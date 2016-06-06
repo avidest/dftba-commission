@@ -1,0 +1,14 @@
+{
+  "name": "dftba-commission",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index"
+  },
+  "author": "Jon Jaques <jon@3five.com>",
+  "license": "(c)2016 3five Inc.",
+  "dependencies": {
+    "express": "^4.13.4"
+  }
+}
