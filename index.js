@@ -1,9 +1,13 @@
-var express = require('express')
+require('babel-register')()
+require('babel-polyfill')
 
-var app = express()
+global.SERVER = true
+global.CLIENT = false
 
-app.get('/', function(req, res) {
-  res.sendStatus(200)
-})
 
-app.listen(process.env.PORT || 3000)
+if (process.env.NODE_ENV === 'production' || require('piping')()) {
+  require('./server').start(
+    process.env.PORT || 9001,
+    process.env.API_PORT || 9002
+  )
+}
