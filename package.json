@@ -34,9 +34,7 @@
     "react-bootstrap": "^0.29.4",
     "redux-form": "^5.2.5",
     "sass-loader": "^3.2.0",
-    "serve-favicon": "^2.3.0"
-  },
-  "devDependencies": {
+    "serve-favicon": "^2.3.0",
     "image-webpack-loader": "^1.8.0",
     "piping": "^1.0.0-rc.2",
     "webpack": "^1.13.1",
