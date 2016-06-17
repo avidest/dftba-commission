@@ -5,20 +5,30 @@ import PageHeader from '../components/page-header'
 import UsersDetailForm from '../forms/users-detail'
 // console.log(UsersDetailForm)
 export default class UsersDetail extends Component {
+  handleSave() {
+    return this.refs.usersDetailForm.submit()
+  }
+
+  getTitle() {
+    return this.props.params.id.toLowerCase() === 'create' ? 'Create User' : 'Edit User'
+  }
+
   render() {
     return <div>
-      <PageHeader route={this.props.route}>
+      <PageHeader title={this.getTitle()}>
         <ButtonGroup className="pull-right">
           <LinkContainer to="/users">
             <Button>Back</Button>
           </LinkContainer>
-          <Button>Save</Button>
+          <Button bsStyle="primary" onClick={::this.handleSave}>
+            Save
+          </Button>
         </ButtonGroup>
       </PageHeader>
       <Grid>
         <Row>
           <Col xs={12}>
-            <UsersDetailForm />
+            <UsersDetailForm ref="usersDetailForm" />
           </Col>
         </Row>
       </Grid>

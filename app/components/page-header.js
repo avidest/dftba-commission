@@ -7,14 +7,24 @@ import {
 } from 'react-bootstrap'
 
 export default function PageHeader(props) {
+  let title = '<untitled>'
+
+  if (props.route && props.route.title) {
+    title = props.route.title
+  }
+
+  if (props.title) {
+    title = props.title
+  }
+
   return <div className="sub-header">
     <Grid>
       <Row>
-        <Col xs={4}>
-          <h1>{props.route.title || "<untitled>"}</h1>
-        </Col>
-        <Col xs={8}>
+        <Col xs={12} sm={7} smPush={5}>
           {props.children}
+        </Col>
+        <Col xs={12} sm={5} smPull={7}>
+          <h1>{title}</h1>
         </Col>
       </Row>
     </Grid>
