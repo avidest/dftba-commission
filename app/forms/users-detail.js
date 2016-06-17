@@ -95,10 +95,10 @@ export class UsersDetailForm extends Component {
       <FormGroup>
         <Col smOffset={3} sm={6}>
           <ButtonGroup style={{marginTop: '15px'}}>
-            <Button onClick={resetForm}>
+            <Button onClick={resetForm} bsSize="lg">
               Reset
             </Button>
-            <Button type="submit" bsStyle="primary" disabled={submitting}>
+            <Button type="submit" bsStyle="primary" bsSize="lg" disabled={submitting}>
               {submitting ? 'Saving...' : 'Save' }
             </Button>
           </ButtonGroup>

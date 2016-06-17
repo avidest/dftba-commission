@@ -2,7 +2,7 @@ import React, {Component} from 'react'
 import {Grid, Row, Col} from 'react-bootstrap'
 import PageHeader from '../components/page-header'
 
-export default class Dashboard extends Component {
+export default class DashboardView extends Component {
   render() {
     return <div>
       <PageHeader route={this.props.route} />

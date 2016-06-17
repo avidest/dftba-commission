@@ -9,7 +9,7 @@ const links = [
   { rel: 'stylesheet', href: '/assets/styles.css' }
 ]
 
-export default class Application extends Component {
+export default class ApplicationView extends Component {
   render() {
     return <div>
       <Helmet title="DFTBA Merchant Portal" link={links} />

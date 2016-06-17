@@ -2,7 +2,7 @@ import React, {Component} from 'react'
 import {Grid, Row, Col} from 'react-bootstrap'
 import PageHeader from '../components/page-header'
 
-export default class NotFound extends Component {
+export default class NotFoundView extends Component {
   render() {
     return <div>
       <PageHeader route={this.props.route} />

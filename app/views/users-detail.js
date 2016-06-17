@@ -3,8 +3,8 @@ import {LinkContainer} from 'protium/router'
 import {Grid, Row, Col, ButtonGroup, Button} from 'react-bootstrap'
 import PageHeader from '../components/page-header'
 import UsersDetailForm from '../forms/users-detail'
-// console.log(UsersDetailForm)
-export default class UsersDetail extends Component {
+
+export default class UsersDetailView extends Component {
   handleSave() {
     return this.refs.usersDetailForm.submit()
   }
@@ -18,9 +18,9 @@ export default class UsersDetail extends Component {
       <PageHeader title={this.getTitle()}>
         <ButtonGroup className="pull-right">
           <LinkContainer to="/users">
-            <Button>Back</Button>
+            <Button bsSize="lg">Back</Button>
           </LinkContainer>
-          <Button bsStyle="primary" onClick={::this.handleSave}>
+          <Button bsSize="lg" bsStyle="primary" onClick={::this.handleSave}>
             Save
           </Button>
         </ButtonGroup>
