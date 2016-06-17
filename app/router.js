@@ -9,23 +9,30 @@ import {
 
 import Application from './views/app'
 import Dashboard from './views/dashboard'
+import UsersDetail from './views/users-detail'
+import UsersList from './views/users-list'
 import Splash from './views/splash'
 import NotFound from './views/notfound'
 
 export default new Router({
   routes: [
     <Route path="/" component={Application} >
-      <IndexRoute component={Splash} />
-      <Route path="dashboard" component={Dashboard} onEnter={authenticate('admin')} />
-      <Route path="admin" component={Dashboard} onEnter={authenticate('admin')} />
-      <Route path="*" component={NotFound} notFound={true} />
+      <IndexRoute title="Login" component={Splash} />
+      <Route onEnter={authenticate('admin')}>
+        <Route path="users" title="Users" component={UsersList} onEnter={authenticate('admin')} />
+        <Route path="users/:id" title="Edit User" component={UsersDetail} onEnter={authenticate('admin')} />
+      </Route>
+      <Route onEnter={authenticate()}>
+        <Route path="dashboard" title="Dashboard" component={Dashboard}  />
+      </Route>
+      <Route path="*" title="Not Found" component={NotFound} notFound={true} />
     </Route>
   ]
 })
 
 function authenticate(role) {
   return (nextProps, replace)=> {
-    console.log(nextProps)
+    // console.log(nextPr ops)
     return nextProps
   }
 }

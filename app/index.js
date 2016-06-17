@@ -6,5 +6,10 @@ export default new Application({
   store: {
     reducers
   },
-  router
+  router,
+  page: {
+    main: [
+      '/assets/app.js'
+    ]
+  }
 })

@@ -8,7 +8,15 @@ export const server = Express()
 
 server.use('/api', proxy)
 
-server.get('/*', renderer(app))
+if (process.env.NODE_ENV !== 'production') {
+  server.use(require('./middleware/dev').default)
+}
+
+server.use('/assets', Express.static('public'))
+
+server.get('/*', (req, res)=> {
+  return renderer(app)(req, res)
+})
 
 export function start(port, apiPort) {
   server.listen(port, function() {

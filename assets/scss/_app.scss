@@ -1,0 +1,59 @@
+
+$logo-max-width: 156px;
+$logo-max-height: 139px;
+$logo-aspect-ratio: 1.122302158;
+
+$logo-desired-height: 80px;
+$logo-desired-width: ceil($logo-desired-height * $logo-aspect-ratio);
+
+.dftba.navbar {
+  margin-bottom: 0;
+
+  .navbar-nav > li > a {
+    text-transform: uppercase;
+    font-weight: 600;
+  }
+
+  .navbar-header {
+    position: relative;
+  }
+
+  .navbar-collapse {
+    padding-left: $logo-desired-width;
+
+    &.collapse.in, &.collapsing {
+      margin-top: 30px;
+      padding-left: 15px;
+    }
+  }
+
+  .dftba-brand {
+    width: $logo-desired-width;
+    height: $logo-desired-height;
+    background: transparent url('../images/logo.png');
+    text-indent: -9999px;
+    overflow: hidden;
+    padding: 0;
+    margin: 0;
+    position: absolute;
+    top: 0;
+    background-size: contain;
+    border: none;
+  }
+}
+
+.sub-header {
+  background-image: url('../images/bg-visual.png');
+  background-color: $brand-success;
+  color: $gray-base;
+  padding-top: 50px;
+  padding-bottom: 30px;
+
+  h1, h2, h3, h4, h5, h6 {
+    text-transform: uppercase;
+  }
+
+  h1 {
+    margin: 0;
+  }
+}
