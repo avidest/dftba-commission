@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "start": "node index",
-    "dev": "nf start"
+    "dev": "nf start",
+    "build": "webpack -p",
+    "postinstall": "npm run build"
   },
   "author": "Jon Jaques <jon@3five.com>",
   "license": "UNLICENSED",
