@@ -6,12 +6,11 @@ import {
   NavItem,
   MenuItem,
   NavDropdown,
-  Grid,
-  Row,
-  Col
+  Image
 } from 'react-bootstrap'
 
 export default function AppHeader(props) {
+  let profile = props.profile
   return <div>
     <Navbar inverse staticTop className="dftba">
       <Navbar.Header>
@@ -27,6 +26,16 @@ export default function AppHeader(props) {
             <NavItem eventKey={1}>Users</NavItem>
           </LinkContainer>
         </Nav>
+
+        {profile && <Nav pullRight>
+          <NavDropdown eventKey={1} title={<span>
+            <Image src={profile.picture} circle style={{maxWidth: '22px'}} /> {profile.name}
+          </span>} id="user-menu">
+            <MenuItem eventKey={'user-menu-logout'} onClick={props.handleLogout}>
+              Logout
+            </MenuItem>
+          </NavDropdown>
+        </Nav>}
       </Navbar.Collapse>
     </Navbar>
   </div>
