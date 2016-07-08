@@ -1,7 +1,7 @@
 import React, {Component}       from 'react'
 import {Helmet, connect}        from 'protium'
 import AppHeader                from '../components/app-header'
-import {logout}                 from '../reducers/users'
+import {logout, login}          from '../reducers/users'
 
 const links = [
   { rel: 'stylesheet', href: 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.1/css/font-awesome.min.css' },
@@ -10,9 +10,17 @@ const links = [
 ]
 
 @connect(mapStateToProps, {
+  handleLogin: login,
   handleLogout: logout
 })
 export default class ApplicationView extends Component {
+
+  componentDidMount() {
+    if (!this.props.token) {
+      this.props.handleLogin()
+    }
+  }
+
   render() {
     return <div>
       <Helmet title="DFTBA Merchant Portal" link={links} />
@@ -26,6 +34,7 @@ export default class ApplicationView extends Component {
 
 function mapStateToProps(state) {
   return {
+    token: state.users.token,
     profile: state.users.profile
   }
 }

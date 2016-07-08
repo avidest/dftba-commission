@@ -11,6 +11,11 @@ import {
 
 export default function AppHeader(props) {
   let profile = props.profile
+
+  let user = profile ? (<span>
+    <Image src={profile.picture} circle style={{maxHeight: '20px', marginTop: '-2px'}} /> {profile.name}
+  </span>) : null;
+
   return <div>
     <Navbar inverse staticTop className="dftba">
       <Navbar.Header>
@@ -28,9 +33,12 @@ export default function AppHeader(props) {
         </Nav>
 
         {profile && <Nav pullRight>
-          <NavDropdown eventKey={1} title={<span>
-            <Image src={profile.picture} circle style={{maxWidth: '22px'}} /> {profile.name}
-          </span>} id="user-menu">
+          <NavDropdown eventKey={1} title={user} id="user-menu">
+            <LinkContainer to="/profile">
+              <MenuItem eventKey={'user-menu-profile'}>
+                Edit Profile
+              </MenuItem>
+            </LinkContainer>
             <MenuItem eventKey={'user-menu-logout'} onClick={props.handleLogout}>
               Logout
             </MenuItem>
