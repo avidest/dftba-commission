@@ -52,6 +52,9 @@ function AdminNav(props) {
     <LinkContainer to="/admin" onlyActiveOnIndex>
       <NavItem eventKey={1}>Dashboard</NavItem>
     </LinkContainer>
+    <LinkContainer to="/admin/products">
+      <NavItem eventKey={1}>Products</NavItem>
+    </LinkContainer>
     <LinkContainer to="/admin/orders">
       <NavItem eventKey={1}>Orders</NavItem>
     </LinkContainer>
@@ -65,6 +68,9 @@ function CreatorNav(props) {
   return <Nav>
     <LinkContainer to="/creators">
       <NavItem eventKey={1}>Dashboard</NavItem>
+    </LinkContainer>
+    <LinkContainer to="/creators/fake">
+      <NavItem eventKey={1}>404 Page</NavItem>
     </LinkContainer>
   </Nav>
 }

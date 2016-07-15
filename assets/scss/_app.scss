@@ -14,6 +14,26 @@ $logo-desired-width: ceil($logo-desired-height * $logo-aspect-ratio);
   outline: 5px auto $brand-primary;
 }
 
+#a0-lock.a0-theme-default.a0-theme-dftba {
+  .a0-panel .a0-top-header {
+    background: #262e2e;
+    color: #fff;
+  }
+
+  .a0-bg-gradient.a0-blur-support {
+    display: none;
+  }
+
+  .a0-panel button.a0-primary {
+    background-color: $brand-primary !important;
+    color: #000 !important;
+
+    &:hover, &:active, &:focus {
+      background-color: darken($brand-primary, 7) !important;
+    }
+  }
+}
+
 .dftba.navbar {
   margin-bottom: 0;
 

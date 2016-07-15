@@ -9,7 +9,6 @@ import {
 
 import Application        from './views/app'
 import Index              from './views/index'
-import Login              from './views/login'
 import AdminDashboard     from './views/admin/dashboard'
 import CreatorsDashboard  from './views/creators/dashboard'
 import NotFound           from './views/notfound'
@@ -25,7 +24,6 @@ export default new Router({
   routes: store => {
     return <Route path="/" component={Application}>
       <IndexRoute title="Welcome" component={Index} onEnter={authenticate(store)} />
-      <Route path="/login" title="Login" component={Login} />
       <Route path="/admin" onEnter={authenticate(store, 'admin')}>
         <IndexRoute                 title="Admin Dashboard"   component={AdminDashboard} />
         <Route path="orders"        title="Orders"            component={OrderList} />
