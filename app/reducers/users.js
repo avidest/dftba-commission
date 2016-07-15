@@ -1,53 +1,64 @@
-import {action} from 'protium'
+import {action, cookie} from 'protium'
+import {push} from 'protium/router'
 
 let lock;
-if (CLIENT) {
+if (__CLIENT__) {
   lock = new global.Auth0Lock(process.env.AUTH0_CLIENT_ID, process.env.AUTH0_DOMAIN)
 }
 
 const AUTH0_LOGIN         = 'dftba/AUTH0_LOGIN'
 const AUTH0_LOGIN_SUCCESS = 'dftba/AUTH0_LOGIN_SUCCESS'
 const AUTH0_LOGIN_FAIL    = 'dftba/AUTH0_LOGIN_FAIL'
+const AUTH0_LOGOUT        = 'dftba/AUTH0_LOGOUT'
 
-const AUTH0_LOGOUT            = 'dftba/AUTH0_LOGOUT'
+const AUTH0_LOAD_TOKEN    = 'dftba/AUTH0_LOAD_TOKEN'
+const AUTH0_LOAD_PROFILE  = 'dftba/AUTH0_LOAD_PROFILE'
+
+export const loadToken = action(AUTH0_LOAD_TOKEN).identity()
+
+export const loadProfile = action(AUTH0_LOAD_PROFILE).identity()
 
 export const login = action(AUTH0_LOGIN, AUTH0_LOGIN_SUCCESS, AUTH0_LOGIN_FAIL)
-  .async((client, payload, dispatch, getState)=> {
-    let tok = localStorage.getItem('auth0_token')
-    if (tok && tok.length) {
-      return new Promise((resolve, reject)=> {
-        lock.getProfile(tok, (err, profile)=> {
-          if (err) {
-            console.error('Login Error', err)
-            return reject(err)
-          }
-          resolve({ profile, token: tok })
-        })
-      })
-    }
-
+  .async(({client, payload, dispatch, getState})=> {
+    let tok = cookie.load('token', { path: '/' })
     return new Promise((resolve, reject)=> {
       lock.show({
         sso: false,
         disableSignupAction: true,
-        closable: false
+        closable: false,
+        authParams: {
+          scope: 'openid name email picture role'
+        }
       }, (err, profile, token)=> {
         if (err) {
-          console.error('Login Error', err)
-          return reject(err)
+          console.error('Login', err)
+          return
         }
-        localStorage.setItem('auth0_token', token)
+        cookie.save('token', token, { path: '/' })
         resolve({ profile, token })
+
+        if (profile.role === 'admin') {
+          process.nextTick(x => {
+            dispatch(push('/admin'))
+          })
+        } else {
+          process.nextTick(x => {
+            dispatch(push('/creators'))
+          })
+        }
       })
     })
   })
 
 export const logout = action(AUTH0_LOGOUT)
-  .sync((client, payload, dispatch, getState)=> {
+  .sync(({client, payload, dispatch, getState})=> {
     const {users} = getState()
     if (users.token) {
-      localStorage.removeItem('auth0_token')
-      lock.logout({ ref: `http://${process.env.APP_HOST}/` })
+      cookie.remove('token', { path: '/' })
+      lock.logout({ 
+        returnTo: `http://${process.env.APP_HOST}/`, 
+        client_id: process.env.AUTH0_CLIENT_ID 
+      })
     }
   })
 
@@ -55,16 +66,15 @@ const initialState = {
   profile: null,
   token: null,
   selected: {},
-  list: [
-    {id: 1, name: 'Kat Gritzmacher', role: 'admin', email: 'kat@3five.com'},
-    {id: 2, name: 'Jon Jaques', role: 'admin', email: 'jon@3five.com'},
-    {id: 3, name: 'Dave Loos', role: 'admin', email: 'dave@dftba.com'},
-    {id: 4, name: 'Random Guy', role: 'merchant', email: 'some@guy.com'},
-  ]
+  list: []
 }
 
 export default function usersReducer(state = initialState, action) {
   switch(action.type) {
+    case AUTH0_LOAD_TOKEN:
+      return { ...state, token: action.result }
+    case AUTH0_LOAD_PROFILE:
+      return { ...state, profile: action.result }
     case AUTH0_LOGIN_SUCCESS:
       return { ...state, profile: action.result.profile, token: action.result.token }
     case AUTH0_LOGOUT:

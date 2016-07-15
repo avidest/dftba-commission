@@ -1,10 +1,10 @@
 import React, {Component} from 'react'
 import {LinkContainer} from 'protium/router'
 import {Grid, Row, Col, ButtonGroup, Button} from 'react-bootstrap'
-import PageHeader from '../components/page-header'
-import UsersDetailForm from '../forms/users-detail'
+import PageHeader from '../../components/page-header'
+import UsersDetailForm from '../../forms/user-detail'
 
-export default class UsersDetailView extends Component {
+export default class UserDetailView extends Component {
   handleSave() {
     return this.refs.usersDetailForm.submit()
   }

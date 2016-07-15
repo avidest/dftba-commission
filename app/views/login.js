@@ -4,7 +4,15 @@ import PageHeader           from '../components/page-header'
 import {connect}            from 'protium'
 import {login}              from '../reducers/users'
 
-export default class SplashView extends Component {
+@connect(state => ({ token: state.users.token }))
+export default class LoginView extends Component {
+
+  componentDidMount() {
+    if (!this.props.token) {
+      this.props.dispatch(login())
+    }
+  }
+
   render() {
     return <div>
       <PageHeader route={this.props.route} />

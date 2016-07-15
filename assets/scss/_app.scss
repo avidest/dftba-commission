@@ -1,12 +1,12 @@
 $logo-max-width: 156px;
 $logo-max-height: 139px;
-$logo-aspect-ratio: 1.122302158;
+$logo-aspect-ratio: 1.1223;
 
 $logo-desired-height: 80px;
 $logo-desired-width: ceil($logo-desired-height * $logo-aspect-ratio);
 
 .btn {
-  box-shadow: 0 1px 1px 0 rgba(255,255,255, 0.1);
+  box-shadow: 0 1px 1px 0 rgba(255, 255, 255, 0.1);
   font-family: $font-family-serif;
 }
 
@@ -38,7 +38,7 @@ $logo-desired-width: ceil($logo-desired-height * $logo-aspect-ratio);
   .dftba-brand {
     width: $logo-desired-width;
     height: $logo-desired-height;
-    background: transparent url('../images/logo.png');
+    background: transparent url("../images/logo.png");
     text-indent: -9999px;
     overflow: hidden;
     padding: 0;
@@ -51,7 +51,7 @@ $logo-desired-width: ceil($logo-desired-height * $logo-aspect-ratio);
 }
 
 .sub-header {
-  background-image: url('../images/bg-visual.png');
+  background-image: url("../images/bg-visual.png");
   background-color: $brand-success;
   color: $gray-base;
   padding-top: 50px;
@@ -65,4 +65,8 @@ $logo-desired-width: ceil($logo-desired-height * $logo-aspect-ratio);
   h1 {
     margin: 0;
   }
+}
+
+.fourohfour-image {
+  background-image: url("../images/404.gif");
 }

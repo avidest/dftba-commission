@@ -7,8 +7,6 @@ import {
   Model
 } from 'sequelize-classes'
 
-
-
-export default class User extends Model {
+export default class Product extends Model {
 
 }

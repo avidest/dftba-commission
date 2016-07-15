@@ -1,7 +1,8 @@
-import React          from 'react'
-import {Application}  from 'protium'
-import router         from './router'
-import * as reducers  from './reducers'
+import React                  from 'react'
+import {Application, cookie}  from 'protium'
+import router                 from './router'
+import * as reducers          from './reducers'
+import {loadToken, loadProfile} from './reducers/users'
 
 export default new Application({
   router,
@@ -10,34 +11,31 @@ export default new Application({
     reducers,
     devTools: true,
     auth: {
-      // initialize(store, http) {
-      //   let token = cookie.load('token', { path: '/' })
-      //   if (__SERVER__ && token && token.length) {
-      //     store.dispatch(loadToken(token))
-      //     if (http && http.req.user) {
-      //       let user = http.req.user
-      //       store.dispatch(loadProfile({
-      //         name: user.name,
-      //         email: user.email,
-      //         email_verified: user.email_verified,
-      //         picture: user.picture,
-      //         role: user.role
-      //       }))
-      //     }
-      //   }
-      // },
-      //
-      // getBearer(store) {
-      //   return store.getState().users.token
-      // }
+      initialize(store, http) {
+        let token = cookie.load('token', { path: '/' })
+        if (__SERVER__ && token && token.length) {
+          store.dispatch(loadToken(token))
+          if (http && http.req.user) {
+            let user = http.req.user
+            store.dispatch(loadProfile({
+              name: user.name,
+              email: user.email,
+              email_verified: user.email_verified,
+              picture: user.picture,
+              role: user.role
+            }))
+          }
+        }
+      },
+      
+      getBearer(store) {
+        return store.getState().users.token
+      }
     },
 
     apiClient: {
       client: {
-        base: '/api/v1',
-        getBearerToken(state) {
-          return state.users.token
-        }
+        base: '/api/v1'
       },
 
       server: {

@@ -14,19 +14,10 @@ const links = [
   handleLogout: logout
 })
 export default class ApplicationView extends Component {
-
-  componentDidMount() {
-    if (!this.props.token) {
-      this.props.handleLogin()
-    }
-  }
-
   render() {
     return <div>
       <Helmet title="DFTBA Merchant Portal" link={links} />
-      <AppHeader route={this.props.route.childRoutes[0]}
-                 profile={this.props.profile}
-                 handleLogout={this.props.handleLogout} />
+      <AppHeader {...this.props} />
       <div id="content">{this.props.children}</div>
     </div>
   }
