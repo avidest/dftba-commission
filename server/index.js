@@ -16,7 +16,7 @@ server.get('/favicon.ico', (req, res)=> {
   res.sendStatus(404)
 })
 server.use(compression())
-server.use('/assets', Express.static('dist'))
+server.use('/assets', Express.static('public'))
 server.use(cookie())
 server.use(json())
 server.use(auth)
