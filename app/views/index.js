@@ -2,7 +2,7 @@ import React, {Component}   from 'react'
 import {Grid, Row, Col, Button}     from 'react-bootstrap'
 import {connect}            from 'protium'
 import {Link, LinkContainer} from 'protium/router'
-import {login}              from '../reducers/users'
+import {login}              from '../ducks/users'
 import PageHeader           from '../components/page-header'
 
 @connect(state => ({ token: state.users.token }), { login })

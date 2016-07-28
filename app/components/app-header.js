@@ -1,5 +1,6 @@
 import React from 'react'
 import {Link, LinkContainer} from 'protium/router'
+import Loader from 'react-loaders'
 import {
   Navbar,
   Nav,
@@ -10,7 +11,7 @@ import {
 } from 'react-bootstrap'
 
 export default function AppHeader(props) {
-  let {profile, handleLogout, route} = props
+  let {profile, handleLogout, route, loading} = props
 
   let user = profile ? (<span>
     <Image src={profile.picture} circle style={{maxHeight: '20px', marginTop: '-2px'}} /> {profile.name}
@@ -41,6 +42,10 @@ export default function AppHeader(props) {
               Logout
             </MenuItem>
           </NavDropdown>
+        </Nav>}
+
+        {loading && <Nav className="loader-container" pullRight>
+          <Loader type="line-scale" />
         </Nav>}
       </Navbar.Collapse>
     </Navbar>

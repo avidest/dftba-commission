@@ -1,7 +1,7 @@
 import React, {Component}       from 'react'
 import {Helmet, connect}        from 'protium'
 import AppHeader                from '../components/app-header'
-import {logout, login}          from '../reducers/users'
+import {logout, login}          from '../ducks/users'
 
 const links = [
   { rel: 'stylesheet', href: 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.1/css/font-awesome.min.css' },
@@ -26,6 +26,7 @@ export default class ApplicationView extends Component {
 function mapStateToProps(state) {
   return {
     token: state.users.token,
-    profile: state.users.profile
+    profile: state.users.profile,
+    loading: !state.reduxAsyncConnect.loaded
   }
 }

@@ -23,8 +23,8 @@ import ProductDetail      from './views/admin/product-detail'
 export default new Router({
   routes: store => {
     return <Route path="/" component={Application}>
-      <IndexRoute title="Welcome" component={Index} onEnter={authenticate(store)} />
-      <Route path="/admin" onEnter={authenticate(store, 'admin')}>
+      <IndexRoute title="Welcome" component={Index} />
+      <Route path="admin">
         <IndexRoute                 title="Admin Dashboard"   component={AdminDashboard} />
         <Route path="orders"        title="Orders"            component={OrderList} />
         <Route path="orders/:id"    title="Order Details"     component={OrderDetail} />
@@ -33,7 +33,7 @@ export default new Router({
         <Route path="products"      title="Products"          component={ProductList} />
         <Route path="products/:id"  title="Product Details"   component={ProductDetail} />
       </Route>
-      <Route path="/creators" onEnter={authenticate(store, 'creator')}>
+      <Route path="creators">
         <IndexRoute title="Creator Dashboard" component={CreatorsDashboard}  />
       </Route>
       <Route path="*" title="Not Found" component={NotFound} notFound={true} />
@@ -52,14 +52,14 @@ function authenticate(store, role) {
       ? users.profile.role === 'admin' ? '/admin' : '/creators'
       : '/'
 
-    if (url !== '/' && !loggedIn) {
-      return replace('/')  
-    }
-
-    if (url === '/' || roleDefined && !matchesRole) {
-      if (url !== defaultView) {
-        return replace(defaultView)
-      }
-    }
+    // if (url !== '/' && !loggedIn) {
+    //   return replace('/')
+    // }
+    //
+    // if (url === '/' || roleDefined && !matchesRole) {
+    //   if (url !== defaultView) {
+    //     return replace(defaultView)
+    //   }
+    // }
   }
 }

@@ -90,3 +90,8 @@ $logo-desired-width: ceil($logo-desired-height * $logo-aspect-ratio);
 .fourohfour-image {
   background-image: url("../images/404.gif");
 }
+
+.loader-container {
+  padding-top: 5px;
+  transform: scale(0.6);
+}

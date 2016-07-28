@@ -15,33 +15,30 @@ export const server = Express()
 server.get('/favicon.ico', (req, res)=> {
   res.sendStatus(404)
 })
+
+server.use('/api', proxy)
 server.use(compression())
-server.use('/assets', Express.static('public'))
 server.use(cookie())
 server.use(json())
 server.use(auth)
-server.use('/api', proxy)
 
-const rendererMiddleware = []
 if (__DEVELOPMENT__) {
   let DevTools = require('protium/devtools').default
   let webpackConfig = require('../webpack.config')
   let devtools = new DevTools(Path.resolve('.'))
-  rendererMiddleware.push(devtools.devMiddleware(webpackConfig))
+  server.use(devtools.devMiddleware(webpackConfig))
 }
 
-const clientEntryPoint = require('../webpack-assets.json').javascript.client
-server.get('/*', rendererMiddleware, renderer(x => {
-  var appPath = require.resolve('../public/server')
-  if (__DEVELOPMENT__) {
-    delete require.cache[appPath]
-  }
-  return require(appPath).default
-}, {
+server.use('/assets', Express.static('public'))
+
+const clientEntry = require('../webpack-assets.json').javascript.client
+const serverEntry = Path.resolve('public/server.js')
+
+server.get('/*', renderer(serverEntry, {
   page: {
     main: [
       'https://cdn.auth0.com/js/lock-9.1.min.js',
-      clientEntryPoint
+      clientEntry
     ]
   }
 }))

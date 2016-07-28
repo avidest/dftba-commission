@@ -55,4 +55,7 @@
 @import "~bootstrap-sass/assets/stylesheets/bootstrap/utilities";
 @import "~bootstrap-sass/assets/stylesheets/bootstrap/responsive-utilities";
 
+$primary-color: lighten($brand-primary, 10);
+@import "~loaders.css/src/loaders";
+
 @import "app";

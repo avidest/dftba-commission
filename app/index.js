@@ -1,8 +1,8 @@
 import React                  from 'react'
 import {Application, cookie}  from 'protium'
 import router                 from './router'
-import * as reducers          from './reducers'
-import {loadToken, loadProfile} from './reducers/users'
+import * as reducers          from './ducks'
+import {loadToken, loadProfile} from './ducks/users'
 
 export default new Application({
   router,
@@ -35,12 +35,12 @@ export default new Application({
 
     apiClient: {
       client: {
-        base: '/api/v1'
+        base: '/api/v1/'
       },
 
       server: {
         port: process.env.API_PORT,
-        base: '/api/v1'
+        base: '/api/v1/'
       }
     }
   }

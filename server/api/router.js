@@ -1,8 +1,11 @@
 import {Router} from 'express'
+import permissions from '../middleware/permissions'
+import Users from './users'
 
 const router = Router()
 export default router
 
-router.get('/', (req, res)=> {
-  res.json({hello: true})
-})
+
+let users = new Users()
+router.use('/users', users.handler())
+
