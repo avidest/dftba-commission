@@ -1,10 +1,5 @@
-import {ManagementClient} from 'auth0'
+import authClient from '../services/auth-client'
 import {Router, route} from 'laforge'
-
-const authClient = new ManagementClient({
-  token: process.env.AUTH0_MANAGE_TOKEN,
-  domain: process.env.AUTH0_DOMAIN
-})
 
 export default class Users extends Router {
 
@@ -22,6 +17,7 @@ export default class Users extends Router {
   updateUser(opts) {
     let {
       email,
+      email_verified,
       password,
       app_metadata,
       user_metadata
@@ -33,16 +29,12 @@ export default class Users extends Router {
     } else {
       payload = {
         email,
+        email_verified,
         app_metadata,
         user_metadata
       }
     }
-
     return authClient.users.update({ id: opts.params.id }, payload)
-      .catch(err => {
-        console.log(err)
-        throw err
-      })
   }
 
   @route('delete', '/:id')
@@ -59,6 +51,7 @@ export default class Users extends Router {
     let {
       password,
       email,
+      email_verified,
       app_metadata,
       user_metadata
     } = opts.body
@@ -66,7 +59,7 @@ export default class Users extends Router {
       connection: 'Username-Password-Authentication',
       email,
       password,
-      email_verified: true,
+      email_verified,
       app_metadata,
       user_metadata
     })

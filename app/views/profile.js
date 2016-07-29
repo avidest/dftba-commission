@@ -2,52 +2,40 @@ import React, {Component} from 'react'
 import {asyncConnect} from 'protium'
 import {LinkContainer} from 'protium/router'
 import {Grid, Row, Col, ButtonGroup, Button} from 'react-bootstrap'
-import PageHeader from '../../components/page-header'
-import UsersDetailForm from '../../forms/user-detail'
-import {
-  loadUser,
-  createUser,
-  updateUser,
-  removeUser
-} from '../../ducks/users'
+import PageHeader from '../components/page-header'
+import UsersDetailForm from '../forms/user-detail'
+import { loadUser, updateUser } from '../ducks/users'
 
 const deps = [
   {
     promise: ({store, params})=> {
       let promises = []
+      console.log('fly')
       let {users} = store.getState()
-      if (params.id && params.id.length && params.id !== 'create') {
-        if (!users.selected || params.id !== users.selected.user_id) {
-          promises.push(store.dispatch(loadUser(params)))
-        }
+      if (users.profile && users.profile.user_id) {
+        promises.push(store.dispatch(loadUser(users.profile)))
       }
       return Promise.all(promises)
     }
   }
 ]
 
-@asyncConnect(deps, null, { createUser, updateUser, removeUser })
-export default class UserDetailView extends Component {
+@asyncConnect(deps, null, { updateUser })
+export default class ProfileView extends Component {
   handleSave() {
     return this.refs.usersDetailForm.submit()
   }
 
   handleSubmit(payload) {
-    if (this.props.params.id === 'create') {
-      return this.props.createUser(payload)
-    }
     return this.props.updateUser(payload)
   }
 
-  getTitle() {
-    return this.props.params.id.toLowerCase() === 'create' ? 'Create User' : 'Edit User'
-  }
-
   render() {
+    console.log(this.props)
     return <div>
-      <PageHeader title={this.getTitle()}>
+      <PageHeader title={this.props.routes[this.props.routes.length-1].title}>
         <ButtonGroup className="pull-right">
-          <LinkContainer to="/admin/users">
+          <LinkContainer to="/">
             <Button bsSize="lg">Back</Button>
           </LinkContainer>
           <Button bsSize="lg" bsStyle="primary" onClick={::this.handleSave}>
@@ -58,7 +46,7 @@ export default class UserDetailView extends Component {
       <Grid>
         <Row>
           <Col xs={12}>
-            <UsersDetailForm ref="usersDetailForm" onSubmit={::this.handleSubmit} />
+            <UsersDetailForm profile ref="usersDetailForm" onSubmit={::this.handleSubmit} />
           </Col>
         </Row>
       </Grid>

@@ -1,18 +1,47 @@
 import React, {Component} from 'react'
-import {connect} from 'protium'
+import {asyncConnect} from 'protium'
 import {LinkContainer} from 'protium/router'
 import {Grid, Row, Col, ButtonGroup, Button} from 'react-bootstrap'
 import PageHeader from '../../components/page-header'
+import ProductDetail from '../../components/product-detail'
+import ProductDetailForm from '../../forms/product-detail'
+import {loadProduct, addCommission} from '../../ducks/products'
+import {loadUsers} from '../../ducks/users'
 
-@connect(state => ({users: state.users.list}))
+const dataDeps = [
+  {
+    promise: ({store, params})=> {
+      let promises = []
+      let {products, users} = store.getState()
+      if (params.id) {
+        if (!products.selected || products.selected.id != params.id) {
+          promises.push(store.dispatch(loadProduct(params.id)))
+        }
+      }
+      if (!users.list.length) {
+        promises.push(store.dispatch(loadUsers()))
+      }
+      return Promise.all(promises)
+    }
+  }
+]
+
+const mapStateToProps = state => ({product: state.products.selected})
+
+const mapDispatchToProps = {
+  addCommission
+}
+
+@asyncConnect(dataDeps, mapStateToProps, mapDispatchToProps)
 export default class ProductDetailView extends Component {
   render() {
     return <div>
-      <PageHeader route={this.props.route} />
+      <PageHeader title={this.props.product.title} />
       <Grid>
         <Row>
           <Col xs={12}>
-          content
+            <ProductDetail {...this.props} />
+            <ProductDetailForm onSubmit={this.props.addCommission} />
           </Col>
         </Row>
       </Grid>

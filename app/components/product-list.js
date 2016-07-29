@@ -1,4 +1,11 @@
 import React, {Component} from 'react'
+import {LinkContainer} from 'protium/router'
+import {
+  Table,
+  Image,
+  Button
+} from 'react-bootstrap'
+import TimeAgo from 'react-timeago'
 
 export default function ProductList(props) {
   let { products } = props
@@ -7,7 +14,7 @@ export default function ProductList(props) {
       <ProductListHeader />
     </thead>
     <tbody>
-      {products.map(product => <ProductListRow product={product} />)}
+      {products.map(product => <ProductListRow key={product.id} product={product} />)}
     </tbody>
   </Table>
 }
@@ -23,18 +30,35 @@ function ProductListHeader(props) {
 
 function ProductListRow(props) {
   let { product } = props
-  let imageSrc = product.image 
-    ? product.image.src
+  let imageSrc = product.images.length
+    ? imageSize(product.images[0].src, '50x')
     : 'http://placehold.it/50x50'
 
-  return <tr key={product.id}>
-    <td><Image style={{maxWidth: '50px', backgroundSize: 'cover'}} src={imageSrc} circle thumbnail /></td>
-    <td>{product.title}</td>
-    <td>{product.updated_at}</td>
-    <td className="text-right">
-      <Button>
-      Edit Commission
-      </Button>
+  let style = {verticalAlign: 'middle'}
+
+  return <tr>
+    <td style={style}>
+      <Image style={{maxWidth: '50px', backgroundSize: 'cover'}}
+             src={imageSrc}
+             circle
+             thumbnail />
+    </td>
+    <td style={style}>{product.title}</td>
+    <td style={style}><TimeAgo date={product.updated_at} /></td>
+    <td style={style} className="text-right">
+      <LinkContainer to={`/admin/products/${product.id}`}>
+        <Button>
+        Edit Commission
+        </Button>
+      </LinkContainer>
     </td>
   </tr>
+}
+
+import Path from 'path'
+
+function imageSize(src, size = '100x') {
+  let ext = Path.extname(src)
+  let base = src.replace(ext, '')
+  return `${base}_${size}${ext}`
 }

@@ -15,6 +15,7 @@ import NotFound           from './views/notfound'
 
 import UserList           from './views/admin/user-list'
 import UserDetail         from './views/admin/user-detail'
+import UserProfile        from './views/profile'
 import OrderList          from './views/admin/order-list'
 import OrderDetail        from './views/admin/order-detail'
 import ProductList        from './views/admin/product-list'
@@ -22,8 +23,12 @@ import ProductDetail      from './views/admin/product-detail'
 
 export default new Router({
   routes: store => {
+    let {users} = store.getState()
     return <Route path="/" component={Application}>
       <IndexRoute title="Welcome" component={Index} />
+      <Route path="profile"
+             title="User Profile"
+             component={UserProfile} />
       <Route path="admin">
         <IndexRoute                 title="Admin Dashboard"   component={AdminDashboard} />
         <Route path="orders"        title="Orders"            component={OrderList} />

@@ -1,8 +1,9 @@
 import React, {Component} from 'react'
-import {connect} from 'protium'
+import {asyncConnect} from 'protium'
 import {LinkContainer} from 'protium/router'
 import PageHeader from '../../components/page-header'
 import ProductList from '../../components/product-list'
+import {loadProducts} from '../../ducks/products'
 import {
   Grid, 
   Row, 
@@ -11,9 +12,22 @@ import {
   Button,
   Table,
   Image
-  } from 'react-bootstrap'
+} from 'react-bootstrap'
 
-@connect(state => ({products: state.products.list}))
+const dataDeps = [
+  {
+    promise: ({store, params})=> {
+      let promises = []
+      let {products} = store.getState()
+      if (!products.list.length) {
+        promises.push(store.dispatch(loadProducts()))
+      }
+      return Promise.all(promises)
+    }
+  }
+]
+
+@asyncConnect(dataDeps, state => ({products: state.products.list}))
 export default class ProductListView extends Component {
   render() {
     return <div>

@@ -19,6 +19,7 @@ export default class UserList extends Component {
       <tr>
         <th>Name</th>
         <th>Email</th>
+        <th>Activated</th>
         <th>Role</th>
         <th className="text-right">Actions</th>
       </tr>
@@ -38,6 +39,7 @@ export default class UserList extends Component {
         return <tr key={user.user_id}>
           <td>{user.user_metadata && user.user_metadata.name}</td>
           <td>{user.email}</td>
+          <td>{user.email_verified ? 'Yes' : 'No'}</td>
           <td>{(user.app_metadata && user.app_metadata.role) || 'creator'}</td>
           <td className="text-right">
             <ButtonGroup>

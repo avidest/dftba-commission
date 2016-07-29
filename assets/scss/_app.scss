@@ -95,3 +95,7 @@ $logo-desired-width: ceil($logo-desired-height * $logo-aspect-ratio);
   padding-top: 5px;
   transform: scale(0.6);
 }
+
+.input-group-addon {
+  background-color: darken(#536565, 10);
+}

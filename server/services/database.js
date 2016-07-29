@@ -1,7 +1,10 @@
 import {Builder}            from 'sequelize-classes';
-import Swatch               from './models/swatch';
-import Swatchbook           from './models/swatchbook';
-import Product              from './models/product';
+// import Order             from '../models/order';
+import Product              from '../models/product';
+import ProductImage         from '../models/product-image';
+import ProductVariant       from '../models/product-variant';
+import Commission           from '../models/commission';
+import UserProfile          from '../models/user-profile';
 
 const databaseLogging = process.env.DATABASE_LOGGING
 
@@ -25,9 +28,47 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 const database = new Builder(options, [
-  Swatch,
-  Swatchbook,
-  Product
+  Commission,
+  Product,
+  ProductImage,
+  ProductVariant,
+  UserProfile
 ])
 
 export default database
+
+export async function sync(force = false) {
+  try {
+    await database.sequelize.sync({ force })
+    console.log(`Database synced... ${force ? 'with force!' : ''}`)
+    let {Product, UserProfile} = database
+
+    /**
+     * Products
+     */
+    let productCount = await Product.count()
+    if (productCount === 0) {
+      console.log('No products found, attempting to download...')
+      let results = await Product.downloadAll()
+      if (results) {
+        console.log(results)
+      }
+    }
+
+    /**
+     * Users
+     */
+
+    // let userCount = await UserProfile.count()
+    // if (userCount === 0) {
+    //   console.log('No user profiles found, attempting to download...')
+    //   let results = await UserProfile.downloadAll()
+    //   if (results) {
+    //     console.log(results)
+    //   }
+    // }
+
+  } catch(e) {
+    console.error(e)
+  }
+}

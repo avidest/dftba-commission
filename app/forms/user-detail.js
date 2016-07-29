@@ -2,21 +2,19 @@ import React, {Component} from 'react'
 import { Field, reduxForm } from 'redux-form'
 import { connect } from 'protium'
 import {
+  renderInlineField
+} from './helpers/render-field'
+import {
   Col,
   Form,
   FormGroup,
-  FormControl,
-  ControlLabel,
   Button,
-  ButtonGroup,
-  Checkbox,
-  HelpBlock,
-  Alert
+  ButtonGroup
 } from 'react-bootstrap'
 
 const formSettings = {form: 'user-detail', validate}
 const mapPropsToState = (state, props, params) => {
-  if (state.routing.locationBeforeTransitions.pathname.indexOf('create') < 0) {
+  if (state.routing.locationBeforeTransitions.pathname.match(/create|profile/i)) {
     return { initialValues: state.users.selected }
   }
   return {}
@@ -29,16 +27,19 @@ export default class UsersDetailForm extends Component {
     const { invalid, reset, submitting, pristine, handleSubmit } = this.props
     return <Form horizontal onSubmit={handleSubmit}>
       <Field component="hidden" name="user_id" />
-      <Field component={renderComponent} name="user_metadata.name" label="Name" />
-      <Field component={renderComponent} name="email" label="Email" type="email" />
-      <Field component={renderComponent} name="app_metadata.role" label="Role" componentClass="select">
-        <option value="-1">Choose one...</option>
-        <option value="admin">Admin</option>
-        <option value="creator">Creator</option>
-      </Field>
+      <Field component={renderInlineField} name="user_metadata.name" label="Name" />
+      <Field component={renderInlineField} name="email" label="Email" type="email" />
+      {!this.props.profile && <div>
+        <Field component={renderInlineField} name="app_metadata.role" label="Role" componentClass="select">
+          <option value="-1">Choose one...</option>
+          <option value="admin">Admin</option>
+          <option value="creator">Creator</option>
+        </Field>
+        <Field component={renderInlineField} name="email_verified" label="Email Verified" type="checkbox" />
+      </div>}
       <hr/>
-      <Field component={renderComponent} name="password" label="Password" type="password" />
-      <Field component={renderComponent} name="passwordConfirm" label="Confirm Password" type="password" />
+      <Field component={renderInlineField} name="password" label="Password" type="password" />
+      <Field component={renderInlineField} name="passwordConfirm" label="Confirm Password" type="password" />
       <hr/>
       <FormGroup>
         <Col smOffset={3} sm={6}>
@@ -77,23 +78,4 @@ function validate(values) {
     errors.email = 'Please specify an email'
   }
   return errors
-}
-
-function renderComponent(field) {
-  let state, compClass
-
-  if (field.dirty && field.invalid) {
-    state = 'error'
-  }
-
-  return <FormGroup controlId={field.input.name} validationState={state}>
-    <Col componentClass={ControlLabel} sm={3}>
-      {field.input.label}
-    </Col>
-    <Col sm={6}>
-      <FormControl {...field.input} />
-      <FormControl.Feedback />
-      {field.dirty && field.error && <HelpBlock>{field.error}</HelpBlock>}
-    </Col>
-  </FormGroup>
 }

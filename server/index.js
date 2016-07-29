@@ -11,7 +11,6 @@ import api            from './api'
 
 export const server = Express()
 
-
 server.get('/favicon.ico', (req, res)=> {
   res.sendStatus(404)
 })

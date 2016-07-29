@@ -10,6 +10,20 @@ export default new Application({
   store: {
     reducers,
     devTools: true,
+    createMiddleware(middleware) {
+      middleware.push(store => next => action => {
+        if (action.error) {
+          if (action.payload instanceof Response
+                && !action.payload.bodyUsed
+                && action.payload.json
+          ) {
+            action.payload.json().then(resp => console.log(resp))
+          }
+        }
+        return next(action)
+      })
+      return middleware
+    },
     auth: {
       initialize(store, http) {
         let token = cookie.load('token', { path: '/' })

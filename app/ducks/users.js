@@ -12,11 +12,9 @@ export const login = createAction('dftba/AUTH0_LOGIN', payload => {
       let expires = new Date()
       expires.setSeconds(expires.getSeconds() + 36000)
       cookie.save('token', result.token, { path: '/', expires })
-
       process.nextTick(x => {
         dispatch(push(result.profile.role === 'admin' ? '/admin' : '/creator'))
       })
-
       return result
     })
   }
@@ -48,7 +46,7 @@ export const loadUsers = createAction('dftba/AUTH0_LOAD_USERS', payload => {
 
 export const loadUser = createAction('dftba/AUTH0_LOAD_USER', payload => {
   return ({client})=> {
-    return client.get(`/users/${payload.id}`)
+    return client.get(`/users/${payload.id || payload.user_id}`)
       .then(user => {
         if (user.app_metadata) {
           user.role = user.app_metadata.role
@@ -57,10 +55,14 @@ export const loadUser = createAction('dftba/AUTH0_LOAD_USER', payload => {
       })
   }
 })
+
 export const createUser = createAction('dftba/AUTH0_CREATE_USER', payload => {
-  return ({client})=> {
+  return ({client, dispatch})=> {
     return client.post(`/users`, {
       body: payload
+    }).then(user => {
+      dispatch(push(`/admin/users/${user.user_id}`))
+      return user
     })
   }
 })
@@ -91,17 +93,16 @@ const initialState = {
 }
 
 export default handleActions({
-  [loadToken]: (state, action) => ({ ...state, token: action.payload }),
-  [loadProfile]: (state, action) => ({ ...state, profile: action.payload }),
-  [login]: (state, action) => ({ ...state, profile: action.payload.profile, token: action.payload.token }),
-  [logout]: (state, action) => ({ ...state, profile: null, token: null }),
-  [loadUsers]: (state, action) => ({ ...state, list: action.payload }),
+  [loadToken]: (state, {payload}) => ({ ...state, token: payload }),
+  [loadProfile]: (state, {payload}) => ({ ...state, profile: payload }),
+  [login]: (state, {payload}) => ({ ...state, profile: payload.profile, token: payload.token }),
+  [logout]: (state, {payload}) => ({ ...state, profile: null, token: null }),
+  [loadUsers]: (state, {payload}) => ({ ...state, list: payload }),
   [loadUser]: updateSelectedUser,
   [createUser]: updateSelectedUser,
   [updateUser]: updateSelectedUser
 }, initialState)
 
-function updateSelectedUser(state, action) {
-  console.log('update user', action.payload)
-  return { ...state, selected: action.payload }
+function updateSelectedUser(state, {payload}) {
+  return { ...state, selected: payload }
 }
