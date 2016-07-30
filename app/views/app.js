@@ -2,6 +2,7 @@ import React, {Component}       from 'react'
 import {Helmet, connect}        from 'protium'
 import AppHeader                from '../components/app-header'
 import {logout, login}          from '../ducks/users'
+import TransitionGroup          from 'react-addons-css-transition-group'
 
 const links = [
   { rel: 'stylesheet', href: 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.1/css/font-awesome.min.css' },
@@ -18,7 +19,16 @@ export default class ApplicationView extends Component {
     return <div>
       <Helmet title="DFTBA Merchant Portal" link={links} />
       <AppHeader {...this.props} />
-      <div id="content">{this.props.children}</div>
+      <TransitionGroup
+        id="content"
+        component="div"
+        transitionName="fade"
+        transitionEnterTimeout={300}
+        transitionLeaveTimeout={300}>
+        {React.cloneElement(this.props.children, {
+          key: this.props.location.pathname
+        })}
+      </TransitionGroup>
     </div>
   }
 }

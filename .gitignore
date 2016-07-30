@@ -5,3 +5,4 @@ node_modules
 public
 dist
 webpack-assets.json
+!public/images

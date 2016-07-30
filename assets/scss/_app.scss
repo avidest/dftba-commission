@@ -103,3 +103,35 @@ $logo-desired-width: ceil($logo-desired-height * $logo-aspect-ratio);
 body {
   padding-top: 50px;
 }
+
+#content {
+  position: relative;
+}
+
+.fade-enter {
+  opacity: 0.01;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+}
+
+.fade-enter.fade-enter-active {
+  opacity: 1;
+  transition: opacity 300ms ease;
+}
+
+.fade-leave {
+  opacity: 1;
+}
+
+.fade-leave.fade-leave-active {
+  opacity: 0.01;
+  transition: opacity 300ms ease;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+}

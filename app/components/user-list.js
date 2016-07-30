@@ -1,6 +1,7 @@
 import React, {Component} from 'react'
 import {LinkContainer} from 'protium/router'
 import {
+  Well,
   Table,
   Button,
   ButtonGroup
@@ -18,57 +19,47 @@ export default class UserList extends Component {
     }
   }
 
-  renderTableHeader() {
-    return <thead>
-      <tr>
-        <th>Name</th>
-        <th>Email</th>
-        <th>Activated</th>
-        <th>Role</th>
-        <th className="text-right">Actions</th>
-      </tr>
-    </thead>
-  }
-
-  renderTableBody() {
+  render() {
     if (!this.props.users && !this.props.users.length) {
-      return <tbody>
-        <tr>
-          <td colSpan="4">No users yet!</td>
-        </tr>
-      </tbody>
+      return <Well>
+        No users yet!
+      </Well>
     }
     var style = {verticalAlign: 'middle'}
-    return <tbody>
-      {this.props.users.map(user => {
-        return <tr key={user.user_id}>
-          <td style={style}>{user.user_metadata && user.user_metadata.name}</td>
-          <td style={style}>{user.email}</td>
-          <td style={style}>{user.email_verified ? 'Yes' : 'No'}</td>
-          <td style={style}>{(user.app_metadata && user.app_metadata.role) || 'creator'}</td>
-          <td style={style} className="text-right">
-            <ButtonGroup>
-              <LinkContainer to={`/admin/users/${user.user_id}`}>
-                <Button bsSize="sm">Edit</Button>
-              </LinkContainer>
-              <Button bsStyle="danger"
-                      bsSize="sm"
-                      onClick={::this.handleRemove}
-                      data-userid={user.user_id}
-                      disabled={this.isSameUser(user)}>
-                Remove
-              </Button>
-            </ButtonGroup>
-          </td>
+    return <Table hover>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Activated</th>
+          <th>Role</th>
+          <th className="text-right">Actions</th>
         </tr>
-      })}
-    </tbody>
-  }
-
-  render() {
-    return <Table>
-      {this.renderTableHeader()}
-      {this.renderTableBody()}
+      </thead>
+      <tbody>
+        {this.props.users.map(user => {
+          return <tr key={user.user_id}>
+            <td style={style}>{user.user_metadata && user.user_metadata.name}</td>
+            <td style={style}>{user.email}</td>
+            <td style={style}>{user.email_verified ? 'Yes' : 'No'}</td>
+            <td style={style}>{(user.app_metadata && user.app_metadata.role) || 'creator'}</td>
+            <td style={style} className="text-right">
+              <ButtonGroup>
+                <LinkContainer to={`/admin/users/${user.user_id}`}>
+                  <Button bsSize="sm">Edit</Button>
+                </LinkContainer>
+                <Button bsStyle="danger"
+                        bsSize="sm"
+                        onClick={::this.handleRemove}
+                        data-userid={user.user_id}
+                        disabled={this.isSameUser(user)}>
+                  Remove
+                </Button>
+              </ButtonGroup>
+            </td>
+          </tr>
+        })}
+      </tbody>
     </Table>
   }
 }
