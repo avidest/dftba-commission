@@ -1,5 +1,4 @@
 import {Builder}            from 'sequelize-classes';
-// import Order             from '../models/order';
 import Product              from '../models/product';
 import ProductImage         from '../models/product-image';
 import ProductVariant       from '../models/product-variant';
@@ -59,14 +58,14 @@ export async function sync(force = false) {
      * Users
      */
 
-    // let userCount = await UserProfile.count()
-    // if (userCount === 0) {
-    //   console.log('No user profiles found, attempting to download...')
-    //   let results = await UserProfile.downloadAll()
-    //   if (results) {
-    //     console.log(results)
-    //   }
-    // }
+    let userCount = await UserProfile.count()
+    if (userCount === 0) {
+      console.log('No user profiles found, attempting to download...')
+      let results = await UserProfile.downloadAll()
+      if (results) {
+        console.log(`${results.length} users created!`)
+      }
+    }
 
   } catch(e) {
     console.error(e)

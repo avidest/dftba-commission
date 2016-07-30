@@ -96,6 +96,10 @@ $logo-desired-width: ceil($logo-desired-height * $logo-aspect-ratio);
   transform: scale(0.6);
 }
 
-.input-group-addon {
-  background-color: darken(#536565, 10);
+.dftba.navbar .dftba-brand {
+  margin-left: -5px;
+}
+
+body {
+  padding-top: 50px;
 }

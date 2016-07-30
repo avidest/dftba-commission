@@ -1,12 +1,13 @@
 import React, {Component} from 'react'
 import {asyncConnect} from 'protium'
 import {LinkContainer} from 'protium/router'
-import {Grid, Row, Col, ButtonGroup, Button} from 'react-bootstrap'
+import {Grid, Row, Col, Button, ButtonGroup} from 'react-bootstrap'
 import PageHeader from '../../components/page-header'
 import ProductDetail from '../../components/product-detail'
+import ProductStats from '../../components/product-stats'
 import ProductDetailForm from '../../forms/product-detail'
 import {loadProduct, addCommission} from '../../ducks/products'
-import {loadUsers} from '../../ducks/users'
+import {loadUsers, loadCreators} from '../../ducks/users'
 
 const dataDeps = [
   {
@@ -21,12 +22,18 @@ const dataDeps = [
       if (!users.list.length) {
         promises.push(store.dispatch(loadUsers()))
       }
+      if (!users.creators.length) {
+        promises.push(store.dispatch(loadCreators()))
+      }
       return Promise.all(promises)
     }
   }
 ]
 
-const mapStateToProps = state => ({product: state.products.selected})
+const mapStateToProps = state => ({
+  product: state.products.selected,
+  creators: state.users.creators
+})
 
 const mapDispatchToProps = {
   addCommission
@@ -35,12 +42,39 @@ const mapDispatchToProps = {
 @asyncConnect(dataDeps, mapStateToProps, mapDispatchToProps)
 export default class ProductDetailView extends Component {
   render() {
+    let {product} = this.props
     return <div>
-      <PageHeader title={this.props.product.title} />
+      <PageHeader title={this.props.product.title}>
+        <div className="pull-right">
+          <ButtonGroup>
+            <a className="btn btn-default btn-lg"
+               href={`https://${process.env.SHOPIFY_SHOP}/admin/products/${product.id}`}
+               target="_blank">
+              Admin View
+            </a>
+            {product.published_at && <a className="btn btn-default btn-lg"
+                                        href={`https://${process.env.SHOPIFY_SHOP}/products/${product.handle}`}
+                                        target="_blank">
+              Storefront View
+            </a>}
+          </ButtonGroup>
+          &nbsp;&nbsp;
+          <LinkContainer to="/admin/products">
+            <Button bsSize="lg">Back</Button>
+          </LinkContainer>
+        </div>
+      </PageHeader>
       <Grid>
         <Row>
-          <Col xs={12}>
+          <Col sm={4}>
+            <h3>Product Details</h3>
+            <ProductStats {...this.props} />
+          </Col>
+          <Col sm={8}>
+            <h3>Commission Splits</h3>
             <ProductDetail {...this.props} />
+            <br/>
+            <h4>Add Commission Split</h4>
             <ProductDetailForm onSubmit={this.props.addCommission} />
           </Col>
         </Row>

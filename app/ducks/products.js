@@ -1,9 +1,12 @@
 import {createAction, handleActions} from 'protium'
 
 export const addCommission = createAction('dftba/ADD_COMMISSION', payload => {
-  return ({client})=> {
+  return ({client, dispatch})=> {
     return client.post('/commissions', {
       body: payload
+    }).then(resp => {
+      dispatch(loadProduct(payload.product_id))
+      return resp
     })
   }
 })

@@ -9,7 +9,8 @@ var serverOptions = {
     'NODE_ENV',
     'AUTH0_CLIENT_ID',
     'AUTH0_DOMAIN',
-    'APP_HOST'
+    'APP_HOST',
+    'SHOPIFY_SHOP'
   ]
 }
 
@@ -19,7 +20,8 @@ var clientOptions = {
     'NODE_ENV',
     'AUTH0_CLIENT_ID',
     'AUTH0_DOMAIN',
-    'APP_HOST'
+    'APP_HOST',
+    'SHOPIFY_SHOP'
   ],
   module: {
     loaders: [

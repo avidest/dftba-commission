@@ -19,7 +19,10 @@ const dataDeps = [
   }
 ]
 
-const mapState = (state)=> ({ users: state.users.list })
+const mapState = (state)=> ({
+  users: state.users.list,
+  current_user: state.users.profile
+})
 
 const mapDispatch = {
   handleRemove: removeUser

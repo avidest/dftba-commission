@@ -20,7 +20,7 @@ const formSettings = {
 }
 
 @connect(state => ({
-  users: state.users.list,
+  users: state.users.creators,
   product: state.products.selected,
   initialValues: {
     product_id: state.products.selected.id
@@ -32,7 +32,6 @@ export default class ProductDetailForm extends Component {
     const { invalid, reset, submitting, pristine, handleSubmit, users, product } = this.props
 
     return <Form onSubmit={handleSubmit}>
-      <h4>Add Commission</h4>
 
       <Field component="input" type="hidden" name="product_id" />
 

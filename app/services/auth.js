@@ -13,7 +13,7 @@ export function performLogin() {
       disableSignupAction: true,
       closable: true,
       authParams: {
-        scope: 'user_id openid name email picture role'
+        scope: 'user_id openid email picture user_metadata app_metadata'
       }
     }, (err, profile, token)=> {
       if (err) {

@@ -13,7 +13,7 @@ export const login = createAction('dftba/AUTH0_LOGIN', payload => {
       expires.setSeconds(expires.getSeconds() + 36000)
       cookie.save('token', result.token, { path: '/', expires })
       process.nextTick(x => {
-        dispatch(push(result.profile.role === 'admin' ? '/admin' : '/creator'))
+        dispatch(push(result.profile.app_metadata.role === 'admin' ? '/admin' : '/creator'))
       })
       return result
     })
@@ -33,26 +33,18 @@ export const logout = createAction('dftba/AUTH0_LOGOUT', payload => {
 export const loadUsers = createAction('dftba/AUTH0_LOAD_USERS', payload => {
   return ({client})=> {
     return client.get('/users')
-      .then(users => {
-        return users.map(user => {
-          if (user.app_metadata) {
-            user.role = user.app_metadata.role
-          }
-          return user;
-        })
-      })
+  }
+})
+
+export const loadCreators = createAction('dftba/AUTH0_LOAD_CREATORS', payload => {
+  return ({client})=> {
+    return client.get('/users/creators')
   }
 })
 
 export const loadUser = createAction('dftba/AUTH0_LOAD_USER', payload => {
   return ({client})=> {
     return client.get(`/users/${payload.id || payload.user_id}`)
-      .then(user => {
-        if (user.app_metadata) {
-          user.role = user.app_metadata.role
-        }
-        return user
-      })
   }
 })
 
@@ -68,11 +60,13 @@ export const createUser = createAction('dftba/AUTH0_CREATE_USER', payload => {
 })
 
 export const updateUser = createAction('dftba/AUTH0_UPDATE_USER', payload => {
-  return ({client, dispatch})=> {
+  return ({client, dispatch, getState})=> {
+    let {users} = getState()
     return client.put(`/users/${payload.user_id}`, {
       body: payload
     }).then(x => {
       dispatch(loadUsers())
+      dispatch(loadCreators())
       return x
     })
   }
@@ -81,7 +75,11 @@ export const updateUser = createAction('dftba/AUTH0_UPDATE_USER', payload => {
 export const removeUser = createAction('dftba/AUTH0_REMOVE_USER', payload => {
   return ({client, dispatch})=> {
     return client.del(`/users/${payload.user_id}`)
-      .then(x => dispatch(loadUsers()))
+      .then(x => {
+        dispatch(loadUsers())
+        dispatch(loadCreators())
+        return x
+      })
   }
 })
 
@@ -89,6 +87,7 @@ const initialState = {
   profile: null,
   token: null,
   selected: {},
+  creators: [],
   list: []
 }
 
@@ -97,6 +96,7 @@ export default handleActions({
   [loadProfile]: (state, {payload}) => ({ ...state, profile: payload }),
   [login]: (state, {payload}) => ({ ...state, profile: payload.profile, token: payload.token }),
   [logout]: (state, {payload}) => ({ ...state, profile: null, token: null }),
+  [loadCreators]: (state, {payload}) => ({ ...state, creators: payload }),
   [loadUsers]: (state, {payload}) => ({ ...state, list: payload }),
   [loadUser]: updateSelectedUser,
   [createUser]: updateSelectedUser,
@@ -104,5 +104,9 @@ export default handleActions({
 }, initialState)
 
 function updateSelectedUser(state, {payload}) {
-  return { ...state, selected: payload }
+  let s = { ...state, selected: payload }
+  if (payload.user_id === state.profile.user_id) {
+    s.profile = payload
+  }
+  return s
 }

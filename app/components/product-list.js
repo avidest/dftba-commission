@@ -21,8 +21,9 @@ export default function ProductList(props) {
 
 function ProductListHeader(props) {
   return <tr>
-    <th>Image</th>
+    <th></th>
     <th>Title</th>
+    <th>Vendor</th>
     <th>Last Updated</th>
     <th className="text-right">Actions</th>
   </tr>
@@ -32,7 +33,7 @@ function ProductListRow(props) {
   let { product } = props
   let imageSrc = product.images.length
     ? imageSize(product.images[0].src, '50x')
-    : 'http://placehold.it/50x50'
+    : `/assets/images/no-image.png`
 
   let style = {verticalAlign: 'middle'}
 
@@ -44,6 +45,7 @@ function ProductListRow(props) {
              thumbnail />
     </td>
     <td style={style}>{product.title}</td>
+    <td style={style}>{product.vendor}</td>
     <td style={style}><TimeAgo date={product.updated_at} /></td>
     <td style={style} className="text-right">
       <LinkContainer to={`/admin/products/${product.id}`}>

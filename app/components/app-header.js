@@ -14,11 +14,12 @@ export default function AppHeader(props) {
   let {profile, handleLogout, route, loading} = props
 
   let user = profile ? (<span>
-    <Image src={profile.picture} circle style={{maxHeight: '20px', marginTop: '-2px'}} /> {profile.name}
+    <Image src={profile.picture} circle style={{maxHeight: '20px', marginTop: '-2px'}} />
+    &nbsp;{profile.user_metadata ? profile.user_metadata.name : profile.email}
   </span>) : null;
 
   return <div>
-    <Navbar inverse staticTop className="dftba">
+    <Navbar inverse fixedTop className="dftba">
       <Navbar.Header>
         <Navbar.Brand className="dftba-brand">
           <Link to="/" onlyActiveOnIndex>DFTBA</Link>
@@ -28,7 +29,7 @@ export default function AppHeader(props) {
 
       <Navbar.Collapse>
         {profile && <div>
-          {profile.role === 'admin' ? <AdminNav/> : <CreatorNav/>}
+          {profile.app_metadata.role === 'admin' ? <AdminNav/> : <CreatorNav/>}
         </div>}
 
         {profile && <Nav pullRight>
@@ -59,9 +60,6 @@ function AdminNav(props) {
     </LinkContainer>
     <LinkContainer to="/admin/products">
       <NavItem eventKey={1}>Products</NavItem>
-    </LinkContainer>
-    <LinkContainer to="/admin/orders">
-      <NavItem eventKey={1}>Orders</NavItem>
     </LinkContainer>
     <LinkContainer to="/admin/users">
       <NavItem eventKey={1}>Users</NavItem>

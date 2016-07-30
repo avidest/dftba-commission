@@ -7,6 +7,10 @@ import {
 } from 'react-bootstrap'
 
 export default class UserList extends Component {
+  isSameUser(user) {
+    return user.user_id === this.props.current_user.user_id
+  }
+
   handleRemove(e) {
     e.preventDefault()
     if (confirm('Are you sure you wish to delete this user?')) {
@@ -34,19 +38,24 @@ export default class UserList extends Component {
         </tr>
       </tbody>
     }
+    var style = {verticalAlign: 'middle'}
     return <tbody>
       {this.props.users.map(user => {
         return <tr key={user.user_id}>
-          <td>{user.user_metadata && user.user_metadata.name}</td>
-          <td>{user.email}</td>
-          <td>{user.email_verified ? 'Yes' : 'No'}</td>
-          <td>{(user.app_metadata && user.app_metadata.role) || 'creator'}</td>
-          <td className="text-right">
+          <td style={style}>{user.user_metadata && user.user_metadata.name}</td>
+          <td style={style}>{user.email}</td>
+          <td style={style}>{user.email_verified ? 'Yes' : 'No'}</td>
+          <td style={style}>{(user.app_metadata && user.app_metadata.role) || 'creator'}</td>
+          <td style={style} className="text-right">
             <ButtonGroup>
               <LinkContainer to={`/admin/users/${user.user_id}`}>
                 <Button bsSize="sm">Edit</Button>
               </LinkContainer>
-              <Button bsStyle="danger" bsSize="sm" onClick={::this.handleRemove} data-userid={user.user_id}>
+              <Button bsStyle="danger"
+                      bsSize="sm"
+                      onClick={::this.handleRemove}
+                      data-userid={user.user_id}
+                      disabled={this.isSameUser(user)}>
                 Remove
               </Button>
             </ButtonGroup>
