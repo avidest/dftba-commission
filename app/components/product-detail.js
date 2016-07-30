@@ -12,7 +12,7 @@ export default function ProductDetail(props) {
   if (!product.commissions || !product.commissions.length) {
     return <Well>No commissions splits yet!</Well>
   }
-  return <Table bordered hover>
+  return <Table bordered hover responsive>
     <thead>
     <tr>
       <th>Creator</th>

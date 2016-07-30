@@ -26,7 +26,7 @@ export default class UserList extends Component {
       </Well>
     }
     var style = {verticalAlign: 'middle'}
-    return <Table hover>
+    return <Table hover responsive>
       <thead>
         <tr>
           <th>Name</th>

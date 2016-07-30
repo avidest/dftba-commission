@@ -9,7 +9,7 @@ import TimeAgo from 'react-timeago'
 
 export default function ProductList(props) {
   let { products } = props
-  return <Table hover>
+  return <Table hover responsive>
     <thead>
       <ProductListHeader />
     </thead>
