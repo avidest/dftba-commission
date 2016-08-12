@@ -10,7 +10,7 @@ export default class AdminDashboardView extends Component {
       <Grid>
         <Row>
           <Col xs={12}>
-          <h2>Content</h2>
+            <h2>Content</h2>
           </Col>
         </Row>
       </Grid>

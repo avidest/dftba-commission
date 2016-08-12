@@ -13,19 +13,20 @@ export const addCommission = createAction('dftba/ADD_COMMISSION', payload => {
 
 export const setProductsCount = createAction('dftba/SET_PRODUCTS_COUNT')
 
-export const loadProducts = createAction('dftba/LOAD_PRODUCTS', opts => {
-  return ({client, dispatch})=> {
+export const loadProducts = createAction('dftba/LOAD_PRODUCTS', (opts = {}) => {
+  let query = {
+    ...opts,
+    include: 'images'
+  }
+  return ({client})=> {
     return client.get('/products', {
-      query: {
-        include: 'images,variants'
-      },
+      query,
       as: 'raw'
     }).then(resp => {
       let count = resp.headers.get('x-row-count')
-      if (count) {
-        dispatch(setProductsCount(parseInt(count, 10)))
-      }
-      return resp.json()
+      return resp.json().then(result => {
+        return { result, count }
+      })
     })
   }
 })
@@ -43,17 +44,17 @@ export const loadProduct = createAction('dftba/LOAD_PRODUCT', id => {
 const initialState = {
   list: [],
   count: null,
+  bulkSelections: [],
+  bulkSelectAll: false,
+  queryOpts: {},
   selected: null
 }
 
 export default handleActions({
-  [setProductsCount]: (state, {payload})=> ({
-    ...state,
-    count: payload
-  }),
   [loadProducts]: (state, {payload})=> ({
     ...state,
-    list: payload
+    list: payload.result,
+    count: payload.count
   }),
   [loadProduct]: (state, {payload})=> ({
     ...state,

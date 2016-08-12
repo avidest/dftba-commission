@@ -9,13 +9,17 @@ import PageHeader           from '../components/page-header'
 export default class HomeView extends Component {
 
   render() {
-    return <Row>
+    return <div>
       <PageHeader route={this.props.route} />
-      <Col xs={12} sm={4} smPush={4} className="text-center">
-        {!this.props.token && <Button bsSize="lg" bsStyle="primary" onClick={this.props.login}>
-            Login
-        </Button>}
-      </Col>
-    </Row>
+      <Grid>
+        <Row>
+          <Col xs={12} sm={4} smPush={4} className="text-center">
+            {!this.props.token && <Button bsSize="lg" bsStyle="primary" onClick={this.props.login}>
+                Login
+            </Button>}
+          </Col>
+        </Row>
+      </Grid>
+    </div>
   }
 }

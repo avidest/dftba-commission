@@ -126,6 +126,26 @@ $table-bg-active:               $table-bg-hover !default;
 //** Border color for table and cell borders.
 $table-border-color:            $gray-darker !default;
 
+//== Form states and alerts
+//
+//## Define colors for form feedback states and, by default, alerts.
+
+$state-success-text:             #b1f37a !default;
+$state-success-bg:               #5a9442 !default;
+$state-success-border:           #b1f37a !default;
+
+$state-info-text:                #6dcde0 !default;
+$state-info-bg:                  #2a6d8e !default;
+$state-info-border:              #6dcde0 !default;
+
+$state-warning-text:             #c5b76a !default;
+$state-warning-bg:               #7d663b !default;
+$state-warning-border:           #c5b76a !default;
+
+$state-danger-text:              #ff6c8e !default;
+$state-danger-bg:                #843849 !default;
+$state-danger-border:            #ff6c8e !default;
+
 
 //== Buttons
 //
@@ -154,8 +174,8 @@ $btn-warning-bg:                 $brand-warning !default;
 $btn-warning-border:             darken($btn-warning-bg, 5%) !default;
 
 $btn-danger-color:               #fff !default;
-$btn-danger-bg:                  $brand-danger !default;
-$btn-danger-border:              darken($btn-danger-bg, 5%) !default;
+$btn-danger-bg:                  $state-danger-bg !default;
+$btn-danger-border:              darken($btn-danger-bg, 2%) !default;
 
 $btn-link-disabled-color:        $gray-light !default;
 
@@ -437,20 +457,20 @@ $nav-pills-active-link-hover-color:         $component-active-color !default;
 //##
 
 $pagination-color:                     $link-color !default;
-$pagination-bg:                        #fff !default;
-$pagination-border:                    #ddd !default;
+$pagination-bg:                        $gray-dark !default;
+$pagination-border:                    $gray-darker !default;
 
 $pagination-hover-color:               $link-hover-color !default;
-$pagination-hover-bg:                  $gray-lighter !default;
-$pagination-hover-border:              #ddd !default;
+$pagination-hover-bg:                  $gray !default;
+$pagination-hover-border:              $gray-dark !default;
 
-$pagination-active-color:              #fff !default;
+$pagination-active-color:              $gray-dark !default;
 $pagination-active-bg:                 $brand-primary !default;
 $pagination-active-border:             $brand-primary !default;
 
-$pagination-disabled-color:            $gray-light !default;
-$pagination-disabled-bg:               #fff !default;
-$pagination-disabled-border:           #ddd !default;
+$pagination-disabled-color:            darken($pagination-color, 10) !default;
+$pagination-disabled-bg:               lighten($pagination-bg, 5) !default;
+$pagination-disabled-border:           lighten($pagination-border, 5) !default;
 
 
 //== Pager
@@ -479,27 +499,6 @@ $jumbotron-bg:                   $gray-lighter !default;
 $jumbotron-heading-color:        inherit !default;
 $jumbotron-font-size:            ceil(($font-size-base * 1.5)) !default;
 $jumbotron-heading-font-size:    ceil(($font-size-base * 4.5)) !default;
-
-
-//== Form states and alerts
-//
-//## Define colors for form feedback states and, by default, alerts.
-
-$state-success-text:             #b1f37a !default;
-$state-success-bg:               #5a9442 !default;
-$state-success-border:           #b1f37a !default;
-
-$state-info-text:                #6dcde0 !default;
-$state-info-bg:                  #2a6d8e !default;
-$state-info-border:              #6dcde0 !default;
-
-$state-warning-text:             #c5b76a !default;
-$state-warning-bg:               #7d663b !default;
-$state-warning-border:           #c5b76a !default;
-
-$state-danger-text:              #ff6c8e !default;
-$state-danger-bg:                #843849 !default;
-$state-danger-border:            #ff6c8e !default;
 
 
 //== Tooltips

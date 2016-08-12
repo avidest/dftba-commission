@@ -1,12 +1,12 @@
 import React, {Component} from 'react'
-import {asyncConnect} from 'protium'
+import {asyncConnect, bindActionCreators} from 'protium'
 import {LinkContainer} from 'protium/router'
 import PageHeader from '../../components/page-header'
-import ProductList from '../../components/product-list'
-import {loadProducts} from '../../ducks/products'
+import ProductGrid from '../../components/product-grid'
+import * as actions from '../../ducks/products'
 import {
   Grid, 
-  Row, 
+  Row,
   Col, 
   ButtonGroup, 
   Button,
@@ -20,14 +20,20 @@ const dataDeps = [
       let promises = []
       let {products} = store.getState()
       if (!products.list.length) {
-        promises.push(store.dispatch(loadProducts()))
+        promises.push(store.dispatch(actions.loadProducts()))
       }
       return Promise.all(promises)
     }
   }
 ]
 
-@asyncConnect(dataDeps, state => ({products: state.products.list}))
+const mapsPropsToState = state => ({products: state.products})
+
+const mapDispatchToProps = dispatch => ({
+  actions: bindActionCreators(actions, dispatch)
+})
+
+@asyncConnect(dataDeps, mapsPropsToState, mapDispatchToProps)
 export default class ProductListView extends Component {
   render() {
     return <div>
@@ -35,7 +41,10 @@ export default class ProductListView extends Component {
       <Grid>
         <Row>
           <Col xs={12}>
-            <ProductList products={this.props.products} />
+            <ProductGrid
+              state={this.props.products}
+              actions={this.props.actions}
+            />
           </Col>
         </Row>
       </Grid>

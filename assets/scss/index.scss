@@ -57,5 +57,7 @@
 
 $primary-color: lighten($brand-primary, 10);
 @import "~loaders.css/src/loaders";
+@import "vendor/_fixed-data-table";
+@import "data-grid-theme";
 
 @import "app";
