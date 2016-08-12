@@ -1,6 +1,15 @@
 require('source-map-support/register')
-require('babel-register')()
 require('babel-polyfill')
+require('babel-register')({
+  presets: [
+    ['es2015', {modules: 'commonjs'}],
+    'stage-0',
+    'react'
+  ],
+  plugins: [
+    'transform-decorators-legacy'
+  ]
+})
 
 global.__SERVER__ = true
 global.__CLIENT__ = false
