@@ -5,9 +5,11 @@ import {logout, login}          from '../ducks/users'
 import TransitionGroup          from 'react-addons-css-transition-group'
 
 const links = [
-  { rel: 'stylesheet', href: 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.1/css/font-awesome.min.css' },
-  { rel: 'stylesheet', href: 'https://fonts.googleapis.com/css?family=Satisfy|Titillium+Web:400,400i,600,600i,700,700i|Yanone+Kaffeesatz:700' },
   { rel: 'stylesheet', href: '/assets/styles.css' }
+]
+
+const meta = [
+  { name: 'viewport', content: 'width=device-width,initial-scale=1' }
 ]
 
 @connect(mapStateToProps, {
@@ -17,7 +19,7 @@ const links = [
 export default class ApplicationView extends Component {
   render() {
     return <div>
-      <Helmet title="DFTBA Merchant Portal" link={links} />
+      <Helmet title="DFTBA Creator Portal" link={links} meta={meta} />
       <AppHeader {...this.props} />
       <TransitionGroup
         id="content"

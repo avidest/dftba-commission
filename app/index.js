@@ -8,7 +8,16 @@ import * as reducers          from './ducks'
 export default new Application({
   hot: true,
   router,
+  page: {
+    asyncLinks: true,
+    links: [
+      'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.1/css/font-awesome.min.css',
+      'https://fonts.googleapis.com/css?family=Satisfy|Titillium+Web:400,400i,600,600i,700,700i|Yanone+Kaffeesatz:700'
+    ]
+  },
   store: {
+    reducers,
+    auth: storeInitializer,
     apiClient: {
       client: {
         base: '/api/v1/'
@@ -19,13 +28,10 @@ export default new Application({
         base: '/api/v1/'
       }
     },
-    auth: storeInitializer,
     devTools: true,
     createMiddleware(middleware) {
       middleware.push(errorReporter)
       return middleware
-    },
-    reducers
+    }
   }
 })
-
