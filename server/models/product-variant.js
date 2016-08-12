@@ -1,4 +1,10 @@
-import {Model, belongsTo, hook} from 'sequelize-classes'
+import {
+  Model, 
+  belongsTo, 
+  belongsToMany, 
+  hook
+} from 'sequelize-classes'
+
 import {
   STRING,
   ARRAY,

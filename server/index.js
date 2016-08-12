@@ -1,3 +1,4 @@
+import 'source-map-support/register'
 import Express        from 'express'
 import Path           from 'path'
 import {renderer}     from 'protium/server'
@@ -8,6 +9,7 @@ import {json}         from 'body-parser'
 import cookie         from 'cookie-parser'
 import cors           from 'cors'
 import api            from './api'
+import {setup as shopifySetup} from './services/shopify'
 
 export const server = Express()
 
@@ -30,14 +32,15 @@ if (__DEVELOPMENT__) {
 
 server.use('/assets', Express.static('public'))
 
-const clientEntry = require('../webpack-assets.json').javascript.client
+const assets = require('../webpack-assets.json')
 const serverEntry = Path.resolve('public/server.js')
 
 server.get('/*', renderer(serverEntry, {
   page: {
     main: [
       'https://cdn.auth0.com/js/lock-9.1.min.js',
-      clientEntry
+      assets.javascript.vendor,
+      assets.javascript.client
     ]
   }
 }))
@@ -48,9 +51,7 @@ export function start(port, apiPort) {
 
     api.listen(apiPort, function() {
       console.log(`\u2699 API listening on port ${apiPort} ...`)
+      shopifySetup()
     })
   })
-
-  // database.sync({ force })
-  // shopify.install()
 }

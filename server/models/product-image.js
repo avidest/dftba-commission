@@ -1,9 +1,6 @@
 import {
   Model,
-  belongsTo,
-  hasOne,
-  beforeCreate,
-  hook
+  belongsTo
 } from 'sequelize-classes'
 
 import {

@@ -1,4 +1,6 @@
 import {Builder}            from 'sequelize-classes';
+import Order                from '../models/order';
+import OrderLineItem        from '../models/order-line-item';
 import Product              from '../models/product';
 import ProductImage         from '../models/product-image';
 import ProductVariant       from '../models/product-variant';
@@ -27,6 +29,8 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 const database = new Builder(options, [
+  Order,
+  OrderLineItem,
   Commission,
   Product,
   ProductImage,
@@ -40,7 +44,19 @@ export async function sync(force = false) {
   try {
     await database.sequelize.sync({ force })
     console.log(`Database synced... ${force ? 'with force!' : ''}`)
-    let {Product, UserProfile} = database
+    let {Product, UserProfile, Order} = database
+
+    /**
+     * User Profiles
+     */
+    let userCount = await UserProfile.count()
+    if (userCount === 0) {
+      console.log('No user profiles found, attempting to download...')
+      let results = await UserProfile.downloadAll()
+      if (results) {
+        console.log(`${results.length} users created!`)
+      }
+    }
 
     /**
      * Products
@@ -55,15 +71,14 @@ export async function sync(force = false) {
     }
 
     /**
-     * Users
+     * Orders
      */
-
-    let userCount = await UserProfile.count()
-    if (userCount === 0) {
-      console.log('No user profiles found, attempting to download...')
-      let results = await UserProfile.downloadAll()
+    let orderCount = await Order.count()
+    if (orderCount === 0) {
+      console.log('No orders found, attempting to download...')
+      let results = await Order.downloadAll()
       if (results) {
-        console.log(`${results.length} users created!`)
+        console.log(results)
       }
     }
 
