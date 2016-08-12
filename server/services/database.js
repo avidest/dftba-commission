@@ -1,10 +1,11 @@
 import {Builder}            from 'sequelize-classes';
+import Commission           from '../models/commission';
 import Order                from '../models/order';
 import OrderLineItem        from '../models/order-line-item';
 import Product              from '../models/product';
 import ProductImage         from '../models/product-image';
 import ProductVariant       from '../models/product-variant';
-import Commission           from '../models/commission';
+import Transaction          from '../models/transaction';
 import UserProfile          from '../models/user-profile';
 
 const databaseLogging = process.env.DATABASE_LOGGING
@@ -29,12 +30,13 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 const database = new Builder(options, [
+  Commission,
   Order,
   OrderLineItem,
-  Commission,
   Product,
   ProductImage,
   ProductVariant,
+  Transaction,
   UserProfile
 ])
 

@@ -19,6 +19,7 @@ import {
 @belongsTo('Order', { as: 'order', foreignKey: 'order_id' })
 @belongsTo('Product', { as: 'product', foreignKey: 'product_id' })
 @belongsTo('ProductVariant', { as: 'variant', foreignKey: 'variant_id' })
+@hasOne('Transaction', { as: 'transaction', foreignKey: 'line_item_id' })
 export default class OrderLineItem extends Model {
 
   id = { type: BIGINT, allowNull: false, unique: true, primaryKey: true };

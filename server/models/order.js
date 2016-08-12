@@ -14,6 +14,7 @@ import {
 import find from 'lodash/find'
 
 @hasMany('OrderLineItem', {as: 'line_items', foreignKey: 'order_id'})
+@hasMany('Transaction',   {as: 'transactions', foreignKey: 'order_id'})
 export default class Order extends Model {
 
   id = { type: BIGINT, allowNull: false, unique: true, primaryKey: true };

@@ -23,6 +23,7 @@ import {
 } from '../services/auth-client'
 
 @hasMany('Commission', { foreignKey: 'user_id', as: 'commissions' })
+@hasMany('Transaction', { foreignKey: 'user_id', as: 'transactions' })
 export default class UserProfile extends Model {
 
   user_id = { type: STRING, allowNull: false, unique: true, primaryKey: true };
