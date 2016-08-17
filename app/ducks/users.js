@@ -53,7 +53,11 @@ export const createUser = createAction('dftba/AUTH0_CREATE_USER', payload => {
     return client.post(`/users`, {
       body: payload
     }).then(user => {
-      dispatch(push(`/admin/users/${user.user_id}`))
+      setTimeout(x => {
+        dispatch(loadUsers())
+        dispatch(loadCreators())
+        dispatch(push(`/admin/users/${user.user_id}`))
+      }, 100)
       return user
     })
   }

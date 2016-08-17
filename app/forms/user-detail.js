@@ -14,7 +14,7 @@ import {
 
 const formSettings = {form: 'user-detail', validate}
 const mapPropsToState = (state, props, params) => {
-  var {pathname} = state.routing.locationBeforeTransitions
+  var {params, location: {pathname}} = props
   var map = { current_user: state.users.profile }
   if (!pathname.match(/create/i)) {
     map.initialValues = state.users.selected
@@ -22,6 +22,7 @@ const mapPropsToState = (state, props, params) => {
   if (pathname.match(/profile/i)) {
     map.initialValues = state.users.profile
   }
+  
   return map
 }
 

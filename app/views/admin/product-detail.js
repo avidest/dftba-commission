@@ -6,7 +6,7 @@ import PageHeader from '../../components/page-header'
 import ProductDetail from '../../components/product-detail'
 import ProductStats from '../../components/product-stats'
 import ProductDetailForm from '../../forms/product-detail'
-import {loadProduct, addCommission} from '../../ducks/products'
+import {loadProduct, addCommission, removeCommission} from '../../ducks/products'
 import {loadUsers, loadCreators} from '../../ducks/users'
 
 const dataDeps = [
@@ -36,13 +36,14 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = {
-  addCommission
+  addCommission,
+  removeCommission
 }
 
 @asyncConnect(dataDeps, mapStateToProps, mapDispatchToProps)
 export default class ProductDetailView extends Component {
   render() {
-    let {product} = this.props
+    let {product, creators} = this.props
     return <div>
       <PageHeader title={this.props.product.title}>
         <div className="pull-right">
@@ -75,7 +76,8 @@ export default class ProductDetailView extends Component {
             <ProductDetail {...this.props} />
             <br/>
             <h4>Add Commission Split</h4>
-            <ProductDetailForm onSubmit={this.props.addCommission} />
+            {!this.props.children && <ProductDetailForm onSubmit={this.props.addCommission} />}
+            {this.props.children}
           </Col>
         </Row>
       </Grid>

@@ -2,7 +2,7 @@ import React, {Component} from 'react'
 import {asyncConnect, bindActionCreators} from 'protium'
 import {LinkContainer} from 'protium/router'
 import PageHeader from '../../components/page-header'
-import ProductGrid from '../../components/product-grid'
+import ProductList from '../../components/product-list'
 import * as actions from '../../ducks/products'
 import {
   Grid, 
@@ -41,10 +41,8 @@ export default class ProductListView extends Component {
       <Grid>
         <Row>
           <Col xs={12}>
-            <ProductGrid
-              state={this.props.products}
-              actions={this.props.actions}
-            />
+            <ProductList products={this.props.products} 
+                         actions={this.props.actions} />
           </Col>
         </Row>
       </Grid>

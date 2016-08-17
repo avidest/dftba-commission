@@ -17,6 +17,10 @@ api.use(bodyParser.json())
 api.use(cookies())
 api.use(auth)
 
+api.use((req, res, next)=> {
+  console.log(req.method, req.url, req.body)
+  next()
+})
 api.use('/api/v1', router)
 
 api.use((err, req, res, next)=> {

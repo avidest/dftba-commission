@@ -93,6 +93,16 @@ export default class Order extends Model {
 
   total_weight = { type: INTEGER };
 
+  async processTransactions() {
+    let {Transaction} = this.sequelize.models
+    await this.reload({ include: [{all: true}] })
+    let transactions = []
+    for (let line of this.line_items) {
+      transactions.push(Transaction.createFromOrder(this, line))
+    }
+    return Promise.all(transactions)
+  }
+
   async updateLineItemsFromShopify(sLineItems) {
     let line_items = this.line_items
     let updates = []
@@ -126,6 +136,8 @@ export default class Order extends Model {
   static async createFromShopify(data) {
     return await this.create(data, { 
       include: [{all: true}] 
+    }).then(order => {
+      return order.processTransactions()
     })
   }
 
@@ -174,6 +186,17 @@ export default class Order extends Model {
     return {
       orders: (await this.bulkCreate(orders)).length,
       lines: (await OrderLineItem.bulkCreate(lines)).length
+    }
+  }
+
+  static async computeAllTransactions() {
+    let orders = await this.findAll()
+    let processed = await Promise.all(orders.map(o => o.processTransactions()))
+    let transactions = processed.reduce((m, trans)=> {
+      return m = m.concat(trans)
+    }, [])
+    return {
+      transactions: transactions.length
     }
   }
 

@@ -59,10 +59,13 @@ function AdminNav(props) {
       <NavItem eventKey={1}>Dashboard</NavItem>
     </LinkContainer>
     <LinkContainer to="/admin/products">
-      <NavItem eventKey={1}>Products</NavItem>
+      <NavItem eventKey={2}>Products</NavItem>
     </LinkContainer>
     <LinkContainer to="/admin/users">
-      <NavItem eventKey={1}>Users</NavItem>
+      <NavItem eventKey={3}>Users</NavItem>
+    </LinkContainer>
+    <LinkContainer to="/admin/ledger">
+      <NavItem eventKey={4}>Ledger</NavItem>
     </LinkContainer>
   </Nav>
 }

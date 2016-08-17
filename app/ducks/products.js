@@ -11,14 +11,42 @@ export const addCommission = createAction('dftba/ADD_COMMISSION', payload => {
   }
 })
 
+export const updateCommission = createAction('dftba/UPDATE_COMMISSION', payload => {
+  return ({client, dispatch, getState})=> {
+    return client.put(`/commissions/${payload.id}`, {
+      body: payload
+    }).then(update => {
+      dispatch(loadProduct(payload.product_id))
+      return update
+    })
+  }
+})
+
+export const removeCommission = createAction('dftba/REMOVE_COMMISSION', payload => {
+  return ({client, dispatch, getState})=> {
+    return client.del(`/commissions/${payload.id}`).then(update => {
+      dispatch(loadProduct(payload.product_id))
+      return update
+    })
+  }
+})
+
 export const setProductsCount = createAction('dftba/SET_PRODUCTS_COUNT')
 
-export const loadProducts = createAction('dftba/LOAD_PRODUCTS', (opts = {}) => {
-  let query = {
-    ...opts,
-    include: 'images'
+export const setPage = createAction('dftba/SET_PAGE', payload => {
+  return ({dispatch, getState})=> {
+    dispatch(loadProducts())
+    return payload
   }
-  return ({client})=> {
+})
+
+export const loadProducts = createAction('dftba/LOAD_PRODUCTS', (opts = {}) => {
+  return ({client, getState})=> {
+    let query = {
+      ...getState().products.queryOpts,
+      ...opts,
+      include: 'images'
+    }
     return client.get('/products', {
       query,
       as: 'raw'
@@ -46,7 +74,10 @@ const initialState = {
   count: null,
   bulkSelections: [],
   bulkSelectAll: false,
-  queryOpts: {},
+  queryOpts: {
+    page: 1,
+    limit: 50
+  },
   selected: null
 }
 
@@ -59,5 +90,12 @@ export default handleActions({
   [loadProduct]: (state, {payload})=> ({
     ...state,
     selected: payload
+  }),
+  [setPage]: (state, {payload})=> ({
+    ...state,
+    queryOpts: {
+      ...state.queryOpts,
+      page: payload
+    }
   })
 }, initialState)

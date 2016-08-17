@@ -20,6 +20,7 @@ import OrderList          from './views/admin/order-list'
 import OrderDetail        from './views/admin/order-detail'
 import ProductList        from './views/admin/product-list'
 import ProductDetail      from './views/admin/product-detail'
+import ProductDetailCommissionDetail from './views/admin/product-detail-edit-commission'
 
 export default new Router({
   routes: store => {
@@ -31,12 +32,14 @@ export default new Router({
              component={UserProfile} />
       <Route path="admin">
         <IndexRoute                 title="Admin Dashboard"   component={AdminDashboard} />
-        <Route path="orders"        title="Orders"            component={OrderList} />
-        <Route path="orders/:id"    title="Order Details"     component={OrderDetail} />
+        <Route path="ledger"             title="Ledger"             component={OrderList} />
+        <Route path="ledger/user/:id"    title="Ledger Details"     component={OrderDetail} />
         <Route path="users"         title="Users"             component={UserList} />
         <Route path="users/:id"     title="User Details"      component={UserDetail} />
         <Route path="products"      title="Products"          component={ProductList} />
-        <Route path="products/:id"  title="Product Details"   component={ProductDetail} />
+        <Route path="products/:id"  title="Product Details"   component={ProductDetail}>
+          <Route path="commissions/:commission_id" title="Commission Details" component={ProductDetailCommissionDetail} />
+        </Route>
       </Route>
       <Route path="creators">
         <IndexRoute title="Creator Dashboard" component={CreatorsDashboard}  />

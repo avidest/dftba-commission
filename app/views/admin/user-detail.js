@@ -16,10 +16,9 @@ const deps = [
     promise: ({store, params})=> {
       let promises = []
       let {users} = store.getState()
-      if (params.id && params.id.length && params.id !== 'create') {
-        if (!users.selected || params.id !== users.selected.user_id) {
-          promises.push(store.dispatch(loadUser(params)))
-        }
+      let hasIdAndNotCreate = params.id && params.id.length && params.id !== 'create'
+      if (hasIdAndNotCreate && !users.selected || hasIdAndNotCreate && users.selected.id != params.id) {
+        promises.push(store.dispatch(loadUser(params)))
       }
       return Promise.all(promises)
     }
@@ -58,7 +57,11 @@ export default class UserDetailView extends Component {
       <Grid>
         <Row>
           <Col xs={12}>
-            <UsersDetailForm ref="usersDetailForm" onSubmit={::this.handleSubmit} />
+            <UsersDetailForm ref="usersDetailForm" 
+              onSubmit={::this.handleSubmit}
+              params={this.props.params}
+              location={this.props.location}
+            />
           </Col>
         </Row>
       </Grid>

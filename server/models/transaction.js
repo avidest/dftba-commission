@@ -39,4 +39,36 @@ export default class Transaction extends Model {
     }
   };
 
+  static calculateAmount(commission, variant) {
+    let {percent, flat} = commission
+    let price = (parseFloat(variant.price) * 100) || 0
+    flat = (parseFloat(flat) * 100) || 0
+    let percentFlat = parseFloat(variant.price) * (parseFloat(percent) / 100)
+    percentFlat = percentFlat * 100
+    let amount = ((flat + percentFlat) / 100).toFixed(2)
+    console.log(amount)
+    return amount
+  }
+
+  static async createFromOrder(order, line) {
+    let [variant, product] = await Promise.all([line.getVariant(), line.getProduct()])
+    let commissions = await product.getCommissions({ include: [{all: true} ]})
+    console.log('product found', !!product, commissions.map(c => c.toJSON()))
+
+    let toCreate = []
+
+    for (let commish of commissions) {
+      toCreate.push({
+        line_item_id: line.id,
+        order_id: order.id,
+        user_id: commish.user_id,
+        description: `Commission earned for order #${order.id}, line-item #${line.id}`,
+        kind: 'credit',
+        amount: this.calculateAmount(commish, variant)
+      })
+    }
+
+    return this.buldCreate(toCreate)
+  }
+
 }

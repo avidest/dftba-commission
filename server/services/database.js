@@ -46,7 +46,7 @@ export async function sync(force = false) {
   try {
     await database.sequelize.sync({ force })
     console.log(`Database synced... ${force ? 'with force!' : ''}`)
-    let {Product, UserProfile, Order} = database
+    let {Product, UserProfile, Order, Transaction} = database
 
     /**
      * User Profiles
@@ -79,6 +79,15 @@ export async function sync(force = false) {
     if (orderCount === 0) {
       console.log('No orders found, attempting to download...')
       let results = await Order.downloadAll()
+      if (results) {
+        console.log(results)
+      }
+    }
+
+    let transactionCount = await Transaction.count()
+    if (transactionCount === 0) {
+      console.log('No transactions found, attempting to compute...')
+      let results = await Order.computeAllTransactions()
       if (results) {
         console.log(results)
       }

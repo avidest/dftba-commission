@@ -5,9 +5,9 @@
   "main": "index.js",
   "scripts": {
     "start": "node index",
-    "dev": "concurrently \"nf start\" \"npm run proxy\"",
+    "dev": "concurrently \"nf start\" \"gulp dev\" \"npm run proxy\"",
     "debug": "env $(cat .env | xargs) node --inspect index",
-    "build": "webpack -p",
+    "build": "webpack -p && gulp static",
     "postinstall": "npm run build",
     "proxy": "ngrok http -subdomain=dftba-commish 9001"
   },
@@ -41,6 +41,8 @@
     "extract-loader": "0.0.2",
     "file-loader": "^0.9.0",
     "fixed-data-table-2": "^0.7.2",
+    "gulp": "^3.9.1",
+    "gulp-sass": "^2.3.2",
     "image-webpack-loader": "^2.0.0",
     "json-loader": "^0.5.4",
     "jsonwebtoken": "^7.1.8",

@@ -13,17 +13,28 @@ import {
 export function renderField(field) {
   let state, compClass
 
-  if (field.dirty && field.invalid) {
-    state = 'error'
-  }
-
   let {
     addonBefore,
     addonAfter,
-    ...input
-  } = field.input
+    componentClass,
+    input,
+    label,
+    children
+  } = field
 
-  let formControl = <FormControl {...input} />
+  let {
+    dirty,
+    error,
+    invalid
+  } = field.meta
+
+  if (dirty && invalid) {
+    state = 'error'
+  }
+
+  let formControl = <FormControl {...input} 
+                      componentClass={componentClass}
+                      children={children} />
 
   if (addonBefore || addonAfter) {
     formControl = <InputGroup>
@@ -33,31 +44,44 @@ export function renderField(field) {
     </InputGroup>
   }
 
-  return <FormGroup controlId={field.input.name} validationState={state}>
-    <ControlLabel>{field.input.label}</ControlLabel>
+  return <FormGroup controlId={input.name} validationState={state}>
+    <ControlLabel>{label}</ControlLabel>
     {formControl}
     <FormControl.Feedback />
-    {field.dirty && field.error && <HelpBlock>{field.error}</HelpBlock>}
+    {dirty && error && <HelpBlock>{error}</HelpBlock>}
   </FormGroup>
 }
 
 export function renderInlineField(field) {
   let state, compClass
 
-  if (field.dirty && field.invalid) {
+  let {dirty, invalid, error} = field.meta
+  let {
+    input, 
+    label,
+    children,
+    type,
+    componentClass
+  } = field
+
+  if (dirty && invalid) {
     state = 'error'
   }
 
-  return <FormGroup controlId={field.input.name} validationState={state}>
+  if (type) {
+    input.type = type
+  }
+
+  return <FormGroup controlId={input.name} validationState={state}>
     <Col componentClass={ControlLabel} sm={3}>
-      {field.input.type !== 'checkbox' && field.input.label}
+      {type !== 'checkbox' && label}
     </Col>
     <Col sm={6}>
-      {field.input.type === 'checkbox'
-        ? <Checkbox {...field.input}>{field.input.label}</Checkbox>
-        : <FormControl {...field.input} /> }
+      {type === 'checkbox'
+        ? <Checkbox {...input}>{label}</Checkbox>
+        : <FormControl {...input} componentClass={componentClass} children={children} /> }
       <FormControl.Feedback />
-      {field.dirty && field.error && <HelpBlock>{field.error}</HelpBlock>}
+      {dirty && error && <HelpBlock>{error}</HelpBlock>}
     </Col>
   </FormGroup>
 }

@@ -13,19 +13,34 @@ import {
   Button,
   ButtonGroup
 } from 'react-bootstrap'
+import find from 'lodash/find'
 
 const formSettings = {
   form: 'product-detail',
   validate
 }
 
-@connect(state => ({
-  users: state.users.creators,
-  product: state.products.selected,
-  initialValues: {
-    product_id: state.products.selected.id
+@connect((state, props) => {
+  var map = {
+    users: state.users.creators,
+    product: state.products.selected,
+    initialValues: {
+      product_id: state.products.selected.id
+    }
   }
-}))
+
+  if (props.editing 
+        && state.products.selected.commissions 
+        && state.products.selected.commissions.length) {
+
+    map.initialValues = {
+      ...map.initialValues,
+      ...find(state.products.selected.commissions, { id: props.editing })
+    }
+  }
+
+  return map
+}, null, null, {withRef: true})
 @reduxForm(formSettings)
 export default class ProductDetailForm extends Component {
   render() {
@@ -33,6 +48,7 @@ export default class ProductDetailForm extends Component {
 
     return <Form onSubmit={handleSubmit}>
 
+      <Field component="input" type="hidden" name="id" />
       <Field component="input" type="hidden" name="product_id" />
 
       <Field component={renderField} name="user_id" label="Creator" componentClass="select">
@@ -63,14 +79,14 @@ export default class ProductDetailForm extends Component {
         </Col>
       </Row>
 
-      <ButtonGroup style={{marginTop: '15px'}} className="pull-right">
+      {!this.props.noSubmit && <ButtonGroup style={{marginTop: '15px'}} className="pull-right">
         <Button onClick={reset} bsSize="lg" disabled={submitting || pristine}>
           Reset
         </Button>
         <Button type="submit" bsStyle="primary" bsSize="lg" disabled={invalid || submitting || pristine}>
           {submitting ? 'Adding...' : 'Add' }
         </Button>
-      </ButtonGroup>
+      </ButtonGroup>}
     </Form>
   }
 }
@@ -84,18 +100,20 @@ function validate(values) {
   ]
 
   required.forEach(field => {
-    if (!values[field]) {
+    if (values[field] === undefined || values[field] === null) {
       errors[field] = 'This field is required.'
     }
   })
 
-  if (values.flat && !values.flat.match(/[0-9\.]/)) {
+  if (values.flat && !/[0-9\.]/.test(values.flat.toString())) {
     errors.flat = 'This field must contain a numerical value.'
   }
 
-  if (values.percent && !values.percent.match(/[0-9\.]/)) {
+  if (values.percent && !/[0-9\.]/.test(values.percent.toString(2))) {
     errors.percent = 'This field must contain a numerical value.'
   }
+
+  console.log(values, errors)
 
   return errors
 }
