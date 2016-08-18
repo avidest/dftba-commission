@@ -26,7 +26,6 @@ export default class ProfileView extends Component {
   }
 
   render() {
-    console.log(this.props)
     return <div>
       <PageHeader title={this.props.routes[this.props.routes.length-1].title} />
       <Grid>
@@ -36,6 +35,8 @@ export default class ProfileView extends Component {
               profile
               ref="usersDetailForm"
               onSubmit={::this.handleSubmit}
+              params={this.props.params}
+              location={this.props.location}
             />
           </Col>
         </Row>

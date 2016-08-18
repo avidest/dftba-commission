@@ -5,7 +5,7 @@ import {Grid, Row, Col, Button, ButtonGroup, Modal} from 'react-bootstrap'
 import PageHeader from '../../components/page-header'
 import ProductDetail from '../../components/product-detail'
 import ProductStats from '../../components/product-stats'
-import ProductDetailForm from '../../forms/product-detail'
+import TransactionDetailForm from '../../forms/transaction-detail'
 import {loadProduct, updateCommission, removeCommission} from '../../ducks/products'
 import {loadUsers, loadCreators} from '../../ducks/users'
 import find from 'lodash/find'
@@ -79,18 +79,17 @@ export default class ProductDetailView extends Component {
   }
 
   render() {
+    console.log(this.props)
     let {product, creators} = this.props
-    let commissionId = this.props.params.commission_id
     return <Modal show={true} onHide={::this.handleClose}>
       <Modal.Header closeButton>
-        <Modal.Title>Editing Commission #{commissionId}</Modal.Title>
+        <Modal.Title>Add Transaction</Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        <ProductDetailForm 
-          ref="productDetailForm2"
+        <TransactionDetailForm 
           noSubmit
-          editing={parseInt(commissionId, 10)} 
-          onSubmit={::this.handleSubmit} />
+          onSubmit={::this.handleSubmit}
+        />
       </Modal.Body>
       <Modal.Footer>
         <Button className="pull-left" bsStyle="danger" onClick={::this.handleRemove}>

@@ -13,7 +13,13 @@ export default function ProductDetail(props) {
   if (!product.commissions || !product.commissions.length) {
     return <Well>No commissions splits yet!</Well>
   }
-  console.log(props)
+
+  function handleRemove() {
+    if (confirm('Are you sure you wish to remove this commission record?')) {
+      props.removeCommission(commission)
+    }
+  }
+
   return <div>
     <Table bordered hover responsive>
       <thead>
@@ -37,7 +43,7 @@ export default function ProductDetail(props) {
                   Edit
                 </Button>
               </LinkContainer>
-              <Button bsStyle="danger" bsSize="xs" onClick={e => props.removeCommission(commission)}>
+              <Button bsStyle="danger" bsSize="xs" onClick={handleRemove}>
                 Remove
               </Button>
             </ButtonGroup>

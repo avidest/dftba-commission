@@ -9,6 +9,7 @@ import {
   NavDropdown,
   Image
 } from 'react-bootstrap'
+import Icon from './icon'
 
 export default function AppHeader(props) {
   let {profile, handleLogout, route, loading} = props
@@ -33,6 +34,9 @@ export default function AppHeader(props) {
         </div>}
 
         {profile && <Nav pullRight>
+          {profile.app_metadata.role === 'admin' && <LinkContainer to="/admin/users">
+            <NavItem eventKey={3}><Icon type="users" /> Users</NavItem>
+          </LinkContainer>}
           <NavDropdown eventKey={1} title={user} id="user-menu">
             <LinkContainer to="/profile">
               <MenuItem eventKey={'user-menu-profile'}>
@@ -40,7 +44,8 @@ export default function AppHeader(props) {
               </MenuItem>
             </LinkContainer>
             <MenuItem eventKey={'user-menu-logout'} onClick={handleLogout}>
-              Logout
+              Logout 
+              &nbsp;<Icon type="sign-out" />
             </MenuItem>
           </NavDropdown>
         </Nav>}
@@ -56,16 +61,13 @@ export default function AppHeader(props) {
 function AdminNav(props) {
   return <Nav>
     <LinkContainer to="/admin" onlyActiveOnIndex>
-      <NavItem eventKey={1}>Dashboard</NavItem>
+      <NavItem eventKey={1}><Icon type="tachometer" /> Dashboard</NavItem>
     </LinkContainer>
     <LinkContainer to="/admin/products">
-      <NavItem eventKey={2}>Products</NavItem>
-    </LinkContainer>
-    <LinkContainer to="/admin/users">
-      <NavItem eventKey={3}>Users</NavItem>
+      <NavItem eventKey={2}><Icon type="shopping-cart" /> Products</NavItem>
     </LinkContainer>
     <LinkContainer to="/admin/ledger">
-      <NavItem eventKey={4}>Ledger</NavItem>
+      <NavItem eventKey={4}><Icon type="bar-chart" /> Ledger</NavItem>
     </LinkContainer>
   </Nav>
 }

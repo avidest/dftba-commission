@@ -9,6 +9,7 @@ gulp.task('styles', x => {
     includePaths: [
       path.resolve('node_modules/bootstrap-sass/assets/stylesheets'),
       path.resolve('node_modules/loaders.css/src'),
+      path.resolve('node_modules/react-datepicker/src/stylesheets'),
     ]
   }
   return gulp.src('assets/scss/index.scss')

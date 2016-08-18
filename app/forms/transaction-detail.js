@@ -18,7 +18,7 @@ import find from 'lodash/find'
 const formSettings = {
   enableReinitialize: true,
   destroyOnUnmount: false,
-  form: 'product-detail',
+  form: 'transaction-detail',
   validate
 }
 
@@ -27,20 +27,9 @@ const formSettings = {
     users: state.users.creators,
     product: state.products.selected,
     initialValues: {
-      product_id: state.products.selected.id
+
     }
   }
-
-  if (props.editing 
-        && state.products.selected.commissions 
-        && state.products.selected.commissions.length) {
-
-    map.initialValues = {
-      ...map.initialValues,
-      ...find(state.products.selected.commissions, { id: props.editing })
-    }
-  }
-
   return map
 }, null, null, {withRef: true})
 @reduxForm(formSettings)
@@ -114,8 +103,6 @@ function validate(values) {
   if (values.percent && !/[0-9\.]/.test(values.percent.toString(2))) {
     errors.percent = 'This field must contain a numerical value.'
   }
-
-  console.log(values, errors)
 
   return errors
 }

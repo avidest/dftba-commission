@@ -5495,32 +5495,32 @@ button.close {
 .ball-grid-beat {
   width: 57px; }
   .ball-grid-beat > div:nth-child(1) {
-    animation-delay: -0.19s;
-    animation-duration: 1.28s; }
+    animation-delay: 0.3s;
+    animation-duration: 1.35s; }
   .ball-grid-beat > div:nth-child(2) {
-    animation-delay: 0.08s;
-    animation-duration: 1.16s; }
+    animation-delay: 0.5s;
+    animation-duration: 1.14s; }
   .ball-grid-beat > div:nth-child(3) {
-    animation-delay: 0.8s;
-    animation-duration: 0.77s; }
+    animation-delay: 0.03s;
+    animation-duration: 0.91s; }
   .ball-grid-beat > div:nth-child(4) {
-    animation-delay: 0.62s;
-    animation-duration: 1.52s; }
+    animation-delay: 0.08s;
+    animation-duration: 0.78s; }
   .ball-grid-beat > div:nth-child(5) {
-    animation-delay: -0.06s;
-    animation-duration: 1.09s; }
-  .ball-grid-beat > div:nth-child(6) {
-    animation-delay: 0.76s;
-    animation-duration: 1.27s; }
-  .ball-grid-beat > div:nth-child(7) {
-    animation-delay: 0.26s;
+    animation-delay: 0.79s;
     animation-duration: 1.39s; }
+  .ball-grid-beat > div:nth-child(6) {
+    animation-delay: 0.59s;
+    animation-duration: 0.65s; }
+  .ball-grid-beat > div:nth-child(7) {
+    animation-delay: 0.64s;
+    animation-duration: 1.06s; }
   .ball-grid-beat > div:nth-child(8) {
-    animation-delay: 0.35s;
-    animation-duration: 1.56s; }
+    animation-delay: -0.19s;
+    animation-duration: 1.54s; }
   .ball-grid-beat > div:nth-child(9) {
-    animation-delay: -0.15s;
-    animation-duration: 0.77s; }
+    animation-delay: 0.29s;
+    animation-duration: 0.95s; }
   .ball-grid-beat > div {
     background-color: #acf1e0;
     width: 15px;
@@ -5547,32 +5547,32 @@ button.close {
 .ball-grid-pulse {
   width: 57px; }
   .ball-grid-pulse > div:nth-child(1) {
-    animation-delay: 0.11s;
-    animation-duration: 0.79s; }
+    animation-delay: 0.33s;
+    animation-duration: 0.85s; }
   .ball-grid-pulse > div:nth-child(2) {
-    animation-delay: -0.19s;
-    animation-duration: 0.65s; }
-  .ball-grid-pulse > div:nth-child(3) {
-    animation-delay: 0.78s;
-    animation-duration: 1.38s; }
-  .ball-grid-pulse > div:nth-child(4) {
-    animation-delay: 0.69s;
-    animation-duration: 0.68s; }
-  .ball-grid-pulse > div:nth-child(5) {
-    animation-delay: 0.45s;
-    animation-duration: 0.63s; }
-  .ball-grid-pulse > div:nth-child(6) {
-    animation-delay: 0.55s;
-    animation-duration: 1.06s; }
-  .ball-grid-pulse > div:nth-child(7) {
-    animation-delay: 0.03s;
-    animation-duration: 0.66s; }
-  .ball-grid-pulse > div:nth-child(8) {
-    animation-delay: 0.68s;
-    animation-duration: 1.13s; }
-  .ball-grid-pulse > div:nth-child(9) {
-    animation-delay: 0.02s;
+    animation-delay: -0.18s;
     animation-duration: 0.95s; }
+  .ball-grid-pulse > div:nth-child(3) {
+    animation-delay: 0.57s;
+    animation-duration: 1.47s; }
+  .ball-grid-pulse > div:nth-child(4) {
+    animation-delay: 0.12s;
+    animation-duration: 1.05s; }
+  .ball-grid-pulse > div:nth-child(5) {
+    animation-delay: 0.39s;
+    animation-duration: 1.41s; }
+  .ball-grid-pulse > div:nth-child(6) {
+    animation-delay: 0.65s;
+    animation-duration: 0.73s; }
+  .ball-grid-pulse > div:nth-child(7) {
+    animation-delay: 0.21s;
+    animation-duration: 1.01s; }
+  .ball-grid-pulse > div:nth-child(8) {
+    animation-delay: 0.53s;
+    animation-duration: 1.06s; }
+  .ball-grid-pulse > div:nth-child(9) {
+    animation-delay: 0.79s;
+    animation-duration: 1.02s; }
   .ball-grid-pulse > div {
     background-color: #acf1e0;
     width: 15px;
@@ -5813,20 +5813,20 @@ button.close {
     transform: scale(1); } }
 
 .line-scale-party > div:nth-child(1) {
-  animation-delay: 0.44s;
-  animation-duration: 0.44s; }
+  animation-delay: 0.47s;
+  animation-duration: 1.12s; }
 
 .line-scale-party > div:nth-child(2) {
-  animation-delay: 0.74s;
-  animation-duration: 0.79s; }
+  animation-delay: 0.58s;
+  animation-duration: 0.52s; }
 
 .line-scale-party > div:nth-child(3) {
-  animation-delay: 0.4s;
-  animation-duration: 1s; }
+  animation-delay: 0.41s;
+  animation-duration: 0.38s; }
 
 .line-scale-party > div:nth-child(4) {
-  animation-delay: 0.53s;
-  animation-duration: 0.61s; }
+  animation-delay: -0.19s;
+  animation-duration: 0.49s; }
 
 .line-scale-party > div {
   background-color: #acf1e0;
@@ -6101,6 +6101,380 @@ button.close {
     width: 100%;
     height: 100%; }
 
+@font-face {
+  font-family: Notification;
+  src: url("../fonts/notification.eot?s3g3t9");
+  src: url("../fonts/notification.eot?#iefixs3g3t9") format("embedded-opentype"), url("../fonts/notification.woff?s3g3t9") format("woff"), url("../fonts/notification.ttf?s3g3t9") format("truetype"), url("../fonts/notification.svg?s3g3t9#notification") format("svg");
+  font-weight: 400;
+  font-style: normal; }
+
+.notification-container {
+  box-sizing: border-box;
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  z-index: 999999;
+  width: 320px;
+  padding: 0 15px;
+  padding-bottom: 15px;
+  max-height: calc(100% - 30px);
+  overflow-x: hidden;
+  overflow-y: auto; }
+
+.notification {
+  box-sizing: border-box;
+  padding: 15px 15px 15px 58px;
+  border-radius: 2px;
+  color: #fff;
+  background-color: #ccc;
+  box-shadow: 0 0 12px #999;
+  cursor: pointer;
+  font-size: 1em;
+  line-height: 1.2em;
+  position: relative;
+  opacity: .9;
+  margin-top: 15px; }
+
+.notification .title {
+  font-size: 1em;
+  line-height: 1.2em;
+  font-weight: 700;
+  margin: 0 0 5px; }
+
+.notification:focus, .notification:hover {
+  opacity: 1; }
+
+.notification-enter {
+  visibility: hidden;
+  -webkit-transform: translate3d(100%, 0, 0);
+  transform: translate3d(100%, 0, 0); }
+
+.notification-enter.notification-enter-active {
+  transition: all .4s; }
+
+.notification-enter.notification-enter-active, .notification-leave {
+  visibility: visible;
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0); }
+
+.notification-leave.notification-leave-active {
+  visibility: hidden;
+  -webkit-transform: translate3d(100%, 0, 0);
+  transform: translate3d(100%, 0, 0);
+  transition: all .4s; }
+
+.notification:before {
+  position: absolute;
+  top: 50%;
+  left: 15px;
+  margin-top: -14px;
+  display: block;
+  font-family: Notification;
+  width: 28px;
+  height: 28px;
+  font-size: 28px;
+  text-align: center;
+  line-height: 28px; }
+
+.notification-info {
+  background-color: #5bc0de; }
+
+.notification-info:before {
+  content: "\f05a"; }
+
+.notification-success {
+  background-color: #80ead0;
+  color: #445353; }
+
+.notification-success:before {
+  content: "\f058"; }
+
+.notification-warning {
+  background-color: #f0ad4e; }
+
+.notification-warning:before {
+  content: "\f06a"; }
+
+.notification-error {
+  background-color: #d9534f; }
+
+.notification-error:before {
+  content: "\f057"; }
+
+.react-datepicker__tether-element-attached-top .react-datepicker__triangle, .react-datepicker__tether-element-attached-bottom .react-datepicker__triangle, .react-datepicker__year-read-view--down-arrow {
+  margin-left: -8px;
+  position: absolute; }
+
+.react-datepicker__tether-element-attached-top .react-datepicker__triangle, .react-datepicker__tether-element-attached-bottom .react-datepicker__triangle, .react-datepicker__year-read-view--down-arrow, .react-datepicker__tether-element-attached-top .react-datepicker__triangle::before, .react-datepicker__tether-element-attached-bottom .react-datepicker__triangle::before, .react-datepicker__year-read-view--down-arrow::before {
+  box-sizing: content-box;
+  position: absolute;
+  border: 8px solid transparent;
+  height: 0;
+  width: 1px; }
+
+.react-datepicker__tether-element-attached-top .react-datepicker__triangle::before, .react-datepicker__tether-element-attached-bottom .react-datepicker__triangle::before, .react-datepicker__year-read-view--down-arrow::before {
+  content: "";
+  z-index: -1;
+  border-width: 8px;
+  left: -8px;
+  border-bottom-color: #aeaeae; }
+
+.react-datepicker__tether-element-attached-top .react-datepicker__triangle {
+  top: 0;
+  margin-top: -8px; }
+
+.react-datepicker__tether-element-attached-top .react-datepicker__triangle, .react-datepicker__tether-element-attached-top .react-datepicker__triangle::before {
+  border-top: none;
+  border-bottom-color: #f0f0f0; }
+
+.react-datepicker__tether-element-attached-top .react-datepicker__triangle::before {
+  top: -1px;
+  border-bottom-color: #aeaeae; }
+
+.react-datepicker__tether-element-attached-bottom .react-datepicker__triangle, .react-datepicker__year-read-view--down-arrow {
+  bottom: 0;
+  margin-bottom: -8px; }
+
+.react-datepicker__tether-element-attached-bottom .react-datepicker__triangle, .react-datepicker__year-read-view--down-arrow, .react-datepicker__tether-element-attached-bottom .react-datepicker__triangle::before, .react-datepicker__year-read-view--down-arrow::before {
+  border-bottom: none;
+  border-top-color: #fff; }
+
+.react-datepicker__tether-element-attached-bottom .react-datepicker__triangle::before, .react-datepicker__year-read-view--down-arrow::before {
+  bottom: -1px;
+  border-top-color: #aeaeae; }
+
+.react-datepicker {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 11px;
+  background-color: #fff;
+  color: #000;
+  border: 1px solid #aeaeae;
+  border-radius: 4px;
+  display: inline-block;
+  position: relative; }
+
+.react-datepicker__triangle {
+  position: absolute;
+  left: 50px; }
+
+.react-datepicker__tether-element-attached-bottom.react-datepicker__tether-element {
+  margin-top: -20px; }
+
+.react-datepicker__header {
+  text-align: center;
+  background-color: #f0f0f0;
+  border-bottom: 1px solid #aeaeae;
+  border-top-left-radius: 4px;
+  border-top-right-radius: 4px;
+  padding-top: 8px;
+  position: relative; }
+
+.react-datepicker__current-month {
+  margin-top: 0;
+  color: #000;
+  font-weight: bold;
+  font-size: 13px; }
+
+.react-datepicker__current-month--hasYearDropdown {
+  margin-bottom: 16px; }
+
+.react-datepicker__navigation {
+  line-height: 24px;
+  text-align: center;
+  cursor: pointer;
+  position: absolute;
+  top: 10px;
+  width: 0;
+  border: 6px solid transparent; }
+
+.react-datepicker__navigation--previous {
+  left: 10px;
+  border-right-color: #ccc; }
+
+.react-datepicker__navigation--previous:hover {
+  border-right-color: #b3b3b3; }
+
+.react-datepicker__navigation--next {
+  right: 10px;
+  border-left-color: #ccc; }
+
+.react-datepicker__navigation--next:hover {
+  border-left-color: #b3b3b3; }
+
+.react-datepicker__navigation--years {
+  position: relative;
+  top: 0;
+  display: block;
+  margin-left: auto;
+  margin-right: auto; }
+
+.react-datepicker__navigation--years-previous {
+  top: 4px;
+  border-top-color: #ccc; }
+
+.react-datepicker__navigation--years-previous:hover {
+  border-top-color: #b3b3b3; }
+
+.react-datepicker__navigation--years-upcoming {
+  top: -4px;
+  border-bottom-color: #ccc; }
+
+.react-datepicker__navigation--years-upcoming:hover {
+  border-bottom-color: #b3b3b3; }
+
+.react-datepicker__month {
+  margin: 5px;
+  text-align: center; }
+
+.react-datepicker__day-name,
+.react-datepicker__day {
+  color: #000;
+  display: inline-block;
+  width: 24px;
+  line-height: 24px;
+  text-align: center;
+  margin: 2px; }
+
+.react-datepicker__day {
+  cursor: pointer; }
+
+.react-datepicker__day:hover {
+  border-radius: 4px;
+  background-color: #f0f0f0; }
+
+.react-datepicker__day--today {
+  font-weight: bold; }
+
+.react-datepicker__day--selected, .react-datepicker__day--in-range {
+  border-radius: 4px;
+  background-color: #216ba5;
+  color: #fff; }
+
+.react-datepicker__day--selected:hover, .react-datepicker__day--in-range:hover {
+  background-color: #1d5d90; }
+
+.react-datepicker__day--disabled {
+  cursor: default;
+  color: #ccc; }
+
+.react-datepicker__day--disabled:hover {
+  background-color: transparent; }
+
+.react-datepicker__input-container {
+  position: relative;
+  display: inline-block; }
+
+.react-datepicker__year-read-view {
+  width: 50%;
+  left: 25%;
+  position: absolute;
+  bottom: 25px;
+  border: 1px solid transparent;
+  border-radius: 4px; }
+
+.react-datepicker__year-read-view:hover {
+  cursor: pointer; }
+
+.react-datepicker__year-read-view:hover .react-datepicker__year-read-view--down-arrow {
+  border-top-color: #b3b3b3; }
+
+.react-datepicker__year-read-view--down-arrow {
+  border-top-color: #ccc;
+  margin-bottom: 3px;
+  left: 5px;
+  top: 9px;
+  position: relative;
+  border-width: 6px; }
+
+.react-datepicker__year-read-view--selected-year {
+  right: 6px;
+  position: relative; }
+
+.react-datepicker__year-dropdown {
+  background-color: #f0f0f0;
+  position: absolute;
+  width: 50%;
+  left: 25%;
+  top: 30px;
+  text-align: center;
+  border-radius: 4px;
+  border: 1px solid #aeaeae; }
+
+.react-datepicker__year-dropdown:hover {
+  cursor: pointer; }
+
+.react-datepicker__year-option {
+  line-height: 20px;
+  width: 100%;
+  display: block;
+  margin-left: auto;
+  margin-right: auto; }
+
+.react-datepicker__year-option:first-of-type {
+  border-top-left-radius: 4px;
+  border-top-right-radius: 4px; }
+
+.react-datepicker__year-option:last-of-type {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  border-bottom-left-radius: 4px;
+  border-bottom-right-radius: 4px; }
+
+.react-datepicker__year-option:hover {
+  background-color: #ccc; }
+
+.react-datepicker__year-option:hover .react-datepicker__navigation--years-upcoming {
+  border-bottom-color: #b3b3b3; }
+
+.react-datepicker__year-option:hover .react-datepicker__navigation--years-previous {
+  border-top-color: #b3b3b3; }
+
+.react-datepicker__year-option--selected {
+  position: absolute;
+  left: 30px; }
+
+.react-datepicker__close-icon {
+  background-color: transparent;
+  border: 0;
+  cursor: pointer;
+  display: inline-block;
+  height: 0;
+  outline: 0;
+  padding: 0;
+  vertical-align: middle; }
+
+.react-datepicker__close-icon::after {
+  background-color: #216ba5;
+  border-radius: 50%;
+  bottom: 0;
+  box-sizing: border-box;
+  color: #fff;
+  content: "\00d7";
+  cursor: pointer;
+  font-size: 12px;
+  height: 16px;
+  width: 16px;
+  line-height: 1;
+  margin: -8px auto 0;
+  padding: 2px;
+  position: absolute;
+  right: 7px;
+  text-align: center;
+  top: 50%; }
+
+.react-datepicker__today-button {
+  background: #f0f0f0;
+  border-top: 1px solid #aeaeae;
+  cursor: pointer;
+  text-align: center;
+  font-weight: bold;
+  padding: 5px 0; }
+
+.react-datepicker__tether-element {
+  z-index: 2147483647; }
+
 .btn {
   box-shadow: 0 1px 1px 0 rgba(255, 255, 255, 0.1);
   font-family: "Titillium Web", sans-serif;
@@ -6228,3 +6602,14 @@ h2, h3, h4, h5 {
 
 .modal-content .close {
   color: #fff; }
+
+.navbar-inverse .navbar-nav > .active > a,
+.navbar-inverse .navbar-nav > .active > a:hover,
+.navbar-inverse .navbar-nav > .active > a:focus {
+  background-color: #445353; }
+
+.input-group .react-datepicker__input-container {
+  display: table-cell; }
+  .input-group .react-datepicker__input-container:first-child .form-control {
+    border-radius-top-left: 4px;
+    border-radius-bottom-left: 4px; }

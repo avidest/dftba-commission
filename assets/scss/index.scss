@@ -59,6 +59,8 @@
 $primary-color: lighten($brand-primary, 10);
 
 @import "loaders";
+@import "vendor/notifications";
+@import "vendor/datepicker";
 
 // @import "vendor/_fixed-data-table";
 // @import "data-grid-theme";

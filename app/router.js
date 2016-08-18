@@ -21,6 +21,7 @@ import OrderDetail        from './views/admin/order-detail'
 import ProductList        from './views/admin/product-list'
 import ProductDetail      from './views/admin/product-detail'
 import ProductDetailCommissionDetail from './views/admin/product-detail-edit-commission'
+import AddTransactionModal from './views/admin/add-transaction-modal'
 
 export default new Router({
   routes: store => {
@@ -32,7 +33,9 @@ export default new Router({
              component={UserProfile} />
       <Route path="admin">
         <IndexRoute                 title="Admin Dashboard"   component={AdminDashboard} />
-        <Route path="ledger"             title="Ledger"             component={OrderList} />
+        <Route path="ledger"        title="Ledger"            component={OrderList}>
+          <Route path="transaction" title="Add Transaction"   component={AddTransactionModal} />
+        </Route>
         <Route path="ledger/user/:id"    title="Ledger Details"     component={OrderDetail} />
         <Route path="users"         title="Users"             component={UserList} />
         <Route path="users/:id"     title="User Details"      component={UserDetail} />

@@ -68,7 +68,7 @@ export default class Transaction extends Model {
       })
     }
 
-    return this.buldCreate(toCreate)
+    return this.bulkCreate(toCreate)
   }
 
 }

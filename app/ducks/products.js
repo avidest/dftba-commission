@@ -1,4 +1,5 @@
 import {createAction, handleActions} from 'protium'
+import {successNotification, errorNotification} from './helpers/notifications'
 
 export const addCommission = createAction('dftba/ADD_COMMISSION', payload => {
   return ({client, dispatch})=> {
@@ -8,6 +9,8 @@ export const addCommission = createAction('dftba/ADD_COMMISSION', payload => {
       dispatch(loadProduct(payload.product_id))
       return resp
     })
+    .then(successNotification('Commission', 'created'))
+    .catch(errorNotification('Commission', 'created'))
   }
 })
 
@@ -19,6 +22,8 @@ export const updateCommission = createAction('dftba/UPDATE_COMMISSION', payload 
       dispatch(loadProduct(payload.product_id))
       return update
     })
+    .then(successNotification('Commission', 'updated'))
+    .catch(errorNotification('Commission', 'updated'))
   }
 })
 
@@ -28,6 +33,8 @@ export const removeCommission = createAction('dftba/REMOVE_COMMISSION', payload 
       dispatch(loadProduct(payload.product_id))
       return update
     })
+    .then(successNotification('Commission', 'removed'))
+    .catch(errorNotification('Commission', 'removed'))
   }
 })
 
@@ -35,7 +42,7 @@ export const setProductsCount = createAction('dftba/SET_PRODUCTS_COUNT')
 
 export const setPage = createAction('dftba/SET_PAGE', payload => {
   return ({dispatch, getState})=> {
-    dispatch(loadProducts())
+    process.nextTick(x => dispatch(loadProducts()))
     return payload
   }
 })

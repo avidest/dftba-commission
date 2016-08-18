@@ -1,6 +1,7 @@
 import {createAction, handleActions, cookie} from 'protium'
 import {push} from 'protium/router'
 import {performLogin, performLogout} from '../services/auth'
+import {successNotification, errorNotification} from './helpers/notifications'
 
 export const loadToken = createAction('dftba/AUTH0_LOAD_TOKEN')
 
@@ -60,6 +61,8 @@ export const createUser = createAction('dftba/AUTH0_CREATE_USER', payload => {
       }, 100)
       return user
     })
+    .then(successNotification('User', 'created'))
+    .catch(errorNotification('User', 'created'))
   }
 })
 
@@ -73,6 +76,8 @@ export const updateUser = createAction('dftba/AUTH0_UPDATE_USER', payload => {
       dispatch(loadCreators())
       return x
     })
+    .then(successNotification('User', 'updated'))
+    .catch(errorNotification('User', 'updated'))
   }
 })
 
@@ -84,6 +89,8 @@ export const removeUser = createAction('dftba/AUTH0_REMOVE_USER', payload => {
         dispatch(loadCreators())
         return x
       })
+      .then(successNotification('User', 'removed'))
+      .catch(errorNotification('User', 'removed'))
   }
 })
 

@@ -25,10 +25,12 @@ export function renderField(field) {
   let {
     dirty,
     error,
-    invalid
+    invalid,
+    pristine,
+    touched
   } = field.meta
 
-  if (dirty && invalid) {
+  if (!pristine && touched && invalid) {
     state = 'error'
   }
 
@@ -48,14 +50,21 @@ export function renderField(field) {
     <ControlLabel>{label}</ControlLabel>
     {formControl}
     <FormControl.Feedback />
-    {dirty && error && <HelpBlock>{error}</HelpBlock>}
+    {(!pristine && touched && error) && <HelpBlock>{error}</HelpBlock>}
   </FormGroup>
 }
 
 export function renderInlineField(field) {
   let state, compClass
 
-  let {dirty, invalid, error} = field.meta
+  let {
+    dirty, 
+    invalid, 
+    error, 
+    pristine,
+    touched
+  } = field.meta
+
   let {
     input, 
     label,
@@ -64,7 +73,7 @@ export function renderInlineField(field) {
     componentClass
   } = field
 
-  if (dirty && invalid) {
+  if (!pristine && touched && invalid) {
     state = 'error'
   }
 
@@ -81,7 +90,7 @@ export function renderInlineField(field) {
         ? <Checkbox {...input}>{label}</Checkbox>
         : <FormControl {...input} componentClass={componentClass} children={children} /> }
       <FormControl.Feedback />
-      {dirty && error && <HelpBlock>{error}</HelpBlock>}
+      {(!pristine && touched && error) && <HelpBlock>{error}</HelpBlock>}
     </Col>
   </FormGroup>
 }

@@ -3,6 +3,7 @@ import {Helmet, connect}        from 'protium'
 import AppHeader                from '../components/app-header'
 import {logout, login}          from '../ducks/users'
 import TransitionGroup          from 'react-addons-css-transition-group'
+import {NotificationContainer}  from 'react-notifications';
     
 const links = [
   { rel: 'stylesheet', href: 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.1/css/font-awesome.min.css' },
@@ -18,7 +19,16 @@ const meta = [
   handleLogin: login,
   handleLogout: logout
 })
-export default class ApplicationView extends Component {
+export default class ApplicationView extends Component {  
+
+  state = {
+    ready: false
+  }
+
+  componentDidMount() {
+    this.setState({ ready: true })
+  }
+
   render() {
     return <div>
       <Helmet title="DFTBA Creator Portal" link={links} meta={meta} />
@@ -33,6 +43,7 @@ export default class ApplicationView extends Component {
           key: this.props.location.pathname
         })}
       </TransitionGroup>
+      {this.state.ready && <NotificationContainer/>}
     </div>
   }
 }

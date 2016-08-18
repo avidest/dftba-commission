@@ -182,3 +182,18 @@ h2, h3, h4, h5 {
     color: #fff;
   }
 }
+
+.navbar-inverse .navbar-nav > .active > a,
+.navbar-inverse .navbar-nav > .active > a:hover,
+.navbar-inverse .navbar-nav > .active > a:focus {
+  background-color: $gray-darker;
+}
+
+.input-group .react-datepicker__input-container {
+  display: table-cell;
+
+  &:first-child .form-control {
+    border-radius-top-left: $input-border-radius;
+    border-radius-bottom-left: $input-border-radius;
+  }
+}
