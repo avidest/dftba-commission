@@ -11,3 +11,5 @@ if (module.hot) {
     require('./index').default.render()
   })
 }
+
+export default app

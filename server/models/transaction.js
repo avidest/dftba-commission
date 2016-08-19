@@ -39,21 +39,49 @@ export default class Transaction extends Model {
     }
   };
 
-  static calculateAmount(commission, variant) {
+  static getTransactionsByCreator(creator, opts) {
+    return this.findAll({
+      where: {
+        user_id: creator.id
+      }
+    })
+  }
+
+  static calcCommissionAmount(order, line, commission) {
     let {percent, flat} = commission
-    let price = (parseFloat(variant.price) * 100) || 0
+    let totalDiscounts = parseFloat(order.total_discounts)
+    let totalLineItemsPrice = parseFloat(order.total_line_items_price)
+
+
+
+    // Percentage to multiply all prices by
+    let discountRatio = (totalDiscounts > 0) 
+      ? 1 - (totalDiscounts / totalLineItemsPrice)
+      : 1
+
+
+    let percentFlat = (parseFloat(line.price) * discountRatio) * (parseFloat(percent) / 100)
     flat = (parseFloat(flat) * 100) || 0
-    let percentFlat = parseFloat(variant.price) * (parseFloat(percent) / 100)
     percentFlat = percentFlat * 100
-    let amount = ((flat + percentFlat) / 100).toFixed(2)
-    console.log(amount)
+
+    // Amount = (line.price * discountPercent * commissionPercent) + commissionFlat
+    let amount = (((flat + percentFlat) * line.quantity) / 100).toFixed(2)
+    
+    console.log(`Line #${line.id} ——
+  - User Commission   : ${commission.user_id}
+  - Price             : ${parseFloat(line.price)}
+  - Line Total        : ${parseFloat(line.price) * line.quantity}
+  - Line Discount    %: ${discountRatio}
+  - Commission       %: ${commission.percent}
+  - Commission       $: ${commission.flat}
+  - Total Commission $: ${amount}
+`)
     return amount
   }
 
   static async createFromOrder(order, line) {
-    let [variant, product] = await Promise.all([line.getVariant(), line.getProduct()])
+    let product = await line.getProduct()
     let commissions = await product.getCommissions({ include: [{all: true} ]})
-    console.log('product found', !!product, commissions.map(c => c.toJSON()))
 
     let toCreate = []
 
@@ -64,11 +92,15 @@ export default class Transaction extends Model {
         user_id: commish.user_id,
         description: `Commission earned for order #${order.id}, line-item #${line.id}`,
         kind: 'credit',
-        amount: this.calculateAmount(commish, variant)
+        amount: this.calcCommissionAmount(order, line, commish)
       })
     }
 
-    return this.bulkCreate(toCreate)
+    return await this.bulkCreate(toCreate)
+  }
+
+  static async updateFromOrder(order, line) {
+
   }
 
 }

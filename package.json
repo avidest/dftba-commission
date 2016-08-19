@@ -47,7 +47,7 @@
     "json-loader": "^0.5.4",
     "jsonwebtoken": "^7.1.8",
     "laforge": "^0.1.6",
-    "laforge-sequelize": "^0.5.15",
+    "laforge-sequelize": "^0.6.2",
     "loaders.css": "^0.1.2",
     "lodash": "^4.15.0",
     "md5": "^2.1.0",

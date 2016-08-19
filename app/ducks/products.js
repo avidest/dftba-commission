@@ -54,6 +54,7 @@ export const loadProducts = createAction('dftba/LOAD_PRODUCTS', (opts = {}) => {
       ...opts,
       include: 'images'
     }
+    console.log(query)
     return client.get('/products', {
       query,
       as: 'raw'
@@ -92,7 +93,7 @@ export default handleActions({
   [loadProducts]: (state, {payload})=> ({
     ...state,
     list: payload.result,
-    count: payload.count
+    count: parseInt(payload.count, 10)
   }),
   [loadProduct]: (state, {payload})=> ({
     ...state,

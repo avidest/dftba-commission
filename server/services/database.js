@@ -8,7 +8,7 @@ import ProductVariant       from '../models/product-variant';
 import Transaction          from '../models/transaction';
 import UserProfile          from '../models/user-profile';
 
-const databaseLogging = process.env.DATABASE_LOGGING
+const databaseLogging = process.env.DATABASE_LOGGING || false
 
 const options = {
   databaseUrl: process.env.DATABASE_URL,

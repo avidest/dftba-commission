@@ -138,6 +138,9 @@ export default class Order extends Model {
       include: [{all: true}] 
     }).then(order => {
       return order.processTransactions()
+        .then(transactions => {
+          return order;
+        })
     })
   }
 
@@ -192,8 +195,13 @@ export default class Order extends Model {
   static async computeAllTransactions() {
     let orders = await this.findAll()
     let processed = await Promise.all(orders.map(o => o.processTransactions()))
-    let transactions = processed.reduce((m, trans)=> {
-      return m = m.concat(trans)
+    let transactions = processed.reduce((m, orders)=> {
+      if (orders && orders.length) {
+        return m = m.concat(orders.reduce((k, transactions)=> {
+          return k = k.concat(transactions)
+        }, [])) 
+      }
+      return m
     }, [])
     return {
       transactions: transactions.length

@@ -1,11 +1,12 @@
 import React, {Component} from 'react'
+import Icon from './icon'
+import DatePicker from 'react-datepicker'
+import moment from 'moment'
 import {
   Button,
   Dropdown,
   DropdownButton
 } from 'react-bootstrap'
-import DatePicker from 'react-datepicker'
-import moment from 'moment'
 
 const DISPLAY_FORMAT = 'M/D/YY'
 
@@ -24,6 +25,7 @@ export default class DavePicker extends Component {
   }
 
   open() {
+    this.setState({currentState: this.state})
     this.setState({editing: true})
   }
 
@@ -33,14 +35,6 @@ export default class DavePicker extends Component {
 
   toggle() {
     this.setState({editing: !this.state.editing})
-  }
-
-  handleChangeStart() {
-    console.log(arguments)
-  }
-
-  handleChangeEnd() {
-    console.log(arguments)
   }
 
   handleOpen() {
@@ -55,6 +49,11 @@ export default class DavePicker extends Component {
 
   handleClose() {
     console.log('close')
+  }
+
+  handleCancel() {
+    this.setState({...this.state.currentState})
+    this.close()
   }
 
   handleApply() {
@@ -98,6 +97,7 @@ export default class DavePicker extends Component {
             onChange={::this.handleChangeEnd} 
           />
           <div className="input-group-btn">
+            <Button onClick={::this.handleCancel}><Icon type="times" /></Button>
             <Button bsStyle="primary" onClick={::this.handleApply}>Apply</Button>
           </div>
         </div>
