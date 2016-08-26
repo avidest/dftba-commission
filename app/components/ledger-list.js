@@ -6,79 +6,57 @@ import {
   Button,
   Pagination
 } from 'react-bootstrap'
-import TimeAgo from 'react-timeago'
+import DavePicker from './dave-picker'
 
-export default function ProductList(props) {
-  let { products, actions } = props
+export default function LedgerList(props) {
+  let { summaries, loadSummaries } = props
 
   return <div>
-    <Paginator {...props} />
+    <DavePicker/>
     <Table hover responsive>
       <thead>
-        <ProductListHeader />
+        <SummaryListHeader />
       </thead>
       <tbody>
-        {products.list.map(product => <ProductListRow key={product.id} product={product} />)}
+        {summaries.map(summary => {
+          return <SummaryRow key={summary.user_id} summary={summary} />
+        })}
       </tbody>
     </Table>
-    <Paginator {...props} />
   </div>
 }
 
-function Paginator(props) {
-  let { products, actions } = props
-  return <div className="text-center">
-    <Pagination
-      prev
-      next
-      first
-      last
-      ellipsis
-      boundaryLinks
-      items={getItemCount(products)}
-      maxButtons={6}
-      activePage={products.queryOpts.page}
-      onSelect={actions.setPage}
-    />
-  </div>
-}
-
-function getItemCount(products) {
-  return Math.ceil(products.count / products.queryOpts.limit) - 1
-}
-
-function ProductListHeader(props) {
+function SummaryListHeader(props) {
   return <tr>
-    <th>&nbsp;</th>
-    <th>Title</th>
-    <th>Vendor</th>
-    <th>Last Updated</th>
+    <th>Creator</th>
+    <th>Starting Balance</th>
+    <th>Gross Expenses</th>
+    <th>Gross Credits</th>
+    <th>Net Balance</th>
     <th className="text-right">Actions</th>
   </tr>
 }
 
-function ProductListRow(props) {
-  let { product } = props
-  let imageSrc = product.images.length
-    ? imageSize(product.images[0].src, '50x')
-    : `/assets/images/no-image.png`
-
+function SummaryRow(props) {
+  let { summary } = props
   let style = {verticalAlign: 'middle'}
 
   return <tr>
     <td style={style}>
-      <Image style={{maxWidth: '50px', backgroundSize: 'cover'}}
-             src={imageSrc}
+      <Image style={{maxWidth: '20px', backgroundSize: 'cover'}}
+             src={summary.user.picture}
              circle
              thumbnail />
+      &nbsp;{summary.user.name}
     </td>
-    <td style={style}>{product.title}</td>
-    <td style={style}>{product.vendor}</td>
-    <td style={style}><TimeAgo date={product.updated_at} /></td>
+    <td style={style}>{summary.startingBalance}</td>
+    <td style={style} className="text-danger">{summary.grossDebits}</td>
+    <td style={style} className="text-success">{summary.grossCredits}</td>
+    <td style={style}>{summary.netBalance}</td>
     <td style={style} className="text-right">
-      <LinkContainer to={`/admin/products/${product.id}`}>
-        <Button>
-        Edit Commission
+      <LinkContainer to={`/admin/ledger/${summary.user.user_id}`}>
+        <Button bsSize="xs">
+          Details
         </Button>
       </LinkContainer>
     </td>

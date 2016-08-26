@@ -25,9 +25,8 @@ const formSettings = {
 @connect((state, props) => {
   var map = {
     users: state.users.creators,
-    product: state.products.selected,
     initialValues: {
-
+      kind: props.type
     }
   }
   return map
@@ -35,37 +34,43 @@ const formSettings = {
 @reduxForm(formSettings)
 export default class ProductDetailForm extends Component {
   render() {
-    const { invalid, reset, submitting, pristine, handleSubmit, users, product } = this.props
+    const { invalid, reset, submitting, pristine, handleSubmit, users } = this.props
 
     return <Form onSubmit={handleSubmit}>
 
-      <Field component="input" type="hidden" name="id" />
-      <Field component="input" type="hidden" name="product_id" />
-
-      <Field component={renderField} name="user_id" label="Creator" componentClass="select">
-        <option value="-1">Choose one...</option>
-        {users.map(user => {
-          return <option key={user.user_id} value={user.user_id}>
-            {user.user_metadata ? user.user_metadata.name : user.email}
-          </option>
-        })}
-      </Field>
+      <Field component="input" type="hidden" name="kind" />
 
       <Row>
-        <Col xs={6}>
+        <Col xs={7}>
+          <Field component={renderField} name="user_id" label="Creator" componentClass="select">
+            <option value="-1">Choose one...</option>
+            {users.map(user => {
+              return <option key={user.user_id} value={user.user_id}>
+                {user.user_metadata ? user.user_metadata.name : user.email}
+              </option>
+            })}
+          </Field>
+        </Col>
+        <Col xs={5}>
           <Field component={renderField}
-                 name="percent"
-                 label="Commission Percentage"
-                 type="decimal"
-                 addonBefore="%"
+                 name="amount"
+                 label="Amount"
+                 type="number"
+                 addonBefore={this.props.type === 'debit' ? '- $' : '+ $'}
+                 placeholder="0.00"
           />
         </Col>
-        <Col xs={6}>
+      </Row>
+
+
+      <Row>
+        <Col xs={12}>
           <Field component={renderField}
-                 name="flat"
-                 label="Commission Flat Fee"
-                 type="decimal"
-                 addonBefore="$"
+                 name="description"
+                 label="Description"
+                 type="textarea"
+                 componentClass="textarea"
+                 props={{rows: 4}}
           />
         </Col>
       </Row>

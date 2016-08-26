@@ -9,7 +9,7 @@ import {
 import TimeAgo from 'react-timeago'
 
 export default function ProductList(props) {
-  let { products, actions } = props
+  let { transactions, actions } = props
 
   return <div>
     <Paginator {...props} />
@@ -77,8 +77,8 @@ function ProductListRow(props) {
     <td style={style}><TimeAgo date={product.updated_at} /></td>
     <td style={style} className="text-right">
       <LinkContainer to={`/admin/products/${product.id}`}>
-        <Button bsSize="xs">
-          Edit Commission
+        <Button>
+        Edit Commission
         </Button>
       </LinkContainer>
     </td>

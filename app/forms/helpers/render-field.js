@@ -19,7 +19,9 @@ export function renderField(field) {
     componentClass,
     input,
     label,
-    children
+    children,
+    rows,
+    placeholder
   } = field
 
   let {
@@ -32,6 +34,14 @@ export function renderField(field) {
 
   if (!pristine && touched && invalid) {
     state = 'error'
+  }
+  
+  if (rows) {
+    input.rows = rows
+  }
+
+  if (placeholder) {
+    input.placeholder = placeholder
   }
 
   let formControl = <FormControl {...input} 
@@ -70,7 +80,10 @@ export function renderInlineField(field) {
     label,
     children,
     type,
-    componentClass
+    componentClass,
+    props,
+    rows,
+    placeholder
   } = field
 
   if (!pristine && touched && invalid) {
@@ -79,6 +92,14 @@ export function renderInlineField(field) {
 
   if (type) {
     input.type = type
+  }
+  
+  if (rows) {
+    input.rows = rows
+  }
+
+  if (placeholder) {
+    input.placeholder = placeholder
   }
 
   return <FormGroup controlId={input.name} validationState={state}>

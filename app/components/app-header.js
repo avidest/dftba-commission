@@ -34,10 +34,13 @@ export default function AppHeader(props) {
         </div>}
 
         {profile && <Nav pullRight>
-          {profile.app_metadata.role === 'admin' && <LinkContainer to="/admin/users">
-            <NavItem eventKey={3}><Icon type="users" /> Users</NavItem>
+          {profile.app_metadata.role === 'admin' && <LinkContainer to="/admin/settings">
+            <NavItem eventKey={5}><Icon type="cog" /> Settings</NavItem>
           </LinkContainer>}
-          <NavDropdown eventKey={1} title={user} id="user-menu">
+          {profile.app_metadata.role === 'admin' && <LinkContainer to="/admin/users">
+            <NavItem eventKey={4}><Icon type="users" /> Users</NavItem>
+          </LinkContainer>}
+          <NavDropdown eventKey={99} title={user} id="user-menu">
             <LinkContainer to="/profile">
               <MenuItem eventKey={'user-menu-profile'}>
                 Edit Profile
@@ -67,18 +70,24 @@ function AdminNav(props) {
       <NavItem eventKey={2}><Icon type="shopping-cart" /> Products</NavItem>
     </LinkContainer>
     <LinkContainer to="/admin/ledger">
-      <NavItem eventKey={4}><Icon type="bar-chart" /> Ledger</NavItem>
+      <NavItem eventKey={3}><Icon type="bar-chart" /> Ledger</NavItem>
     </LinkContainer>
   </Nav>
 }
 
 function CreatorNav(props) {
   return <Nav>
-    <LinkContainer to="/creators">
+    <LinkContainer to="/creator" onlyActiveOnIndex>
       <NavItem eventKey={1}>Dashboard</NavItem>
     </LinkContainer>
-    <LinkContainer to="/creators/fake">
-      <NavItem eventKey={1}>404 Page</NavItem>
+    <LinkContainer to="/creator/inventory">
+      <NavItem eventKey={2}><Icon type="cubes" /> My Inventory</NavItem>
+    </LinkContainer>
+    <LinkContainer to="/creator/expenses">
+      <NavItem eventKey={2}><Icon type="dollar" /> Expenses</NavItem>
+    </LinkContainer>
+    <LinkContainer to="/creator/Ledger">
+      <NavItem eventKey={2}><Icon type="bar-chart" /> Ledger</NavItem>
     </LinkContainer>
   </Nav>
 }

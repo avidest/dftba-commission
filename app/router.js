@@ -10,7 +10,7 @@ import {
 import Application        from './views/app'
 import Index              from './views/index'
 import AdminDashboard     from './views/admin/dashboard'
-import CreatorsDashboard  from './views/creators/dashboard'
+import CreatorsDashboard  from './views/creator/dashboard'
 import NotFound           from './views/notfound'
 
 import UserList                         from './views/admin/user-list'
@@ -22,6 +22,10 @@ import ProductList                      from './views/admin/product-list'
 import ProductDetail                    from './views/admin/product-detail'
 import ProductDetailCommissionDetail    from './views/admin/product-detail-edit-commission'
 import AddTransactionModal              from './views/admin/add-transaction-modal'
+import Settings                         from './views/admin/settings'
+import CreatorInventory                 from './views/admin/settings'
+import CreatorLedger                    from './views/admin/settings'
+import CreatorExpenses                  from './views/admin/settings'
 
 export default new Router({
   routes: store => {
@@ -36,16 +40,21 @@ export default new Router({
         <Route path="ledger"        title="Ledger"            component={LedgerList}>
           <Route path="transaction" title="Add Transaction"   component={AddTransactionModal} />
         </Route>
-        <Route path="ledger/user/:id"    title="Ledger Details"     component={LedgerDetail} />
+        <Route path="ledger/:user_id"    title="Ledger Details"     component={LedgerDetail} />
         <Route path="users"         title="Users"             component={UserList} />
         <Route path="users/:id"     title="User Details"      component={UserDetail} />
         <Route path="products"      title="Products"          component={ProductList} />
         <Route path="products/:id"  title="Product Details"   component={ProductDetail}>
           <Route path="commissions/:commission_id" title="Commission Details" component={ProductDetailCommissionDetail} />
         </Route>
+        <Route path="settings"      title="Settings"          component={Settings} />
       </Route>
-      <Route path="creators">
+      <Route path="creator">
         <IndexRoute title="Creator Dashboard" component={CreatorsDashboard}  />
+        <Route path="inventory" title="My Inventory" component={CreatorInventory} />
+        <Route path="expenses" title="Expenses" component={CreatorExpenses} />
+        <Route path="ledger" title="Ledger" component={CreatorLedger} />
+
       </Route>
       <Route path="*" title="Not Found" component={NotFound} notFound={true} />
     </Route>

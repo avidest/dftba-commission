@@ -7,6 +7,7 @@ import Products         from './products'
 import Commissions      from './commissions'
 import Transactions     from './transactions'
 import Shopify          from './shopify'
+import Settings         from './settings'
 
 const router = Router()
 export default router
@@ -16,10 +17,12 @@ let products = new Products({ database })
 let commissions = new Commissions({ database })
 let transactions = new Transactions({ database })
 let users = new UserProfiles({ database, name: 'UserProfile' })
+let settings = new Settings({ database })
 
 router.use('/users', users.handler())
 router.use('/products', products.handler())
 router.use('/transactions', transactions.handler())
 router.use('/commissions', commissions.handler())
 router.use('/shopify', shopify.handler())
+router.use('/settings', settings.handler())
 

@@ -7,8 +7,9 @@ import ProductImage         from '../models/product-image';
 import ProductVariant       from '../models/product-variant';
 import Transaction          from '../models/transaction';
 import UserProfile          from '../models/user-profile';
+import Setting              from '../models/setting';
 
-const databaseLogging = process.env.DATABASE_LOGGING || false
+const databaseLogging = process.env.DATABASE_LOGGING || 1
 
 const options = {
   databaseUrl: process.env.DATABASE_URL,
@@ -37,7 +38,8 @@ const database = new Builder(options, [
   ProductImage,
   ProductVariant,
   Transaction,
-  UserProfile
+  UserProfile,
+  Setting
 ])
 
 export default database
@@ -92,6 +94,27 @@ export async function sync(force = false) {
         console.log(results)
       }
     }
+
+
+    // if (__DEVELOPMENT__) {
+    //   var tranns = []
+    //   for (let k = 0; k < 100; k++) {
+    //     console.time('time-' + k)
+    //     for (let i = 0; i < 1000; i++) {
+    //       let kind = Math.random() > 0.5 ? 'credit' : 'debit'
+    //       tranns.push({
+    //         description: 'test ' + i,
+    //         amount: (Math.random() * 100) * (kind === 'credit' ? 1 : -1),
+    //         kind,
+    //         user_id: 'auth0|57b4a7d43c7cb335712a36b8'
+    //       })
+    //     }
+    //     console.log('starting bulkCreate', k)
+    //     await Transaction.bulkCreate(tranns)
+    //     console.log('finished bulkCreate', k)
+    //     console.timeEnd('time-' + k)
+    //   }
+    // }
 
   } catch(e) {
     console.error(e)

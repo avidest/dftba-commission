@@ -3,44 +3,53 @@ import {asyncConnect} from 'protium'
 import {LinkContainer} from 'protium/router'
 import {Grid, Row, Col, ButtonGroup, Button, Table} from 'react-bootstrap'
 import PageHeader from '../../components/page-header'
-import DavePicker from '../../components/dave-picker'
-import {loadTransactions} from '../../ducks/ledger'
+import LedgerList from '../../components/ledger-list'
+import { loadSummaries } from '../../ducks/ledger'
+import { loadCreators } from '../../ducks/users'
 
 const dataDeps = [{
-  promise({ store, location: {query} }) {
+  promise({ store: {getState, dispatch}, location: {query} }) {
     let promises = []
+    let {ledger: {summaries}, users: {creators}} = getState()
 
-    if (!store.getState().ledger.transactions.length) {
-      promises.push(store.dispatch(loadTransactions()))
+    if (!creators.length) {
+      promises.push(dispatch(loadCreators()))
+    }
+
+    if (!summaries.length) {
+      promises.push(dispatch(loadSummaries()))
     }
 
     return Promise.all(promises)
   }
 }]
 
-const mapStateToProps = state => ({
-  transactions: state.ledger.transactions
+const mapStateToProps = ({ ledger: {summaries}, users: {creators} }) => ({
+  summaries,
+  creators
 })
 
-const mapDispatchToProps = {
-
-}
+const mapDispatchToProps = { loadSummaries }
 
 @asyncConnect(dataDeps, mapStateToProps, mapDispatchToProps)
-export default class OrderListView extends Component {
+export default class LedgerView extends Component {
   render() {
     return <div>
       <PageHeader route={this.props.route}>
         <div className="pull-right">
-          <Button bsSize="lg">Add Debit</Button>
+          <LinkContainer to="/admin/ledger/transaction?debit=1">
+            <Button bsSize="lg">Add Debit</Button>
+          </LinkContainer>
           &nbsp;
-          <Button bsSize="lg">Add Credit</Button>
+          <LinkContainer to="/admin/ledger/transaction?credit=1">
+            <Button bsSize="lg">Add Credit</Button>
+          </LinkContainer>
         </div>
       </PageHeader>
       <Grid>
         <Row>
           <Col xs={12}>
-          <pre>{JSON.stringify(this.props.transactions, null, 2)}</pre>
+            <LedgerList summaries={this.props.summaries} />
           </Col>
         </Row>
       </Grid>

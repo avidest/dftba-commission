@@ -1,7 +1,8 @@
 import React, {Component}       from 'react'
-import {Helmet, connect}        from 'protium'
+import {Helmet, asyncConnect}   from 'protium'
 import AppHeader                from '../components/app-header'
 import {logout, login}          from '../ducks/users'
+import {loadSettings}           from '../ducks/settings'
 import TransitionGroup          from 'react-addons-css-transition-group'
 import {NotificationContainer}  from 'react-notifications';
     
@@ -15,10 +16,25 @@ const meta = [
   { name: 'viewport', content: 'width=device-width,initial-scale=1' }
 ]
 
-@connect(mapStateToProps, {
+const deps = [{
+  promise({store}) {
+    return store.dispatch(loadSettings())
+  }
+}]
+
+const mapStateToProps = state => ({
+  token: state.users.token,
+  profile: state.users.profile,
+  loading: !state.reduxAsyncConnect.loaded,
+  settings: state.settings
+})
+
+const mapDispatchToProps = {
   handleLogin: login,
   handleLogout: logout
-})
+}
+
+@asyncConnect(deps, mapStateToProps, mapDispatchToProps)
 export default class ApplicationView extends Component {  
 
   state = {
@@ -40,18 +56,12 @@ export default class ApplicationView extends Component {
         transitionEnterTimeout={300}
         transitionLeaveTimeout={300}>
         {React.cloneElement(this.props.children, {
-          key: this.props.location.pathname
+          key: this.props.location.pathname,
+          settings: this.props.settings,
+          profile: this.props.profile
         })}
       </TransitionGroup>
       {this.state.ready && <NotificationContainer/>}
     </div>
-  }
-}
-
-function mapStateToProps(state) {
-  return {
-    token: state.users.token,
-    profile: state.users.profile,
-    loading: !state.reduxAsyncConnect.loaded
   }
 }

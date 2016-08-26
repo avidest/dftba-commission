@@ -1,5 +1,5 @@
 import {
-  DECIMAL,
+  INTEGER,
   TEXT,
   ENUM
 } from 'sequelize'
@@ -19,9 +19,26 @@ export default class Transaction extends Model {
 
   kind = { type: ENUM('debit', 'credit'), allowNull: false };
 
+
+
   amount = { 
-    type: DECIMAL,
+    type: INTEGER,
     allowNull: false,
+    get() {
+      if (!this.getDataValue('amount')) {
+        return 0;
+      }
+      return (this.getDataValue('amount') / 100).toFixed(2)
+    },
+    set(value) {
+      if (typeof value === 'string') {
+        return this.setDataValue('amount', parseFloat(value) * 100)
+      } else if (typeof value === 'number') {
+        return this.setDataValue('amount', value * 100)
+      } else {
+        throw new Error('Bad type')
+      }
+    },
     validate: {
       isDecimal: true,
       isValid(value) {
@@ -39,13 +56,6 @@ export default class Transaction extends Model {
     }
   };
 
-  static getTransactionsByCreator(creator, opts) {
-    return this.findAll({
-      where: {
-        user_id: creator.id
-      }
-    })
-  }
 
   static calcCommissionAmount(order, line, commission) {
     let {percent, flat} = commission
