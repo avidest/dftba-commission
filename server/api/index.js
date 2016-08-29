@@ -9,8 +9,6 @@ import router                   from './router'
 const api = Express()
 export default api
 
-database.sync(process.env.DATABASE_FORCE_SYNC)
-
 api.use(compression())
 api.use(bodyParser.urlencoded({ extended: true }))
 api.use(bodyParser.json())

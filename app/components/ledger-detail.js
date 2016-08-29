@@ -4,84 +4,126 @@ import {
   Table,
   Image,
   Button,
-  Pagination
+  Pagination,
+  Row,
+  Col,
+  Well,
+  Label
 } from 'react-bootstrap'
-import TimeAgo from 'react-timeago'
+import classnames from 'classnames'
+import DavePicker from './dave-picker'
 
-export default function ProductList(props) {
-  let { transactions, actions } = props
+export default function LedgerList(props) {
+  let {
+    transactions,
+    summary,
+    push,
+    replace,
+    loadSummariesByUser,
+    loadTransactionsByUser,
+    location,
+    params,
+    kind
+  } = props
+
+  function handleChange(opts) {
+    loadSummariesByUser({...opts, user_id: params.user_id})
+    loadTransactionsByUser({...opts, user_id: params.user_id})
+  }
 
   return <div>
-    <Paginator {...props} />
+    <DavePicker onChange={handleChange} />
+    <br/><br/>
+    {!props.noSummary === true && <div>
+      <h3>Summary</h3>
+      <SummaryViewer summary={summary} />
+    </div>}
+    <h3>Transaction Details</h3>
     <Table hover responsive>
       <thead>
-        <ProductListHeader />
+      <SummaryListHeader />
       </thead>
       <tbody>
-        {products.list.map(product => <ProductListRow key={product.id} product={product} />)}
+      {!transactions.length && <tr className="text-center">
+        <td colSpan="6">No transactions for this cycle.</td>
+      </tr>}
+      {transactions.map(transaction => {
+        return <TransactionRow key={transaction.id} transaction={transaction} />
+      })}
+      {!props.noSummary === true && <SummaryRow {...props} />}
       </tbody>
     </Table>
-    <Paginator {...props} />
   </div>
 }
 
-function Paginator(props) {
-  let { products, actions } = props
-  return <div className="text-center">
-    <Pagination
-      prev
-      next
-      first
-      last
-      ellipsis
-      boundaryLinks
-      items={getItemCount(products)}
-      maxButtons={6}
-      activePage={products.queryOpts.page}
-      onSelect={actions.setPage}
-    />
-  </div>
+function SummaryViewer(props) {
+  let {summary} = props
+  return <Row className="ledger-detail-summary">
+    <Col sm={3}>
+      <Well>
+        <h5>Starting Balance</h5>
+        <p>${summary.startingBalance}</p>
+      </Well>
+    </Col>
+    <Col sm={3}>
+      <Well>
+        <h5>Gross Debits</h5>
+        <p>${summary.grossDebits}</p>
+      </Well>
+    </Col>
+    <Col sm={3}>
+      <Well>
+        <h5>Gross Credits</h5>
+        <p>${summary.grossCredits}</p>
+      </Well>
+    </Col>
+    <Col sm={3}>
+      <Well>
+        <h5>Net Balance</h5>
+        <p>${summary.netBalance}</p>
+      </Well>
+    </Col>
+  </Row>
 }
 
-function getItemCount(products) {
-  return Math.ceil(products.count / products.queryOpts.limit) - 1
-}
-
-function ProductListHeader(props) {
+function SummaryListHeader(props) {
   return <tr>
-    <th>&nbsp;</th>
-    <th>Title</th>
-    <th>Vendor</th>
-    <th>Last Updated</th>
-    <th className="text-right">Actions</th>
+    <th>Kind</th>
+    <th>Created On</th>
+    <th>Description</th>
+    <th className="text-right">Amount</th>
   </tr>
 }
 
-function ProductListRow(props) {
-  let { product } = props
-  let imageSrc = product.images.length
-    ? imageSize(product.images[0].src, '50x')
-    : `/assets/images/no-image.png`
+function TransactionRow(props) {
+  let {transaction} = props
+  let amountClasses = classnames({
+    'text-danger': transaction.kind === 'debit',
+    'text-success': transaction.kind === 'credit'
+  }, 'text-right')
+  return <tr>
+    <td><Label>
+      {transaction.kind.toUpperCase()}
+    </Label></td>
+    <td className="text-muted">
+      {transaction.created_at}
+    </td>
+    <td className="text-muted">
+      {transaction.description ? transaction.description : '<No description provided>'}
+    </td>
+    <td className={amountClasses}>${transaction.amount}</td>
+  </tr>
+}
 
+function SummaryRow(props) {
+  let { summary } = props
   let style = {verticalAlign: 'middle'}
 
   return <tr>
-    <td style={style}>
-      <Image style={{maxWidth: '50px', backgroundSize: 'cover'}}
-             src={imageSrc}
-             circle
-             thumbnail />
-    </td>
-    <td style={style}>{product.title}</td>
-    <td style={style}>{product.vendor}</td>
-    <td style={style}><TimeAgo date={product.updated_at} /></td>
-    <td style={style} className="text-right">
-      <LinkContainer to={`/admin/products/${product.id}`}>
-        <Button>
-        Edit Commission
-        </Button>
-      </LinkContainer>
-    </td>
+    <td />
+    <td />
+    <td className="text-right"><strong>Total:</strong></td>
+    <td style={style} className="text-right"><strong>${summary.netBalance}</strong></td>
   </tr>
 }
 

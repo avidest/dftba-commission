@@ -10,6 +10,7 @@ import cookie         from 'cookie-parser'
 import cors           from 'cors'
 import api            from './api'
 import {setup as shopifySetup} from './services/shopify'
+import {sync}         from './services/database'
 
 export const server = Express()
 
@@ -45,13 +46,17 @@ server.get('/*', renderer(serverEntry, {
   }
 }))
 
+export function setup() {
+  sync(process.env.DATABASE_FORCE_SYNC)
+  shopifySetup()
+}
+
 export function start(port, apiPort) {
   server.listen(port, function() {
     console.log(`\u2699 App listening on port ${port} ...`)
 
     api.listen(apiPort, function() {
       console.log(`\u2699 API listening on port ${apiPort} ...`)
-      shopifySetup()
     })
   })
 }

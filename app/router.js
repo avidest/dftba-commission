@@ -7,15 +7,16 @@ import {
   Redirect
 } from 'protium/router'
 
+// Shared views
 import Application        from './views/app'
 import Index              from './views/index'
-import AdminDashboard     from './views/admin/dashboard'
-import CreatorsDashboard  from './views/creator/dashboard'
+import UserProfile        from './views/profile'
 import NotFound           from './views/notfound'
 
+// Admin view
+import AdminDashboard                   from './views/admin/dashboard'
 import UserList                         from './views/admin/user-list'
 import UserDetail                       from './views/admin/user-detail'
-import UserProfile                      from './views/profile'
 import LedgerList                       from './views/admin/ledger-list'
 import LedgerDetail                     from './views/admin/ledger-detail'
 import ProductList                      from './views/admin/product-list'
@@ -23,19 +24,19 @@ import ProductDetail                    from './views/admin/product-detail'
 import ProductDetailCommissionDetail    from './views/admin/product-detail-edit-commission'
 import AddTransactionModal              from './views/admin/add-transaction-modal'
 import Settings                         from './views/admin/settings'
-import CreatorInventory                 from './views/admin/settings'
-import CreatorLedger                    from './views/admin/settings'
-import CreatorExpenses                  from './views/admin/settings'
+
+// Creator views
+import CreatorsDashboard                from './views/creator/dashboard'
+import CreatorInventory                 from './views/creator/inventory'
+import CreatorExpenses                  from './views/creator/expenses'
+import CreatorIncome                    from './views/creator/income'
 
 export default new Router({
   routes: store => {
-    let {users} = store.getState()
     return <Route path="/" component={Application}>
       <IndexRoute title="Welcome" component={Index} />
-      <Route path="profile"
-             title="User Profile"
-             component={UserProfile} />
-      <Route path="admin">
+      <Route path="profile" title="User Profile" component={UserProfile} />
+      <Route path="admin" onEnter={authenticate(store)}>
         <IndexRoute                 title="Admin Dashboard"   component={AdminDashboard} />
         <Route path="ledger"        title="Ledger"            component={LedgerList}>
           <Route path="transaction" title="Add Transaction"   component={AddTransactionModal} />
@@ -49,37 +50,37 @@ export default new Router({
         </Route>
         <Route path="settings"      title="Settings"          component={Settings} />
       </Route>
-      <Route path="creator">
-        <IndexRoute title="Creator Dashboard" component={CreatorsDashboard}  />
-        <Route path="inventory" title="My Inventory" component={CreatorInventory} />
-        <Route path="expenses" title="Expenses" component={CreatorExpenses} />
-        <Route path="ledger" title="Ledger" component={CreatorLedger} />
-
+      <Route path="creator" onEnter={authenticate(store)}>
+        <IndexRoute               title="Creator Dashboard"    component={CreatorsDashboard}  />
+        <Route path="inventory"   title="My Inventory"         component={CreatorInventory} />
+        <Route path="expenses"    title="Expenses"             component={CreatorExpenses} />
+        <Route path="income"      title="Income"               component={CreatorIncome} />
       </Route>
       <Route path="*" title="Not Found" component={NotFound} notFound={true} />
     </Route>
   }
 })
 
-function authenticate(store, role) {
+function authenticate(store) {
   return (nextProps, replace)=> {
-    let {users} = store.getState()
+    let {users: {token, profile}} = store.getState()
     let url = nextProps.location.pathname
-    let loggedIn = !!(users.token && users.profile)
-    let roleDefined = !!role
-    let matchesRole = users.profile && users.profile.role === role
-    let defaultView = loggedIn
-      ? users.profile.role === 'admin' ? '/admin' : '/creators'
-      : '/'
+    let loggedIn = !!(token && profile)
+    let role = profile.app_metadata && profile.app_metadata.role
+    if ((!loggedIn || !role) && url !== '/') {
+      return replace('/')
+    }
 
-    // if (url !== '/' && !loggedIn) {
-    //   return replace('/')
-    // }
-    //
-    // if (url === '/' || roleDefined && !matchesRole) {
-    //   if (url !== defaultView) {
-    //     return replace(defaultView)
-    //   }
-    // }
+    if (url === '/profile') {
+      return
+    }
+
+    if (role !== 'admin' && url.indexOf('/admin') === 0) {
+      return replace('/')
+    }
+
+    if (role !== 'creator' && url.indexOf('/creator') === 0) {
+      return replace('/')
+    }
   }
 }

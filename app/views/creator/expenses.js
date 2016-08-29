@@ -27,7 +27,8 @@ const deps = [{
 
     let q = {
       ...query,
-      user_id: profile.user_id
+      user_id: profile.user_id,
+      kind: 'debit'
     }
 
     promises.push(dispatch(loadSummariesByUser(q)))
@@ -54,18 +55,15 @@ const mapDispatchToProps = {
 }
 
 @asyncConnect(deps, mapStateToProps, mapDispatchToProps)
-export default class CreatorDashboardView extends Component {
+export default class CreatorExpensesView extends Component {
   render() {
-    let name = this.props.creator.user_metadata.name
-      ? this.props.creator.user_metadata.name
-      : this.props.creator.email
-    let title = `Welcome, ${name}!`
+    let title = `My Expenses`
     return <div>
       <PageHeader title={title} />
       <Grid>
         <Row>
           <Col xs={12}>
-            <LedgerDetail {...this.props} />
+            <LedgerDetail {...this.props} noSummary />
           </Col>
         </Row>
       </Grid>

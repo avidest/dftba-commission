@@ -47,6 +47,13 @@ export const setPage = createAction('dftba/SET_PAGE', payload => {
   }
 })
 
+export const loadProductByCurrentUser = createAction('dftba/LOAD_PRODUCT_BY_USER', payload => {
+  return ({client, getState})=> {
+    let {users} = getState()
+    return client.get(`/users/${users.profile.user_id}/products`)
+  }
+})
+
 export const loadProducts = createAction('dftba/LOAD_PRODUCTS', (opts = {}) => {
   return ({client, getState})=> {
     let query = {
@@ -79,6 +86,7 @@ export const loadProduct = createAction('dftba/LOAD_PRODUCT', id => {
 
 const initialState = {
   list: [],
+  inventory: [],
   count: null,
   bulkSelections: [],
   bulkSelectAll: false,
@@ -94,6 +102,10 @@ export default handleActions({
     ...state,
     list: payload.result,
     count: parseInt(payload.count, 10)
+  }),
+  [loadProductByCurrentUser]: (state, {payload})=> ({
+    ...state,
+    inventory: payload
   }),
   [loadProduct]: (state, {payload})=> ({
     ...state,

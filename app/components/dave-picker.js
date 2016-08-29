@@ -5,8 +5,14 @@ import moment from 'moment'
 import {
   Button,
   Dropdown,
-  DropdownButton
+  DropdownButton,
+  FormGroup,
+  FormControl,
+  InputGroup,
+  ControlLabel,
+  MenuItem
 } from 'react-bootstrap'
+import { getCurrentCycle, getLastNCycles } from '../../lib/cycle'
 
 const DISPLAY_FORMAT = 'M/D/YY'
 
@@ -52,13 +58,19 @@ export default class DavePicker extends Component {
   }
 
   handleCancel() {
-    this.setState({...this.state.currentState})
     this.close()
+    this.setState({...this.state.currentState})
+  }
+
+  apply() {
+    this.close()
+    process.nextTick(x => {
+      this.props.onChange && this.props.onChange(this.state)
+    })
   }
 
   handleApply() {
-    this.props.onChange && this.props.onChange(this.state)
-    this.close()
+    this.apply()
   }
 
   handleChangeStart(value) {
@@ -67,6 +79,24 @@ export default class DavePicker extends Component {
 
   handleChangeEnd(value) {
     this.setState({endDate: value})
+  }
+
+  handleApplyPeriod(start, end) {
+    this.setState({
+      startDate: start,
+      endDate: end
+    })
+    this.apply()
+  }
+
+  renderCycles() {
+    return getLastNCycles(12).map((cycle, k) => {
+      let [start, end] = cycle
+      return <MenuItem key={k} onClick={this.handleApplyPeriod.bind(this, start, end)}>
+        {k === 0 && 'Current Cycle'}
+        {k > 0 && `${start.format(DISPLAY_FORMAT)}—${end.format(DISPLAY_FORMAT)}`}
+      </MenuItem>
+    })
   }
 
   render() {
@@ -78,7 +108,10 @@ export default class DavePicker extends Component {
       <Dropdown.Toggle>
         {this.state.startDate.format(DISPLAY_FORMAT)}—{this.state.endDate.format(DISPLAY_FORMAT)}
       </Dropdown.Toggle>
-      <Dropdown.Menu style={{minWidth: '450px', padding: '5px 5px 5px 6px'}}>
+      <Dropdown.Menu>
+        {this.renderCycles()}
+        <MenuItem divider />
+
         <div className="input-group">
           <DatePicker 
             dateFormat={DISPLAY_FORMAT}
@@ -106,3 +139,21 @@ export default class DavePicker extends Component {
   }
 
 }
+
+
+/*
+<FormGroup>
+  <FormGroup controlId="formControlsSelect">
+    <ControlLabel>Year</ControlLabel>
+    <InputGroup>
+      <InputGroup.Button>
+        <Button><Icon type="chevron-left" /></Button>
+      </InputGroup.Button>
+      <FormControl type="text" />
+      <InputGroup.Button>
+        <Button><Icon type="chevron-right" /></Button>
+      </InputGroup.Button>
+    </InputGroup>
+  </FormGroup>
+</FormGroup>
+*/

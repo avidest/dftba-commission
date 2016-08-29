@@ -21,7 +21,9 @@ export default class ProductVariant extends Model {
 
   id = { type: BIGINT, allowNull: false, unique: true, primaryKey: true };
 
-  barcode = { type: TEXT };
+  inventory_quantity = { type: INTEGER }
+
+  barcode = { type: STRING };
 
   option1 = { type: STRING };
 

@@ -1,4 +1,5 @@
 import find from 'lodash/find'
+import map from 'lodash/map'
 import {
   BOOLEAN,
   INTEGER,
@@ -55,8 +56,8 @@ export default class UserProfile extends Model {
 
   user_metadata = {type: JSONB}
 
-  static findAllCreators(opts) {
-    return this.findAll({
+  static findAllCreators(opts, user_id) {
+    let query = {
       attributes: [
         'user_id',
         'user_metadata',
@@ -66,7 +67,12 @@ export default class UserProfile extends Model {
       where: {
         'app_metadata.role': 'creator'
       }
-    })
+    }
+    if (user_id) {
+      query.where.user_id = user_id
+    }
+
+    return this.findAll(query)
   }
 
   static findCreatorGrossCredits(opts, user_id) {
@@ -82,9 +88,24 @@ export default class UserProfile extends Model {
       },
       group: [col('Transaction.user_id')]
     }
+
     if (user_id) {
       query.where.user_id = user_id
     }
+
+
+    if (opts.startDate) {
+      query.where.created_at = {
+        $gte: new Date(opts.startDate)
+      }
+    }
+
+    if (opts.endDate) {
+      query.where.created_at = {
+        $lte: new Date(opts.endDate)
+      }
+    }
+
     return Transaction.findAll(query)
   }
 
@@ -101,9 +122,51 @@ export default class UserProfile extends Model {
       },
       group: [col('Transaction.user_id')]
     }
+
     if (user_id) {
       query.where.user_id = user_id
     }
+
+
+    if (opts.startDate) {
+      query.where.created_at = {
+        $gte: new Date(opts.startDate)
+      }
+    }
+
+    if (opts.endDate) {
+      query.where.created_at = {
+        $lte: new Date(opts.endDate)
+      }
+    }
+
+    return Transaction.findAll(query)
+  }
+
+  static findTransactionsByCreator(opts = {}, user_id) {
+    let {Transaction} = this.sequelize.models
+    let query = { where: {} }
+
+    if (opts.kind) {
+      query.where.kind = opts.kind
+    }
+
+    if (user_id) {
+      query.where.user_id = user_id
+    }
+
+    if (opts.startDate) {
+      query.where.created_at = {
+        $gte: new Date(opts.startDate)
+      }
+    }
+
+    if (opts.endDate) {
+      query.where.created_at = {
+        $lte: new Date(opts.endDate)
+      }
+    }
+
     return Transaction.findAll(query)
   }
 
@@ -115,43 +178,93 @@ export default class UserProfile extends Model {
         [fn('sum', col('Transaction.amount')), 'startingBalance'],
         [col('Transaction.user_id'), 'user_id']
       ],
+      where: {},
       group: [col('Transaction.user_id')]
     }
+
     if (user_id) {
       query.where.user_id = user_id
     }
+
+    if (opts.startDate) {
+      query.where.created_at = {
+        $lt: new Date(opts.startDate)
+      }
+    }
+
+    console.log(query)
     return Transaction.findAll(query)
   }
 
-  static async findCreatorTransactionSummaries(opts) {
+  static async findCreatorTransactionSummaries(opts, user_id) {
     let [
       creatorRecords,
       startingBalances,
       grossCredits,
       grossDebits,
     ] = await Promise.all([
-      this.findAllCreators(opts),
-      this.findCreatorStartingBalances(opts),
-      this.findCreatorGrossCredits(opts),
-      this.findCreatorGrossDebits(opts)
+      this.findAllCreators({}, user_id),
+      this.findCreatorStartingBalances(opts, user_id),
+      this.findCreatorGrossCredits(opts, user_id),
+      this.findCreatorGrossDebits(opts, user_id)
     ])
 
     let creators = creatorRecords.map(c => c.toJSON())
+    startingBalances = startingBalances.map(s => s.toJSON())
     grossCredits = grossCredits.map(c => c.toJSON())
     grossDebits = grossDebits.map(c => c.toJSON())
 
-    return startingBalances.map(s => {
-      let summary = s.toJSON()
-      let credits = find(grossCredits, {user_id: s.user_id}).grossCredits
-      let debits = find(grossDebits, {user_id: s.user_id}).grossDebits
-      console.log(typeof credits, typeof debits)
-      summary.startingBalance = (summary.startingBalance / 100).toFixed(2)
+    let summaries = creators.map(creator => {
+      let startingBalance = startingBalances.length ? find(startingBalances, {user_id: creator.user_id}).startingBalance : 0
+      let credits = grossCredits.length ? find(grossCredits, {user_id: creator.user_id}).grossCredits : 0
+      let debits = grossDebits.length ? find(grossDebits, {user_id: creator.user_id}).grossDebits : 0
+      let summary = { user_id: creator.user_id, user: creator };
+
+      summary.startingBalance = (startingBalance / 100).toFixed(2)
       summary.grossCredits = (credits / 100).toFixed(2)
       summary.grossDebits = (debits / 100).toFixed(2)
-      summary.netBalance = ((parseInt(debits, 10) + parseInt(credits, 10)) / 100).toFixed(2)
-      summary.user = find(creators, {user_id: s.user_id})
-      delete summary.amount
+      summary.netBalance = (
+        (parseInt(startingBalance, 10)
+          + parseInt(debits, 10)
+          + parseInt(credits, 10)
+      ) / 100).toFixed(2)
       return summary
+    })
+
+    if (summaries.length === 1) {
+      return summaries[0]
+    }
+
+    return summaries
+  }
+
+  static async findProductsByUser(id) {
+    let {Commission, Product, ProductVariant, ProductImage} = this.sequelize.models
+    let commishs = await Commission.findAll({
+      attributes: [
+        'id',
+        'user_id',
+        'product_id'
+      ],
+      where: {
+        user_id: id
+      }
+    })
+
+    let productIds = map(commishs, 'product_id')
+    return await Product.findAll({
+      where: {
+        id: {
+          $in: productIds
+        }
+      },
+      include: [
+        { model: ProductVariant, as: 'variants' },
+        { model: ProductImage, as: 'images' },
+        { model: Commission, as: 'commissions', where: {
+          id: { $in: map(commishs, 'id') }
+        }}
+      ]
     })
   }
 

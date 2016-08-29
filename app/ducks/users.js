@@ -45,7 +45,11 @@ export const loadCreators = createAction('dftba/AUTH0_LOAD_CREATORS', payload =>
 
 export const loadUser = createAction('dftba/AUTH0_LOAD_USER', payload => {
   return ({client})=> {
-    return client.get(`/users/${payload.id || payload.user_id}`)
+    return client.get(`/users/${payload.id || payload.user_id}`, {
+      query: {
+        include: []
+      }
+    })
   }
 })
 

@@ -1,11 +1,14 @@
 import React, {Component} from 'react'
 import {asyncConnect} from 'protium'
-import {LinkContainer} from 'protium/router'
+import {LinkContainer, push} from 'protium/router'
 import {Grid, Row, Col, ButtonGroup, Button, Table} from 'react-bootstrap'
 import PageHeader from '../../components/page-header'
 import LedgerList from '../../components/ledger-list'
-import { loadSummaries } from '../../ducks/ledger'
 import { loadCreators } from '../../ducks/users'
+import {
+  loadSummaries
+} from '../../ducks/ledger'
+
 
 const dataDeps = [{
   promise({ store: {getState, dispatch}, location: {query} }) {
@@ -17,7 +20,7 @@ const dataDeps = [{
     }
 
     if (!summaries.length) {
-      promises.push(dispatch(loadSummaries()))
+      promises.push(dispatch(loadSummaries(query)))
     }
 
     return Promise.all(promises)
@@ -29,7 +32,7 @@ const mapStateToProps = ({ ledger: {summaries}, users: {creators} }) => ({
   creators
 })
 
-const mapDispatchToProps = { loadSummaries }
+const mapDispatchToProps = { loadSummaries, push }
 
 @asyncConnect(dataDeps, mapStateToProps, mapDispatchToProps)
 export default class LedgerView extends Component {
@@ -49,7 +52,11 @@ export default class LedgerView extends Component {
       <Grid>
         <Row>
           <Col xs={12}>
-            <LedgerList summaries={this.props.summaries} />
+            <LedgerList summaries={this.props.summaries} 
+              loadSummaries={this.props.loadSummaries}
+              location={this.props.location}
+              push={this.props.push}
+            />
           </Col>
         </Row>
       </Grid>

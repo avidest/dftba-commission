@@ -9,15 +9,23 @@ import {
 import DavePicker from './dave-picker'
 
 export default function LedgerList(props) {
-  let { summaries, loadSummaries } = props
+  let { summaries, loadSummaries, push, location } = props
+
+  function handleChange(opts) {
+    loadSummaries(opts)
+  }
 
   return <div>
-    <DavePicker/>
+    <DavePicker onChange={handleChange} />
+    <br/><br/>
     <Table hover responsive>
       <thead>
         <SummaryListHeader />
       </thead>
       <tbody>
+      {!summaries.length && <tr className="text-center">
+        <td colSpan="6">No transactions for this cycle.</td>
+      </tr>}
         {summaries.map(summary => {
           return <SummaryRow key={summary.user_id} summary={summary} />
         })}
@@ -59,6 +67,10 @@ function SummaryRow(props) {
           Details
         </Button>
       </LinkContainer>
+      &nbsp;
+      <Button bsSize="xs" bsStyle="primary">
+        Pay Out
+      </Button>
     </td>
   </tr>
 }

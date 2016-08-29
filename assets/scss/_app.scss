@@ -183,6 +183,30 @@ h2, h3, h4, h5 {
   }
 }
 
+.dropdown-menu {
+  background-color: darken($gray-base, 5%);
+  border-color: darken($gray-base, 9%);
+}
+
+#dave-picker + .dropdown-menu {
+  min-width: 320px;
+  padding: 6px 5px;
+
+  .divider {
+    background-color: $gray-dark;
+  }
+
+  & > li > a {
+    color: darken($text-color, 10);
+  }
+
+  & > li > a:hover, & > li > a:focus {
+    text-decoration: none;
+    color: $text-color;
+    background-color: $gray-dark;
+  }
+}
+
 .navbar-inverse .navbar-nav > .active > a,
 .navbar-inverse .navbar-nav > .active > a:hover,
 .navbar-inverse .navbar-nav > .active > a:focus {
@@ -195,5 +219,25 @@ h2, h3, h4, h5 {
   &:first-child .form-control {
     border-top-left-radius: $input-border-radius !important;
     border-bottom-left-radius: $input-border-radius !important;
+  }
+}
+
+.product-row {
+  background-color: rgba(0,0,0,0.3);
+}
+
+.ledger-detail-summary .well {
+  text-align: center;
+  padding: 0.6em 0;
+
+  h5 {
+    font-family: $font-family-sans-serif;
+    text-transform: uppercase;
+    font-weight: bold;
+    font-size: 1.1em;
+  }
+
+  p {
+    font-size: 2.0em;
   }
 }

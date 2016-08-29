@@ -78,16 +78,16 @@ function AdminNav(props) {
 function CreatorNav(props) {
   return <Nav>
     <LinkContainer to="/creator" onlyActiveOnIndex>
-      <NavItem eventKey={1}>Dashboard</NavItem>
+      <NavItem eventKey={1}><Icon type="dashboard" /> Dashboard</NavItem>
     </LinkContainer>
     <LinkContainer to="/creator/inventory">
       <NavItem eventKey={2}><Icon type="cubes" /> My Inventory</NavItem>
     </LinkContainer>
     <LinkContainer to="/creator/expenses">
-      <NavItem eventKey={2}><Icon type="dollar" /> Expenses</NavItem>
+      <NavItem eventKey={2}><Icon type="arrow-circle-o-up" /> Expenses</NavItem>
     </LinkContainer>
-    <LinkContainer to="/creator/Ledger">
-      <NavItem eventKey={2}><Icon type="bar-chart" /> Ledger</NavItem>
+    <LinkContainer to="/creator/income">
+      <NavItem eventKey={2}><Icon type="arrow-circle-o-down" /> Income</NavItem>
     </LinkContainer>
   </Nav>
 }
