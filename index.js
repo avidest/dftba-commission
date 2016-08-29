@@ -32,17 +32,23 @@ if (!__PRODUCTION__ && require('piping')(pipingOpts)) {
 }
 
 if (__PRODUCTION__) {
-  var throng = require('throng')
   var server = require('./server')
-  throng({
-    master: function() {
-      server.setup()
-    },
-    start: function(id) {
-      server.start(
-        process.env.PORT || 9001,
-        process.env.API_PORT || 9002
-      )
-    }
-  })
+  server.setup()
+  server.start(
+    process.env.PORT || 9001,
+    process.env.API_PORT || 9002
+  )
+  // var throng = require('throng')
+  // var server = require('./server')
+  // throng({
+  //   master: function() {
+  //     server.setup()
+  //   },
+  //   start: function(id) {
+  //     server.start(
+  //       process.env.PORT || 9001,
+  //       process.env.API_PORT || 9002
+  //     )
+  //   }
+  // })
 }

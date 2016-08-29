@@ -53,14 +53,14 @@ export async function sync(force = false) {
     /**
      * User Profiles
      */
-    let userCount = await UserProfile.count()
-    if (userCount === 0) {
-      console.log('No user profiles found, attempting to download...')
-      let results = await UserProfile.downloadAll()
-      if (results) {
-        console.log(`${results.length} users created!`)
-      }
-    }
+    // let userCount = await UserProfile.count()
+    // if (userCount === 0) {
+    //   console.log('No user profiles found, attempting to download...')
+    //   let results = await UserProfile.downloadAll()
+    //   if (results) {
+    //     console.log(`${results.length} users created!`)
+    //   }
+    // }
 
     /**
      * Products
