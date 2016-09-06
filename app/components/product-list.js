@@ -7,6 +7,7 @@ import {
   Pagination
 } from 'react-bootstrap'
 import TimeAgo from 'react-timeago'
+import {getSize} from './helpers/images'
 
 export default function ProductList(props) {
   let { products, actions } = props
@@ -60,7 +61,7 @@ function ProductListHeader(props) {
 function ProductListRow(props) {
   let { product } = props
   let imageSrc = product.images.length
-    ? imageSize(product.images[0].src, '50x')
+    ? getSize(product.images[0].src, '50x')
     : `/assets/images/no-image.png`
 
   let style = {verticalAlign: 'middle'}
@@ -83,12 +84,4 @@ function ProductListRow(props) {
       </LinkContainer>
     </td>
   </tr>
-}
-
-import Path from 'path'
-
-function imageSize(src, size = '100x') {
-  let ext = Path.extname(src)
-  let base = src.replace(ext, '')
-  return `${base}_${size}${ext}`
 }

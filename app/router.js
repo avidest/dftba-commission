@@ -31,6 +31,7 @@ import CreatorInventory                 from './views/creator/inventory'
 import CreatorExpenses                  from './views/creator/expenses'
 import CreatorIncome                    from './views/creator/income'
 
+
 export default new Router({
   routes: store => {
     return <Route path="/" component={Application}>

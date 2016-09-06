@@ -241,3 +241,70 @@ h2, h3, h4, h5 {
     font-size: 2.0em;
   }
 }
+
+$selector-size: 16px;
+
+.selector {
+  cursor: pointer;
+  display: inline-block;
+  width: $selector-size + (2 * 3px);
+  height: $selector-size + (2 * 3px);
+  border-radius: 3px;
+  font-size: $selector-size;
+  text-align: center;
+  vertical-align: middle;
+  line-height: $selector-size + (2 * 3px) - 2px;
+  color: $gray-lighter;
+  border: 1px solid $gray-light;
+  margin: 0 6px;
+
+  &:hover {
+    border-color: $brand-primary;
+  }
+
+  &.selector-checked {
+    color: $brand-primary;
+    border-color: $gray-darker;
+    box-shadow: 0 0 0 2px $brand-primary;
+  }
+}
+
+
+.data-grid {
+  .table {
+    margin-bottom: 0;
+  }
+
+  #grid-search {
+    max-width: 350px;
+    margin-bottom: 0;
+  }
+
+  .data-grid-header {
+    border-bottom: 2px solid $gray-darker;
+    background-color: darken($gray-base, 5);
+    padding: 5px;
+    border-radius: 5px 5px 0 0;
+
+    .count {
+      padding-right: 10px;
+    }
+  }
+
+  .data-grid-body {
+
+  }
+
+  .data-grid-footer {
+    border-top: 2px solid $gray-darker;
+    background-color: darken($gray-base, 5);
+    border-radius: 0 0 5px 5px;
+    margin-bottom: 10px;
+  }
+}
+
+
+
+.table > thead > tr > th {
+  background-color: darken($gray-base, 5);
+}

@@ -1,6 +1,10 @@
 import {createAction, handleActions} from 'protium'
 import {successNotification, errorNotification} from './helpers/notifications'
 
+import * as gridActions from './grid'
+
+export const GRID_KEY = 'products'
+
 export const addCommission = createAction('dftba/ADD_COMMISSION', payload => {
   return ({client, dispatch})=> {
     return client.post('/commissions', {
@@ -55,13 +59,12 @@ export const loadProductByCurrentUser = createAction('dftba/LOAD_PRODUCT_BY_USER
 })
 
 export const loadProducts = createAction('dftba/LOAD_PRODUCTS', (opts = {}) => {
-  return ({client, getState})=> {
+  return ({client, getState, dispatch})=> {
     let query = {
       ...getState().products.queryOpts,
       ...opts,
       include: 'images'
     }
-    console.log(query)
     return client.get('/products', {
       query,
       as: 'raw'
@@ -70,6 +73,13 @@ export const loadProducts = createAction('dftba/LOAD_PRODUCTS', (opts = {}) => {
       return resp.json().then(result => {
         return { result, count }
       })
+    }).then(results => {
+      console.log(results)
+      dispatch(gridActions.loadAll({
+        data: results.result,
+        total: results.count
+      }, GRID_KEY))
+      return results
     })
   }
 })
