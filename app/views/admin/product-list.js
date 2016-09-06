@@ -1,8 +1,9 @@
 import React, {Component} from 'react'
 import {LinkContainer} from 'protium/router'
-import {asyncConnect} from 'protium'
+import {asyncConnect, bindActionCreators} from 'protium'
 import PageHeader from '../../components/page-header'
 import DataGrid from '../../connectors/grid'
+import debounce from 'lodash/debounce'
 import {getSize} from '../../components/helpers/images'
 import * as gridActions from '../../ducks/grid'
 import * as productActions from '../../ducks/products'
@@ -32,8 +33,18 @@ const mapStateToProps = state => ({
   productsGrid: state.grid[GRID_KEY]
 })
 
-@asyncConnect(deps, mapStateToProps)
+const mapDispatchToProps = dispatch => ({
+  grid: bindActionCreators(gridActions, dispatch),
+  products: bindActionCreators(productActions, dispatch)
+})
+
+@asyncConnect(deps, mapStateToProps, mapDispatchToProps)
 export default class ProductListView extends Component {
+
+  constructor(props) {
+    super(props)
+    this.loadProducts = debounce(this.props.products.loadProducts, 400)
+  }
 
   handleCellClick({record, label, colIndex, rowIndex, event}) {
     console.log(record)
@@ -41,6 +52,16 @@ export default class ProductListView extends Component {
 
   handleHeaderClick({ label, colIndex, event}) {
     console.log(record)
+  }
+
+  handleSetQuery(query) {
+    this.props.grid.setQuery(query, GRID_KEY)
+    this.loadProducts({ withGrid: true })
+  }
+
+  handleSetPage(page) {
+    this.props.grid.setPage(page, GRID_KEY)
+    this.props.products.loadProducts({ withGrid: true })
   }
 
   render() {
@@ -53,6 +74,10 @@ export default class ProductListView extends Component {
               cellStyle={{verticalAlign: 'middle'}}
               onCellClick={::this.handleCellClick}
               onHeaderClick={::this.handleHeaderClick}
+              onSetNextPage={::this.handleSetPage}
+              onSetPrevPage={::this.handleSetPage}
+              onSetPage={::this.handleSetPage}
+              onSetQuery={::this.handleSetQuery}
               columns={[
                 ['', IndexCol],
                 ['Title', 'title'],

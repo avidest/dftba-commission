@@ -20,7 +20,8 @@ export default function ProductDetail(props) {
   const minVariant = minBy(product.variants, v => parseFloat(v.price))
   const maxVariant = minBy(product.variants, v => parseFloat(v.price))
 
-  function handleRemove() {
+  function handleRemove(commission) {
+    console.log(commission)
     if (confirm('Are you sure you wish to remove this commission record?')) {
       props.removeCommission(commission)
     }
@@ -53,7 +54,7 @@ export default function ProductDetail(props) {
                   Edit
                 </Button>
               </LinkContainer>
-              <Button bsStyle="danger" bsSize="xs" onClick={handleRemove}>
+              <Button bsStyle="danger" bsSize="xs" onClick={e => handleRemove(commission)}>
                 Remove
               </Button>
             </ButtonGroup>

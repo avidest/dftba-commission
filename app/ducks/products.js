@@ -60,29 +60,58 @@ export const loadProductByCurrentUser = createAction('dftba/LOAD_PRODUCT_BY_USER
 
 export const loadProducts = createAction('dftba/LOAD_PRODUCTS', (opts = {}) => {
   return ({client, getState, dispatch})=> {
-    let query = {
-      ...getState().products.queryOpts,
-      ...opts,
-      include: 'images'
+    let state = getState()
+
+    let {
+      withGrid,
+      ...queryOpts
+    } = opts
+
+    let query = withGrid 
+      ? getGridQuery(state, GRID_KEY) 
+      : {
+      ...state.products.queryOpts,
+      ...queryOpts
     }
+
+    query.include = 'images'
+
     return client.get('/products', {
       query,
       as: 'raw'
     }).then(resp => {
-      let count = resp.headers.get('x-row-count')
+      let count = parseInt(resp.headers.get('x-row-count'), 10)
       return resp.json().then(result => {
         return { result, count }
       })
     }).then(results => {
-      console.log(results)
-      dispatch(gridActions.loadAll({
-        data: results.result,
-        total: results.count
-      }, GRID_KEY))
+      let grid = getState().grid[GRID_KEY]
+      if (!grid.query || !grid.query.length || grid.query === query.query) {
+        dispatch(gridActions.loadAll({
+          data: results.result,
+          total: results.count
+        }, GRID_KEY))
+      }
       return results
     })
   }
 })
+
+function getGridQuery(state, key) {
+  let grid = state.grid[key]
+  let query = {
+    page: grid.page,
+    limit: grid.limit,
+    sort: grid.sort
+  }
+
+  if (grid.query && grid.query.length) {
+    query.query = grid.query;
+    query.fields = 'title,vendor,handle'
+  }
+
+  return query;
+}
 
 export const loadProduct = createAction('dftba/LOAD_PRODUCT', id => {
   return ({client})=> {

@@ -47,10 +47,10 @@ export default class Grid extends Component {
       let propHandler = `on${upCase(event)}`
 
       this[eventHandler] = (payload) => {
-        this.props.actions[event](payload, this.props.type)
         if (this.props[propHandler]) {
           this.props[propHandler](payload)
         }
+        return payload
       }
     })
   }
@@ -74,22 +74,6 @@ export default class Grid extends Component {
 
   isPrevPageable() {
     return this.props.grid.page > 1;
-  }
-
-  handleNextPage() {
-    if (this.isNextPageable()) {
-      this.setPage(this.props.grid.page + 1)
-    }
-  }
-
-  handlePrevPage() {
-    if (this.isPrevPageable()) {
-      this.setPage(this.props.grid.page - 1)
-    }
-  }
-
-  handleSetPage(page) {
-    this.setPage(page)
   }
 
   getColumnHeader(index) {
@@ -226,11 +210,11 @@ export default class Grid extends Component {
 function TableHeader(props) {
   let minRange = (props.grid.page === 0 || props.grid.page === 1)
                     ? 1
-                    : props.grid.limit * props.grid.page
+                    : (props.grid.limit * (props.grid.page - 1)) + 1
 
   let maxRange = ((minRange + props.grid.limit) > props.grid.total)
                               ? (props.grid.total)
-                              : (minRange + props.grid.limit) - 1
+                              : props.grid.limit * props.grid.page
 
   let grid = props.gridInstance;
 
@@ -243,10 +227,10 @@ function TableHeader(props) {
         Viewing {minRange}-{maxRange} / {props.grid.total}&nbsp;
       </small>
       <ButtonGroup>
-        <Button disabled={!grid.isPrevPageable()} onClick={::grid.handleSetPrevPage}>
+        <Button disabled={!grid.isPrevPageable()} onClick={e => grid.handleSetPrevPage(props.grid.page - 1)}>
           <Icon type="chevron-left" />
         </Button>
-        <Button disabled={!grid.isNextPageable()} onClick={::grid.handleSetNextPage}>
+        <Button disabled={!grid.isNextPageable()} onClick={e => grid.handleSetNextPage(props.grid.page + 1)}>
           <Icon type="chevron-right" />
         </Button>
       </ButtonGroup>
@@ -258,15 +242,17 @@ function TableHeader(props) {
 function TableFooter(props) {
   return <div className="data-grid-footer">
     <div className="text-center">
-      <Pagination items={Math.ceil(props.grid.total / props.grid.limit)}
-                  prev
-                  next
-                  first
-                  last
-                  ellipsis
-                  boundaryLinks
-                  maxButtons={7}
-                  activePage={props.grid.page}
+      <Pagination 
+        items={Math.ceil(props.grid.total / props.grid.limit)}
+        prev
+        next
+        first
+        last
+        ellipsis
+        boundaryLinks
+        maxButtons={7}
+        onSelect={props.gridInstance.handleSetPage}
+        activePage={props.grid.page}
       />
     </div>
   </div>

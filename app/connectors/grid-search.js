@@ -7,12 +7,19 @@ import {
   Button
 } from 'react-bootstrap'
 import Icon from '../components/icon'
+import debounce from 'lodash/debounce'
 
 export default class SearchForm extends Component {
+
+  constructor(props) {
+    super(props)
+    this.search = val => this.props.onSearch(val)
+  }
+
   handleSearch(e) {
     e.preventDefault()
     var node = ReactDOM.findDOMNode(this.refs.searchform)
-    this.props.onSearch(node.value)
+    this.search(node.value)
     return node.value
   }
 
@@ -30,9 +37,10 @@ export default class SearchForm extends Component {
           <FormControl ref="searchform"
                        type="search"
                        componentClass="input"
-                       placeholder="Search for ID, handle, title..."
+                       placeholder="Search for title, handle or vendor..."
                        value={this.props.value}
-                       onKeyUp={::this.handleKeyup} />
+                       onKeyUp={::this.handleKeyup}
+                       onChange={::this.handleKeyup} />
           <InputGroup.Button>
             <Button type="submit"><Icon type="search" /></Button>
           </InputGroup.Button>
