@@ -26,9 +26,8 @@ export function performLogin() {
 
 export function performLogout() {
   if (!lock) return;
-  let protocol = __PRODUCTION__ ? 'https' : 'http'
   lock.logout({
-    returnTo: `${protocol}://${process.env.APP_HOST}/`,
+    returnTo: `${location.protocol}//${location.host}/`,
     client_id: process.env.AUTH0_CLIENT_ID
   })
 }
