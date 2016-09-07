@@ -216,9 +216,16 @@ export default class UserProfile extends Model {
     grossDebits = grossDebits.map(c => c.toJSON())
 
     let summaries = creators.map(creator => {
-      let startingBalance = startingBalances.length ? find(startingBalances, {user_id: creator.user_id}).startingBalance : 0
-      let credits = grossCredits.length ? find(grossCredits, {user_id: creator.user_id}).grossCredits : 0
-      let debits = grossDebits.length ? find(grossDebits, {user_id: creator.user_id}).grossDebits : 0
+      
+      let cStartingBalance = find(startingBalances, {user_id: creator.user_id})
+      let startingBalance = cStartingBalance ? cStartingBalance.startingBalance : 0
+
+      let cGrossCredits = find(grossCredits, {user_id: creator.user_id})
+      let credits = cGrossCredits ? cGrossCredits.grossCredits : 0
+      
+      let cGrossDebit = find(grossDebits, {user_id: creator.user_id})
+      let debits = cGrossDebit ? cGrossDebit.grossDebits : 0
+      
       let summary = { user_id: creator.user_id, user: creator };
 
       summary.startingBalance = (startingBalance / 100).toFixed(2)

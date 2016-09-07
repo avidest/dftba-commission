@@ -12,7 +12,7 @@ export default function LedgerList(props) {
   let { summaries, loadSummaries, push, location } = props
 
   function handleChange(opts) {
-    loadSummaries(opts)
+    loadSummaries({ startDate: opts.start, endDate: opts.end })
   }
 
   return <div>
@@ -23,7 +23,7 @@ export default function LedgerList(props) {
         <SummaryListHeader />
       </thead>
       <tbody>
-        {(!summaries || summaries.length) && <tr className="text-center">
+        {(!summaries || !summaries.length) && <tr className="text-center">
           <td colSpan="6">No transactions for this cycle.</td>
         </tr>}
         {summaries && summaries.map(summary => {

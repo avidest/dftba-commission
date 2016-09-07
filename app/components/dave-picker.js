@@ -22,6 +22,11 @@ export default class DavePicker extends Component {
     editing: false
   };
 
+  componentWillMount() {
+    let currentCycle = getCurrentCycle(this.props)
+    this.setState({range: currentCycle})
+  }
+
   static defaultProps = {
     cycleTime: moment().toString()
   };
@@ -55,13 +60,13 @@ export default class DavePicker extends Component {
 
   handleCancel() {
     this.close()
-    this.setState({...this.state.currentState})
+    this.componentWillMount()
   }
 
   apply() {
     this.close()
     process.nextTick(x => {
-      this.props.onChange && this.props.onChange(this.state)
+      this.props.onChange && this.props.onChange(this.state.range)
     })
   }
 
@@ -70,18 +75,22 @@ export default class DavePicker extends Component {
   }
 
   handleChangeStart(value) {
-    this.setState({startDate: value})
+    let range = this.state.range
+    range.start = value
+    this.setState({ range })
   }
 
   handleChangeEnd(value) {
-    this.setState({endDate: value})
+    let range = this.state.range
+    range.end = value
+    this.setState({ range })
   }
 
   handleApplyPeriod(start, end) {
-    this.setState({
-      startDate: start,
-      endDate: end
-    })
+    let range = this.state.range
+    range.start = start
+    range.end = end
+    this.setState({ range })
     this.apply()
   }
 
@@ -97,7 +106,7 @@ export default class DavePicker extends Component {
 
   render() {
     let currentCycle = getCurrentCycle(this.props)
-    let {start, end} = currentCycle
+    let {start, end} = this.state.range
 
     return <Dropdown id="dave-picker" 
               open={this.state.editing} 
