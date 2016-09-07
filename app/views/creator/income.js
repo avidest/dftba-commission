@@ -26,7 +26,6 @@ const deps = [{
     } = getState()
 
     let q = {
-      ...query,
       user_id: profile.user_id,
       kind: 'credit'
     }
@@ -42,7 +41,8 @@ const mapStateToProps = (state, props) => {
   let ret = {
     transactions: state.ledger.selectedTransactions,
     summary: state.ledger.selectedSummary,
-    creator: state.users.profile
+    creator: state.users.profile,
+    profile: state.users.profile,
   }
   return ret
 }

@@ -29,8 +29,17 @@ export const loadSummaries = createAction('dftba/ledger/LOAD_SUMMARIES', (payloa
 
     let {startDate, endDate} = payload
 
-    startDate = (startDate || currentCycle.start).toISOString()
-    endDate = (endDate || currentCycle.end).toISOString()
+    if (!startDate) {
+      startDate = currentCycle.start
+    }
+
+    if (!endDate) {
+      endDate = currentCycle.end
+    }
+
+    console.log(startDate, endDate)
+    startDate = startDate.toISOString()
+    endDate = endDate.toISOString()
 
     return client.get('users/creators/transactions/summaries', { 
       query: {startDate, endDate}
@@ -42,11 +51,19 @@ export const loadTransactionsByUser = createAction('dftba/ledger/LOAD_TRANSACTIO
   return ({client, getState, dispatch})=> {
     let {settings} = getState()
     let currentCycle = getCurrentCycle(settings)
-
+    console.log('loadTransactionsByUser', payload)
     let {startDate, endDate, user_id} = payload
 
-    startDate = (startDate || currentCycle.start).toISOString()
-    endDate = (endDate || currentCycle.end).toISOString()
+    if (!startDate) {
+      startDate = currentCycle.start
+    }
+
+    if (!endDate) {
+      endDate = currentCycle.end
+    }
+
+    startDate = startDate.toISOString()
+    endDate = endDate.toISOString()
 
     return client.get(`users/${user_id}/transactions`, { 
       query: {startDate, endDate}
@@ -58,11 +75,20 @@ export const loadSummariesByUser = createAction('dftba/ledger/LOAD_TRANSACTIONS_
   return ({client, getState, dispatch})=> {
     let {settings} = getState()
     let currentCycle = getCurrentCycle(settings)
-
+console.log('loadSummariesByUser', payload)
+    
     let {startDate, endDate, user_id} = payload
 
-    startDate = (startDate || currentCycle.start).toISOString()
-    endDate = (endDate || currentCycle.end).toISOString()
+    if (!startDate) {
+      startDate = currentCycle.start
+    }
+
+    if (!endDate) {
+      endDate = currentCycle.end
+    }
+
+    startDate = startDate.toISOString()
+    endDate = endDate.toISOString()
 
 
     return client.get(`users/${user_id}/transactions/summary`, { 

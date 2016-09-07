@@ -76,20 +76,18 @@ export default class DavePicker extends Component {
 
   handleChangeStart(value) {
     let range = this.state.range
-    range.start = value
+    range = moment.range(moment(value), range.end)
     this.setState({ range })
   }
 
   handleChangeEnd(value) {
     let range = this.state.range
-    range.end = value
+    range = moment.range(range.start, moment(value))
     this.setState({ range })
   }
 
   handleApplyPeriod(start, end) {
-    let range = this.state.range
-    range.start = start
-    range.end = end
+    let range = moment.range(start, end)
     this.setState({ range })
     this.apply()
   }

@@ -23,7 +23,8 @@ export default function LedgerList(props) {
     loadTransactionsByUser,
     location,
     params,
-    kind
+    kind,
+    profile
   } = props
 
   if (!transactions) {
@@ -31,8 +32,12 @@ export default function LedgerList(props) {
   }
 
   function handleChange(opts) {
-    loadSummariesByUser({...opts, user_id: params.user_id})
-    loadTransactionsByUser({...opts, user_id: params.user_id})
+    let query = {
+      startDate: opts.start,
+      endDate: opts.end
+    }
+    loadSummariesByUser({...query, user_id: (params.user_id || profile.user_id) })
+    loadTransactionsByUser({...query, user_id: (params.user_id || profile.user_id) })
   }
 
   return <div>
@@ -48,10 +53,10 @@ export default function LedgerList(props) {
       <SummaryListHeader />
       </thead>
       <tbody>
-      {!transactions.length && <tr className="text-center">
+      {(!transactions || !transactions.length) && <tr className="text-center">
         <td colSpan="6">No transactions for this cycle.</td>
       </tr>}
-      {transactions.map(transaction => {
+      {transactions && transactions.map(transaction => {
         return <TransactionRow key={transaction.id} transaction={transaction} />
       })}
       {!props.noSummary === true && <SummaryRow {...props} />}
@@ -71,13 +76,13 @@ function SummaryViewer(props) {
     </Col>
     <Col sm={3}>
       <Well>
-        <h5>Gross Debits</h5>
+        <h5>Gross Expenses</h5>
         <p>${summary.grossDebits || (0).toFixed(2)}</p>
       </Well>
     </Col>
     <Col sm={3}>
       <Well>
-        <h5>Gross Credits</h5>
+        <h5>Gross Income</h5>
         <p>${summary.grossCredits || (0).toFixed(2)}</p>
       </Well>
     </Col>
