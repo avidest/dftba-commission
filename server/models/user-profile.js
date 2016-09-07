@@ -93,17 +93,17 @@ export default class UserProfile extends Model {
       query.where.user_id = user_id
     }
 
-
-    if (opts.startDate) {
-      query.where.created_at = {
-        $gte: new Date(opts.startDate)
-      }
+    if (!opts.startDate) {
+      opts.startDate = (new Date()).toISOString()
     }
 
-    if (opts.endDate) {
-      query.where.created_at = {
-        $lte: new Date(opts.endDate)
-      }
+
+    if (!opts.endDate) {
+      opts.endDate = (new Date()).toISOString()
+    }
+
+    query.where.created_at = {
+      $between: [opts.startDate, opts.endDate]
     }
 
     return Transaction.findAll(query)
@@ -128,16 +128,17 @@ export default class UserProfile extends Model {
     }
 
 
-    if (opts.startDate) {
-      query.where.created_at = {
-        $gte: new Date(opts.startDate)
-      }
+    if (!opts.startDate) {
+      opts.startDate = (new Date()).toISOString()
     }
 
-    if (opts.endDate) {
-      query.where.created_at = {
-        $lte: new Date(opts.endDate)
-      }
+
+    if (!opts.endDate) {
+      opts.endDate = (new Date()).toISOString()
+    }
+
+    query.where.created_at = {
+      $between: [opts.startDate, opts.endDate]
     }
 
     return Transaction.findAll(query)
@@ -155,16 +156,17 @@ export default class UserProfile extends Model {
       query.where.user_id = user_id
     }
 
-    if (opts.startDate) {
-      query.where.created_at = {
-        $gte: new Date(opts.startDate)
-      }
+    if (!opts.startDate) {
+      opts.startDate = (new Date()).toISOString()
     }
 
-    if (opts.endDate) {
-      query.where.created_at = {
-        $lte: new Date(opts.endDate)
-      }
+
+    if (!opts.endDate) {
+      opts.endDate = (new Date()).toISOString()
+    }
+
+    query.where.created_at = {
+      $between: [opts.startDate, opts.endDate]
     }
 
     return Transaction.findAll(query)
@@ -192,7 +194,6 @@ export default class UserProfile extends Model {
       }
     }
 
-    console.log(query)
     return Transaction.findAll(query)
   }
 

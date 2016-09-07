@@ -14,21 +14,17 @@ import {
 } from 'react-bootstrap'
 import { getCurrentCycle, getLastNCycles } from '../../lib/cycle'
 
-const DISPLAY_FORMAT = 'M/D/YY'
+const DISPLAY_FORMAT = 'M/D/YY HH:mm:ss ZZ'
 
 export default class DavePicker extends Component {
 
   state = {
     editing: false
-  }
+  };
 
-  componentWillMount() {
-    let {
-      startDate = moment(),
-      endDate = moment().add(1, 'month')
-    } = this.props
-    this.setState({ startDate, endDate })
-  }
+  static defaultProps = {
+    cycleTime: moment().toString()
+  };
 
   open() {
     this.setState({currentState: this.state})
@@ -54,7 +50,7 @@ export default class DavePicker extends Component {
   }
 
   handleClose() {
-    console.log('close')
+    // this.close()
   }
 
   handleCancel() {
@@ -90,23 +86,26 @@ export default class DavePicker extends Component {
   }
 
   renderCycles() {
-    return getLastNCycles(12).map((cycle, k) => {
-      let [start, end] = cycle
+    return getLastNCycles(12, this.props).map((cycle, k) => {
+      let {start, end} = cycle
       return <MenuItem key={k} onClick={this.handleApplyPeriod.bind(this, start, end)}>
         {k === 0 && 'Current Cycle'}
-        {k > 0 && `${start.format(DISPLAY_FORMAT)}—${end.format(DISPLAY_FORMAT)}`}
+        {k > 0 && displayDate(start, end)}
       </MenuItem>
     })
   }
 
   render() {
+    let currentCycle = getCurrentCycle(this.props)
+    let {start, end} = currentCycle
+
     return <Dropdown id="dave-picker" 
               open={this.state.editing} 
               onOpen={::this.handleOpen} 
               onClose={::this.handleClose} 
               onToggle={::this.handleToggle}>
       <Dropdown.Toggle>
-        {this.state.startDate.format(DISPLAY_FORMAT)}—{this.state.endDate.format(DISPLAY_FORMAT)}
+        {displayDate(start, end)}
       </Dropdown.Toggle>
       <Dropdown.Menu>
         {this.renderCycles()}
@@ -115,17 +114,17 @@ export default class DavePicker extends Component {
         <div className="input-group">
           <DatePicker 
             dateFormat={DISPLAY_FORMAT}
-            selected={this.state.startDate}
-            startDate={this.state.startDate}
-            endDate={this.state.endDate}
+            selected={start}
+            startDate={start}
+            endDate={end}
             className="form-control" 
             onChange={::this.handleChangeStart} 
           />
           <DatePicker 
             dateFormat={DISPLAY_FORMAT}
-            selected={this.state.endDate}
-            startDate={this.state.startDate}
-            endDate={this.state.endDate}
+            selected={end}
+            startDate={start}
+            endDate={end}
             className="form-control" 
             onChange={::this.handleChangeEnd} 
           />
@@ -141,19 +140,6 @@ export default class DavePicker extends Component {
 }
 
 
-/*
-<FormGroup>
-  <FormGroup controlId="formControlsSelect">
-    <ControlLabel>Year</ControlLabel>
-    <InputGroup>
-      <InputGroup.Button>
-        <Button><Icon type="chevron-left" /></Button>
-      </InputGroup.Button>
-      <FormControl type="text" />
-      <InputGroup.Button>
-        <Button><Icon type="chevron-right" /></Button>
-      </InputGroup.Button>
-    </InputGroup>
-  </FormGroup>
-</FormGroup>
-*/
+function displayDate(start, end) {
+  return `${start.format(DISPLAY_FORMAT)}—${end.format(DISPLAY_FORMAT)}`
+}

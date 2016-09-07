@@ -21,7 +21,8 @@ export function renderField(field) {
     label,
     children,
     rows,
-    placeholder
+    placeholder,
+    withoutGroup
   } = field
 
   let {
@@ -47,6 +48,10 @@ export function renderField(field) {
   let formControl = <FormControl {...input} 
                       componentClass={componentClass}
                       children={children} />
+
+  if (withoutGroup) {
+    return formControl
+  }
 
   if (addonBefore || addonAfter) {
     formControl = <InputGroup>

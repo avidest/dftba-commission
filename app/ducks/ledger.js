@@ -2,6 +2,7 @@ import {createAction, handleActions} from 'protium'
 import find from 'lodash/find'
 import {replace} from 'protium/router'
 import moment from 'moment'
+import {getCurrentCycle} from '../../lib/cycle'
 
 export const createTransaction = createAction('dftba/ledger/CREATE_TRANSACTION', payload => {
   return ({client, dispatch})=> {
@@ -23,60 +24,49 @@ export const createTransaction = createAction('dftba/ledger/CREATE_TRANSACTION',
 
 export const loadSummaries = createAction('dftba/ledger/LOAD_SUMMARIES', (payload = {}) => {
   return ({client, getState, dispatch})=> {
-    let location = getState().routing.locationBeforeTransitions
-    let query = Object.keys(payload).length ? {
-      startDate: moment.isMoment(payload.startDate) ? payload.startDate.toISOString() : payload.startDate,
-      endDate: moment.isMoment(payload.endDate) ? payload.endDate.toISOString() : payload.endDate
-    } : {}
+    let {settings} = getState()
+    let currentCycle = getCurrentCycle(settings)
 
-    return client.get('users/creators/transactions/summaries', {
-      query
-    }).then(x => {
-      if (query.endDate !== location.query.endDate || query.startDate !== location.query.startDate) {
-        dispatch(replace({ pathname: location.pathname, query }))
-      }
-      return x
+    let {startDate, endDate} = payload
+
+    startDate = (startDate || currentCycle.start).toISOString()
+    endDate = (endDate || currentCycle.end).toISOString()
+
+    return client.get('users/creators/transactions/summaries', { 
+      query: {startDate, endDate}
     })
   }
 })
 
 export const loadTransactionsByUser = createAction('dftba/ledger/LOAD_TRANSACTIONS_BY_USER', payload => {
   return ({client, getState, dispatch})=> {
-    let location = getState().routing.locationBeforeTransitions
-    let query = Object.keys(payload).length ? {
-      startDate: moment.isMoment(payload.startDate) ? payload.startDate.toISOString() : payload.startDate,
-      endDate: moment.isMoment(payload.endDate) ? payload.endDate.toISOString() : payload.endDate
-    } : {}
+    let {settings} = getState()
+    let currentCycle = getCurrentCycle(settings)
 
-    if (payload.kind) {
-      query.kind = payload.kind
-    }
+    let {startDate, endDate, user_id} = payload
 
-    return client.get(`users/${payload.user_id}/transactions`, {
-      query
+    startDate = (startDate || currentCycle.start).toISOString()
+    endDate = (endDate || currentCycle.end).toISOString()
+
+    return client.get(`users/${user_id}/transactions`, { 
+      query: {startDate, endDate}
     })
   }
 })
 
 export const loadSummariesByUser = createAction('dftba/ledger/LOAD_TRANSACTIONS_SUMMARIES_BY_USER', payload => {
   return ({client, getState, dispatch})=> {
-    let location = getState().routing.locationBeforeTransitions
-    let query = Object.keys(payload).length ? {
-      startDate: moment.isMoment(payload.startDate) ? payload.startDate.toISOString() : payload.startDate,
-      endDate: moment.isMoment(payload.endDate) ? payload.endDate.toISOString() : payload.endDate
-    } : {}
+    let {settings} = getState()
+    let currentCycle = getCurrentCycle(settings)
 
-    if (payload.kind) {
-      query.kind = payload.kind
-    }
+    let {startDate, endDate, user_id} = payload
 
-    return client.get(`users/${payload.user_id}/transactions/summary`, {
-      query
-    }).then(x => {
-      if (query.endDate !== location.query.endDate || query.startDate !== location.query.startDate) {
-        dispatch(replace({ pathname: location.pathname, query }))
-      }
-      return x
+    startDate = (startDate || currentCycle.start).toISOString()
+    endDate = (endDate || currentCycle.end).toISOString()
+
+
+    return client.get(`users/${user_id}/transactions/summary`, { 
+      query: {startDate, endDate}
     })
   }
 })

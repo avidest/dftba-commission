@@ -6,7 +6,7 @@ import {
   Button,
   Pagination
 } from 'react-bootstrap'
-import DavePicker from './dave-picker'
+import DatePicker from '../connectors/date-picker'
 
 export default function LedgerList(props) {
   let { summaries, loadSummaries, push, location } = props
@@ -16,7 +16,7 @@ export default function LedgerList(props) {
   }
 
   return <div>
-    <DavePicker onChange={handleChange} />
+    <DatePicker onChange={handleChange} />
     <br/><br/>
     <Table hover responsive>
       <thead>
@@ -48,7 +48,7 @@ function SummaryListHeader(props) {
 function SummaryRow(props) {
   let { summary } = props
   let style = {verticalAlign: 'middle'}
-
+  let netBalance = parseFloat(summary.netBalance)
   return <tr>
     <td style={style}>
       <Image style={{maxWidth: '20px', backgroundSize: 'cover'}}
@@ -63,12 +63,14 @@ function SummaryRow(props) {
     <td style={style}>{summary.netBalance}</td>
     <td style={style} className="text-right">
       <LinkContainer to={`/admin/ledger/${summary.user.user_id}`}>
-        <Button bsSize="xs">
+        <Button>
           Details
         </Button>
       </LinkContainer>
       &nbsp;
-      <Button bsSize="xs" bsStyle="primary">
+      <Button bsStyle="primary" 
+              disabled={netBalance <= 0} 
+              onClick={e => props.payout(summary.netBalance)}>
         Pay Out
       </Button>
     </td>

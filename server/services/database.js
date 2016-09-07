@@ -26,10 +26,6 @@ const options = {
   }
 }
 
-if (process.env.NODE_ENV === 'production') {
-  options.config.logging = false
-}
-
 const database = new Builder(options, [
   Commission,
   Order,

@@ -1,7 +1,9 @@
 import {
   INTEGER,
   TEXT,
-  ENUM
+  ENUM,
+  DATE,
+  NOW
 } from 'sequelize'
 
 import {
@@ -17,9 +19,16 @@ export default class Transaction extends Model {
 
   description = { type: TEXT };
 
-  kind = { type: ENUM('debit', 'credit'), allowNull: false };
+  kind = { 
+    type: ENUM('debit', 'credit'), 
+    allowNull: false 
+  };
 
-
+  effective_at = { 
+    type: DATE, 
+    defaultValue: NOW,
+    allowNull: true
+  };
 
   amount = { 
     type: INTEGER,

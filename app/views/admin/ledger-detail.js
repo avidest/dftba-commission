@@ -21,7 +21,9 @@ const deps = [{
       ledger: {
         selectedSummary,
         selectedTransactions
-      }, users: {creators}
+      }, 
+      users: {creators},
+      settings
     } = getState()
 
     let q = {...query, user_id: params.user_id}
@@ -30,12 +32,14 @@ const deps = [{
       promises.push(dispatch(loadCreators()))
     }
 
+    let payload = {...settings, user_id: params.user_id}
+
     if (!selectedSummary || (params.user_id !== selectedSummary.user_id)) {
-      promises.push(dispatch(loadSummariesByUser(q)))
+      promises.push(dispatch(loadSummariesByUser(payload)))
     }
 
     if (!selectedTransactions || !selectedTransactions.length || (params.user_id !== selectedSummary.user_id)) {
-      promises.push(dispatch(loadTransactionsByUser(q)))
+      promises.push(dispatch(loadTransactionsByUser(payload)))
     }
 
     return Promise.all(promises)

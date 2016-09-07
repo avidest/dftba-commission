@@ -11,7 +11,7 @@ import {
   Label
 } from 'react-bootstrap'
 import classnames from 'classnames'
-import DavePicker from './dave-picker'
+import DatePicker from '../connectors/date-picker'
 
 export default function LedgerList(props) {
   let {
@@ -26,13 +26,17 @@ export default function LedgerList(props) {
     kind
   } = props
 
+  if (!transactions) {
+    transactions = []
+  }
+
   function handleChange(opts) {
     loadSummariesByUser({...opts, user_id: params.user_id})
     loadTransactionsByUser({...opts, user_id: params.user_id})
   }
 
   return <div>
-    <DavePicker onChange={handleChange} />
+    <DatePicker onChange={handleChange} />
     <br/><br/>
     {!props.noSummary === true && <div>
       <h3>Summary</h3>
@@ -62,25 +66,25 @@ function SummaryViewer(props) {
     <Col sm={3}>
       <Well>
         <h5>Starting Balance</h5>
-        <p>${summary.startingBalance}</p>
+        <p>${summary.startingBalance || (0).toFixed(2)}</p>
       </Well>
     </Col>
     <Col sm={3}>
       <Well>
         <h5>Gross Debits</h5>
-        <p>${summary.grossDebits}</p>
+        <p>${summary.grossDebits || (0).toFixed(2)}</p>
       </Well>
     </Col>
     <Col sm={3}>
       <Well>
         <h5>Gross Credits</h5>
-        <p>${summary.grossCredits}</p>
+        <p>${summary.grossCredits || (0).toFixed(2)}</p>
       </Well>
     </Col>
     <Col sm={3}>
       <Well>
         <h5>Net Balance</h5>
-        <p>${summary.netBalance}</p>
+        <p>${summary.netBalance || (0).toFixed(2)}</p>
       </Well>
     </Col>
   </Row>
@@ -123,7 +127,7 @@ function SummaryRow(props) {
     <td />
     <td />
     <td className="text-right"><strong>Total:</strong></td>
-    <td style={style} className="text-right"><strong>${summary.netBalance}</strong></td>
+    <td style={style} className="text-right"><strong>${summary.netBalance || (0).toFixed(2)}</strong></td>
   </tr>
 }
 
