@@ -23,10 +23,10 @@ export default function LedgerList(props) {
         <SummaryListHeader />
       </thead>
       <tbody>
-      {!summaries.length && <tr className="text-center">
-        <td colSpan="6">No transactions for this cycle.</td>
-      </tr>}
-        {summaries.map(summary => {
+        {(!summaries || summaries.length) && <tr className="text-center">
+          <td colSpan="6">No transactions for this cycle.</td>
+        </tr>}
+        {summaries && summaries.map(summary => {
           return <SummaryRow key={summary.user_id} summary={summary} />
         })}
       </tbody>
