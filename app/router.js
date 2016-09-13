@@ -14,7 +14,6 @@ import UserProfile        from './views/profile'
 import NotFound           from './views/notfound'
 
 // Admin view
-import AdminDashboard                   from './views/admin/dashboard'
 import UserList                         from './views/admin/user-list'
 import UserDetail                       from './views/admin/user-detail'
 import LedgerList                       from './views/admin/ledger-list'
@@ -38,7 +37,7 @@ export default new Router({
       <IndexRoute title="Welcome" component={Index} />
       <Route path="profile" title="User Profile" component={UserProfile} />
       <Route path="admin" onEnter={authenticate(store)}>
-        <IndexRoute                 title="Admin Dashboard"   component={AdminDashboard} />
+        <IndexRedirect to="ledger" />
         <Route path="ledger"        title="Ledger"            component={LedgerList}>
           <Route path="transaction" title="Add Transaction"   component={AddTransactionModal} />
         </Route>

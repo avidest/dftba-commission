@@ -7,6 +7,8 @@ export const loadToken = createAction('dftba/AUTH0_LOAD_TOKEN')
 
 export const loadProfile = createAction('dftba/AUTH0_LOAD_PROFILE')
 
+export const resetUser = createAction('dftba/AUTH0_RESET_USER')
+
 export const login = createAction('dftba/AUTH0_LOGIN', payload => {
   return ({dispatch})=> {
     return performLogin().then(result => {
@@ -113,6 +115,7 @@ export default handleActions({
   [logout]: (state, {payload}) => ({ ...state, profile: null, token: null }),
   [loadCreators]: (state, {payload}) => ({ ...state, creators: payload }),
   [loadUsers]: (state, {payload}) => ({ ...state, list: payload }),
+  [resetUser]: (state, action) => ({ ...state, selected: null }),
   [loadUser]: updateSelectedUser,
   [createUser]: updateSelectedUser,
   [updateUser]: updateSelectedUser

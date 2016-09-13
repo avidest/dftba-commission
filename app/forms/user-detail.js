@@ -12,7 +12,12 @@ import {
   ButtonGroup
 } from 'react-bootstrap'
 
-const formSettings = {form: 'user-detail', validate}
+const formSettings = {
+  enableReinitialize: true,
+  destroyOnUnmount: false,
+  form: 'user-detail',
+  validate
+}
 const mapPropsToState = (state, props, params) => {
   var {params, location: {pathname}} = props
   var map = { current_user: state.users.profile }

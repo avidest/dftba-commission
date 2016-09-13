@@ -23,7 +23,7 @@ export default function AppHeader(props) {
     <Navbar inverse fixedTop className="dftba">
       <Navbar.Header>
         <Navbar.Brand className="dftba-brand">
-          <Link to="/" onlyActiveOnIndex>DFTBA</Link>
+          <Link to={profile && profile.app_metadata.role === 'admin' ? '/admin' : '/creator'} onlyActiveOnIndex>DFTBA</Link>
         </Navbar.Brand>
         <Navbar.Toggle />
       </Navbar.Header>
@@ -63,14 +63,11 @@ export default function AppHeader(props) {
 
 function AdminNav(props) {
   return <Nav>
-    <LinkContainer to="/admin" onlyActiveOnIndex>
-      <NavItem eventKey={1}><Icon type="tachometer" /> Dashboard</NavItem>
+    <LinkContainer to="/admin/ledger">
+      <NavItem eventKey={3}><Icon type="bar-chart" /> Ledger</NavItem>
     </LinkContainer>
     <LinkContainer to="/admin/products">
       <NavItem eventKey={2}><Icon type="shopping-cart" /> Products</NavItem>
-    </LinkContainer>
-    <LinkContainer to="/admin/ledger">
-      <NavItem eventKey={3}><Icon type="bar-chart" /> Ledger</NavItem>
     </LinkContainer>
   </Nav>
 }

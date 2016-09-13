@@ -31,13 +31,13 @@ export default class SearchForm extends Component {
   }
 
   render() {
-    return <form onSubmit={::this.handleSearch}>
+    return <form onSubmit={::this.handleSearch} style={{display: 'inline-block', float: 'left', marginRight: '8px'}}>
       <FormGroup id="grid-search">
         <InputGroup>
           <FormControl ref="searchform"
                        type="search"
                        componentClass="input"
-                       placeholder="Search for title, handle or vendor..."
+                       placeholder={this.props.label}
                        value={this.props.value}
                        onKeyUp={::this.handleKeyup}
                        onChange={::this.handleKeyup} />
@@ -47,5 +47,9 @@ export default class SearchForm extends Component {
         </InputGroup>
       </FormGroup>
     </form>
+  }
+
+  static defaultProps = {
+    label: 'Search...'
   }
 }

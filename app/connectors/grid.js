@@ -7,9 +7,12 @@ import {
   Table,
   Pagination,
   ButtonGroup,
-  Button
+  Button,
+  DropdownButton,
+  MenuItem
 } from 'react-bootstrap'
 import SearchForm from './grid-search'
+import {push, replace} from 'protium/router'
 
 const mapStateToProps = (state, props)=> {
   return {
@@ -18,7 +21,11 @@ const mapStateToProps = (state, props)=> {
 }
 
 const mapDispatchToProps = dispatch => ({
-  actions: bindActionCreators(gridActions, dispatch)
+  actions: bindActionCreators(gridActions, dispatch),
+  routing: bindActionCreators({
+    push,
+    replace
+  }, dispatch)
 })
 
 const ComponentPrototype = Component.prototype
@@ -29,6 +36,7 @@ export default class Grid extends Component {
   events = [
     'init',
     'reset',
+    'bulkAction',
     'loadAll',
     'loadOne',
     'select',
@@ -85,9 +93,14 @@ export default class Grid extends Component {
     let {columns} = this.props
     let Selector = columns[colIndex][1]
     if (typeof Selector === 'function' || ComponentPrototype.isPrototypeOf(Selector)) {
-      return <Selector {...{record, rowIndex, colIndex}} />
+      return <Selector {...{record, rowIndex, colIndex}} {...this.props} />
     }
     return record[Selector]
+  }
+
+  getColumnProps(index) {
+    let {columns} = this.props
+    return columns[index][2] || {}
   }
 
   isAllSelected() {
@@ -117,12 +130,16 @@ export default class Grid extends Component {
         </th>}
         {this.props.columns.map((col, colIndex) => {
           let label = this.getColumnHeader(colIndex)
-          return <th style={this.props.cellStyle}
-                     key={`header-cell-${colIndex}`} onClick={event => this.handleHeaderClick({
-                        label,
-                        rowIndex,
-                        event
-                      })}>{label}</th>
+          let extra = this.getColumnProps(colIndex)
+          return <th
+            style={this.props.cellStyle}
+            key={`header-cell-${colIndex}`}
+            {...extra}
+            onClick={event => this.handleHeaderClick({
+              label,
+              rowIndex,
+              event
+            })}>{label}</th>
         })}
       </tr>
     </thead>
@@ -144,15 +161,17 @@ export default class Grid extends Component {
       {this.props.columns.map((col, colIndex)=> {
         let label = this.getColumnHeader(colIndex)
         let datum = this.getColumnDatum(record, rowIndex, colIndex)
+        let extra = this.getColumnProps(colIndex)
         return <td style={this.props.cellStyle}
-                   key={`cell-${rowIndex}-${colIndex}`}
-                   onClick={event => this.handleCellClick({
-                     record,
-                     rowIndex,
-                     colIndex,
-                     event,
-                     label
-                   })}>{datum}</td>
+          key={`cell-${rowIndex}-${colIndex}`}
+          {...extra}
+          onClick={event => this.handleCellClick({
+            record,
+            rowIndex,
+            colIndex,
+            event,
+            label
+          })}>{datum}</td>
       })}
     </tr>
   }
@@ -182,7 +201,7 @@ export default class Grid extends Component {
         {header && this.renderHeader(grid.data)}
         {this.renderBody(grid.data)}
       </Table>
-      <TableFooter {...this.props} gridInstance={this} />
+      {this.props.pageable && <TableFooter {...this.props} gridInstance={this} />}
     </div>
   }
 
@@ -195,7 +214,10 @@ export default class Grid extends Component {
     onSetPage: PropTypes.func,
     onNextPage: PropTypes.func,
     onPrevPage: PropTypes.func,
-    onSearch: PropTypes.func
+    onSearch: PropTypes.func,
+    searchLabel: PropTypes.string,
+    pageable: PropTypes.bool,
+    bulkActions: PropTypes.array
   }
 
   static defaultProps = {
@@ -203,7 +225,10 @@ export default class Grid extends Component {
     header: true,
     cellStyle: {},
     columns: [],
-    selectable: false
+    selectable: false,
+    pageable: true,
+    bulkActions: [],
+    searchLabel: 'Search for title, handle or vendor...'
   }
 }
 
@@ -212,17 +237,24 @@ function TableHeader(props) {
                     ? 1
                     : (props.grid.limit * (props.grid.page - 1)) + 1
 
+  if (props.grid.total === 0) {
+    minRange = 0;
+  }
+
   let maxRange = ((minRange + props.grid.limit) > props.grid.total)
                               ? (props.grid.total)
                               : props.grid.limit * props.grid.page
 
   let grid = props.gridInstance;
+  let hasBulkActions = !!props.bulkActions.length
+  let bulkActionable = !!(props.grid.selected.length && props.bulkActions.length)
 
   return <div className="clearfix data-grid-header">
     <div className="pull-left">
-      <SearchForm value={props.grid.query} onSearch={::grid.handleSetQuery} />
+      <SearchForm label={props.searchLabel} value={props.grid.query} onSearch={::grid.handleSetQuery} />
+      {hasBulkActions && <BulkActions {...props} gridInstance={grid} disabled={!bulkActionable} />}
     </div>
-    <div className="pull-right">
+    {props.pageable && <div className="pull-right">
       <small className="count">
         Viewing {minRange}-{maxRange} / {props.grid.total}&nbsp;
       </small>
@@ -234,10 +266,26 @@ function TableHeader(props) {
           <Icon type="chevron-right" />
         </Button>
       </ButtonGroup>
-    </div>
+    </div>}
   </div>
 }
 
+function BulkActions(props) {
+  let {data, selected} = props.grid
+  let selectedObjs = []
+  for (let i = 0; i < selected.length; i++) {
+    selectedObjs.push(data[selected[i]])
+  }
+  return <div style={{display: 'inline-block'}}>
+    <DropdownButton title="Bulk Actions" disabled={props.disabled}>
+      {props.bulkActions.map((action, key)=> {
+        return <MenuItem eventKey={key} key={key} onClick={e => {
+          props.gridInstance.handleBulkAction({ action, data: selectedObjs });
+        }}>{action.label}</MenuItem>
+      })}
+    </DropdownButton>
+  </div>
+}
 
 function TableFooter(props) {
   return <div className="data-grid-footer">

@@ -4,14 +4,11 @@ import {LinkContainer, push, replace} from 'protium/router'
 import {Grid, Row, Col, ButtonGroup, Button} from 'react-bootstrap'
 import PageHeader from '../../components/page-header'
 import LedgerDetail from '../../components/ledger-detail'
-import find from 'lodash/find'
+import DatePicker from '../../connectors/date-picker'
 import {
   loadSummariesByUser,
   loadTransactionsByUser
 } from '../../ducks/ledger'
-import {
-  loadCreators
-} from '../../ducks/users'
 
 const deps = [{
   promise({ store: {getState, dispatch}, location: {query}, params }) {
@@ -56,14 +53,30 @@ const mapDispatchToProps = {
 
 @asyncConnect(deps, mapStateToProps, mapDispatchToProps)
 export default class CreatorIncomeView extends Component {
+
+  handleDateChange(opts) {
+    let {profile} = this.props
+    let query = {
+      startDate: opts.start,
+      endDate: opts.end,
+      kind: 'credit'
+    }
+    this.props.loadSummariesByUser({...query, user_id: profile.user_id })
+    this.props.loadTransactionsByUser({...query, user_id: profile.user_id })
+  }
+
   render() {
     let title = `My Income`
     return <div>
-      <PageHeader title={title} />
+      <PageHeader title={title}>
+        <div className="pull-right">
+          <DatePicker onChange={::this.handleDateChange} bsSize="lg" />
+        </div>
+      </PageHeader>
       <Grid>
         <Row>
           <Col xs={12}>
-            <LedgerDetail {...this.props} noSummary />
+            <LedgerDetail {...this.props} noSummary kind="credit" />
           </Col>
         </Row>
       </Grid>

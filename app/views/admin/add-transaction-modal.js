@@ -2,13 +2,9 @@ import React, {Component} from 'react'
 import {asyncConnect} from 'protium'
 import {LinkContainer, goBack} from 'protium/router'
 import {Grid, Row, Col, Button, ButtonGroup, Modal} from 'react-bootstrap'
-import PageHeader from '../../components/page-header'
-import ProductDetail from '../../components/product-detail'
-import ProductStats from '../../components/product-stats'
 import TransactionDetailForm from '../../forms/transaction-detail'
 import {createTransaction} from '../../ducks/ledger'
 import {loadCreators} from '../../ducks/users'
-import find from 'lodash/find'
 
 const dataDeps = [
   {
@@ -60,15 +56,19 @@ export default class ProductDetailView extends Component {
   }
 
   render() {
-    console.log(this.props)
     let {product, creators} = this.props
     return <Modal show={true} onHide={::this.handleClose}>
       <Modal.Header closeButton>
-        <Modal.Title>Add {this.type === 'debit' ? 'Debit' : 'Credit'} Transaction</Modal.Title>
+        <Modal.Title>Create {this.type === 'debit' ? 'Expense' : 'Credit'}</Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        <TransactionDetailForm ref="transactionForm"
-          noSubmit onSubmit={::this.handleSubmit} type={this.type} />
+        <TransactionDetailForm
+          ref="transactionForm"
+          noSubmit
+          onSubmit={::this.handleSubmit}
+          type={this.type}
+          params={this.props.location.query}
+        />
       </Modal.Body>
       <Modal.Footer>
         <ButtonGroup>

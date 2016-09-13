@@ -6,7 +6,36 @@ import {
   Button,
   Pagination
 } from 'react-bootstrap'
+import Grid from '../connectors/grid'
 import DatePicker from '../connectors/date-picker'
+
+
+const layout = [
+  {
+    key: 'title',
+    header: 'Title',
+    width: 300,
+    isResizable: true
+  },
+  {
+    key: 'vendor',
+    header: 'Vendor',
+    width: 150,
+    isResizable: true
+  },
+  {
+    key: 'actions',
+    header: 'Actions',
+    align: 'right',
+    flexGrow: true,
+    cell(props, item, value) {
+      return <div>
+        Do stuff
+      </div>
+    }
+  }
+
+]
 
 export default function LedgerList(props) {
   let { summaries, loadSummaries, push, location } = props
@@ -18,19 +47,9 @@ export default function LedgerList(props) {
   return <div>
     <DatePicker onChange={handleChange} />
     <br/><br/>
-    <Table hover responsive>
-      <thead>
-        <SummaryListHeader />
-      </thead>
-      <tbody>
-        {(!summaries || !summaries.length) && <tr className="text-center">
-          <td colSpan="6">No transactions for this cycle.</td>
-        </tr>}
-        {summaries && summaries.map(summary => {
-          return <SummaryRow key={summary.user_id} summary={summary} />
-        })}
-      </tbody>
-    </Table>
+    <Grid
+      columns={layout}
+    />
   </div>
 }
 
@@ -39,7 +58,7 @@ function SummaryListHeader(props) {
     <th>Creator</th>
     <th>Starting Balance</th>
     <th>Gross Expenses</th>
-    <th>Gross Credits</th>
+    <th>Gross Income</th>
     <th>Net Balance</th>
     <th className="text-right">Actions</th>
   </tr>

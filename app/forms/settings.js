@@ -30,11 +30,11 @@ export default class SettingsForm extends Component {
     return <Form onSubmit={handleSubmit}>
 
       <FormGroup>
-        <Col smOffset={3} sm={6}>
+        <Col smOffset={2} sm={8}>
           <Row>
-            <Col xs={6}>
+            <Col xs={4}>
               <FormGroup id="settings-time-date">
-                <Field component={renderField} label="Day" componentClass="select" name="day">
+                <Field component={renderField} label="Day of Month" componentClass="select" name="day">
                   {range(32).map(n => {
                     if (n === 0) return null;
                     if (n < 10) { n = '0'+(n+'') }
@@ -43,9 +43,9 @@ export default class SettingsForm extends Component {
                 </Field>
               </FormGroup>
             </Col>
-            <Col xs={6}>
+            <Col xs={4}>
               <FormGroup id="settings-time-group">
-                <ControlLabel>Time</ControlLabel>
+                <ControlLabel>Time of Day</ControlLabel>
                 <InputGroup id="settings-time">
                   <Field component={renderField} withoutGroup componentClass="select" name="hours">
                     {range(24).map(n => {
@@ -53,7 +53,7 @@ export default class SettingsForm extends Component {
                       return <option key={`hours-${n}`} value={n}>{n}</option>
                     })}
                   </Field>
-                  <span className="input-group-addon">:</span>
+                  <span className="input-group-addon" style={{borderRadius: '5px'}}>:</span>
                   <Field component={renderField} withoutGroup componentClass="select" name="minutes">
                     {range(60).map(n => {
                     if (n < 10) { n = '0'+(n+'') }
@@ -63,13 +63,26 @@ export default class SettingsForm extends Component {
                 </InputGroup>
               </FormGroup>
             </Col>
+            <Col xs={4}>
+              <FormGroup id="settings-time-date">
+                <Field component={renderField} label="TZ Offset" componentClass="select" name="offset">
+                  {range(13, -12).map(n => {
+                    let val = `${n <= 0 ? '-' : '+'}${(n < 10 && n > -10) ? ('0'+Math.abs(n)) : Math.abs(n)}:00`
+                    if (n === 0) {
+                      val = 'UTC'
+                    }
+                    return <option key={`offset-${val}`} value={val}>{val}</option>
+                  })}
+                </Field>
+              </FormGroup>
+            </Col>
           </Row>
         </Col>
       </FormGroup>
 
 
       <FormGroup>
-        <Col smOffset={3} sm={6}>
+        <Col smOffset={2} sm={8}>
           <ButtonGroup style={{marginTop: '15px'}}>
 
             <Button onClick={reset} bsSize="lg" disabled={submitting || pristine}>
@@ -90,9 +103,10 @@ export default class SettingsForm extends Component {
   }
 }
 
-function range(x) {
+function range(x, y) {
   let arr = []
   let i = 0;
+  if (y) { i = y }
   while(i < x) {
     arr.push(i)
     i++;

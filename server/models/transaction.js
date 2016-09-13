@@ -3,7 +3,8 @@ import {
   TEXT,
   ENUM,
   DATE,
-  NOW
+  NOW,
+  BOOLEAN
 } from 'sequelize'
 
 import {
@@ -24,10 +25,9 @@ export default class Transaction extends Model {
     allowNull: false 
   };
 
-  effective_at = { 
-    type: DATE, 
-    defaultValue: NOW,
-    allowNull: true
+  payout = {
+    type: BOOLEAN,
+    defaultValue: false
   };
 
   amount = { 
@@ -86,20 +86,20 @@ export default class Transaction extends Model {
     // Amount = (line.price * discountPercent * commissionPercent) + commissionFlat
     let amount = (((flat + percentFlat) * line.quantity) / 100).toFixed(2)
     
-    console.log(`Line #${line.id} ——
-  - User Commission   : ${commission.user_id}
-  - Price             : ${parseFloat(line.price)}
-  - Line Total        : ${parseFloat(line.price) * line.quantity}
-  - Line Discount    %: ${discountRatio}
-  - Commission       %: ${commission.percent}
-  - Commission       $: ${commission.flat}
-  - Total Commission $: ${amount}
-`)
+//     console.log(`Line #${line.id} ——
+//   - User Commission   : ${commission.user_id}
+//   - Price             : ${parseFloat(line.price)}
+//   - Line Total        : ${parseFloat(line.price) * line.quantity}
+//   - Line Discount    %: ${discountRatio}
+//   - Commission       %: ${commission.percent}
+//   - Commission       $: ${commission.flat}
+//   - Total Commission $: ${amount}
+// `)
     return amount
   }
 
   static async createFromOrder(order, line) {
-    let product = await line.getProduct()
+    let [product, variant] = await Promise.all([line.getProduct(), line.getVariant()])
     let commissions = await product.getCommissions({ include: [{all: true} ]})
 
     let toCreate = []
@@ -109,7 +109,7 @@ export default class Transaction extends Model {
         line_item_id: line.id,
         order_id: order.id,
         user_id: commish.user_id,
-        description: `Commission earned for order #${order.id}, line-item #${line.id}`,
+        description: `Commission earned for order #${order.id}, ${line.quantity}x ${product.title} ${variant.title === 'Default Title' ? '' : ('/ ' + variant.title)}`,
         kind: 'credit',
         amount: this.calcCommissionAmount(order, line, commish)
       })

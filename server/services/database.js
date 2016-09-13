@@ -92,27 +92,55 @@ export async function sync(force = false) {
     }
 
 
-    // if (__DEVELOPMENT__) {
-    //   var tranns = []
-    //   for (let k = 0; k < 100; k++) {
-    //     console.time('time-' + k)
-    //     for (let i = 0; i < 1000; i++) {
-    //       let kind = Math.random() > 0.5 ? 'credit' : 'debit'
-    //       tranns.push({
-    //         description: 'test ' + i,
-    //         amount: (Math.random() * 100) * (kind === 'credit' ? 1 : -1),
-    //         kind,
-    //         user_id: 'auth0|57b4a7d43c7cb335712a36b8'
-    //       })
-    //     }
-    //     console.log('starting bulkCreate', k)
-    //     await Transaction.bulkCreate(tranns)
-    //     console.log('finished bulkCreate', k)
-    //     console.timeEnd('time-' + k)
-    //   }
-    // }
+    if (__DEVELOPMENT__) {
+      return;
+      var sample = require('lodash/sample')
+      var moment = require('moment')
+      require('moment-range')
+      let creators = await UserProfile.findAllCreators()
+      let trans = []
+      let range = moment.range('1/5/16', moment())
+
+      range.by('day', moment => {
+        console.log(moment.format('lll'))
+        for (let i = 0; i < 50; i++) {
+          let creator = sample(creators)
+          let neg = Math.random() > 0.7
+          let dollars = getRandomInt(0, 100)
+          let cents = getRandomInt(0, 100)
+          let amount = dollars + (cents / 100)
+          let hour = getRandomInt(0, 24)
+          let minute = getRandomInt(0, 60)
+          let second = getRandomInt(0, 60)
+          if (neg) {
+            amount = amount * -1
+          }
+          let time = moment.hours(hour).minutes(minute).seconds(second).toJSON()
+          trans.push({
+            amount,
+            kind: neg ? 'debit' : 'credit',
+            user_id: creator.user_id,
+            description: 'Test amount la la la',
+            created_at: time,
+            updated_at: time,
+            effective_at: time
+          })
+        }
+      })
+
+      Transaction.bulkCreate(trans)
+
+    }
 
   } catch(e) {
     console.error(e)
   }
+}
+
+// Returns a random integer between min (included) and max (excluded)
+// Using Math.round() will give you a non-uniform distribution!
+function getRandomInt(min, max) {
+  min = Math.ceil(min);
+  max = Math.floor(max);
+  return Math.floor(Math.random() * (max - min)) + min;
 }

@@ -7,11 +7,12 @@ export function performLogin() {
   return new Promise((resolve, reject)=> {
     if (!lock) return Promise.resolve(null);
     return lock.show({
-      icon: `//${process.env.APP_HOST}/assets/images/logo.png`,
+      icon: false,
       sso: false,
       theme: 'default a0-theme-dftba',
       disableSignupAction: true,
-      closable: true,
+      closable: false,
+      container: 'login-container',
       authParams: {
         scope: 'user_id openid email picture user_metadata app_metadata'
       }

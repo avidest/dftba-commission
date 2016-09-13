@@ -8,8 +8,12 @@ import {
   loadUser,
   createUser,
   updateUser,
-  removeUser
+  removeUser,
+  resetUser
 } from '../../ducks/users'
+import {
+  initialize
+} from 'redux-form'
 
 const deps = [
   {
@@ -19,6 +23,9 @@ const deps = [
       let hasIdAndNotCreate = params.id && params.id.length && params.id !== 'create'
       if (hasIdAndNotCreate && !users.selected || hasIdAndNotCreate && users.selected.id != params.id) {
         promises.push(store.dispatch(loadUser(params)))
+      }
+      if (!hasIdAndNotCreate) {
+        promises.push(store.dispatch(initialize('user-detail', {})))
       }
       return Promise.all(promises)
     }

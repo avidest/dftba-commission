@@ -12,42 +12,30 @@ import {
 } from 'react-bootstrap'
 import classnames from 'classnames'
 import DatePicker from '../connectors/date-picker'
+import moment from 'moment'
+import filter from 'lodash/filter'
 
 export default function LedgerList(props) {
   let {
     transactions,
     summary,
-    push,
-    replace,
-    loadSummariesByUser,
-    loadTransactionsByUser,
-    location,
-    params,
-    kind,
-    profile
+    kind
   } = props
 
   if (!transactions) {
     transactions = []
   }
 
-  function handleChange(opts) {
-    let query = {
-      startDate: opts.start,
-      endDate: opts.end
-    }
-    loadSummariesByUser({...query, user_id: (params.user_id || profile.user_id) })
-    loadTransactionsByUser({...query, user_id: (params.user_id || profile.user_id) })
+  if (kind) {
+    transactions = filter(transactions, t => t.kind === kind)
   }
 
   return <div>
-    <DatePicker onChange={handleChange} />
-    <br/><br/>
     {!props.noSummary === true && <div>
       <h3>Summary</h3>
       <SummaryViewer summary={summary} />
+      <h3>Transaction Details</h3>
     </div>}
-    <h3>Transaction Details</h3>
     <Table hover responsive>
       <thead>
       <SummaryListHeader />
@@ -57,7 +45,7 @@ export default function LedgerList(props) {
         <td colSpan="6">No transactions for this cycle.</td>
       </tr>}
       {transactions && transactions.map(transaction => {
-        return <TransactionRow key={transaction.id} transaction={transaction} />
+        return <TransactionRow key={transaction.id} transaction={transaction} kind={props.kind} />
       })}
       {!props.noSummary === true && <SummaryRow {...props} />}
       </tbody>
@@ -107,20 +95,26 @@ function SummaryListHeader(props) {
 function TransactionRow(props) {
   let {transaction} = props
   let amountClasses = classnames({
-    'text-danger': transaction.kind === 'debit',
-    'text-success': transaction.kind === 'credit'
+    'text-danger': transaction.kind === 'debit' && !transaction.payout && props.kind !== 'debit',
+    'text-success': transaction.payout,
   }, 'text-right')
+
+  let labelStyle = 'default'
+  if (transaction.payout) {
+    labelStyle = 'success'
+  }
+
   return <tr>
-    <td><Label>
-      {transaction.kind.toUpperCase()}
+    <td><Label bsStyle={labelStyle} style={{display: 'block', paddingTop: '0.3em'}}>
+      {transaction.payout ? 'PAYOUT' : transaction.kind.toUpperCase()}
     </Label></td>
     <td className="text-muted">
-      {transaction.created_at}
+      {moment(transaction.created_at).format('lll')}
     </td>
     <td className="text-muted">
       {transaction.description ? transaction.description : '<No description provided>'}
     </td>
-    <td className={amountClasses}>${transaction.amount}</td>
+    <td className={amountClasses}>${transaction.payout ? (parseFloat(transaction.amount) * -1) : transaction.amount}</td>
   </tr>
 }
 

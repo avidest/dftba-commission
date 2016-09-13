@@ -77,6 +77,7 @@ const mutators = {
   })),
   setQuery: reducer((state, action)=> ({
     ...state,
+    selected: [],
     query: action.payload
   }))
 }

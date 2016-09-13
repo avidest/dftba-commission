@@ -9,9 +9,7 @@ import {
   loadSummariesByUser,
   loadTransactionsByUser
 } from '../../ducks/ledger'
-import {
-  loadCreators
-} from '../../ducks/users'
+import DatePicker from '../../connectors/date-picker'
 
 const deps = [{
   promise({ store: {getState, dispatch}, location: {query}, params }) {
@@ -57,13 +55,31 @@ const mapDispatchToProps = {
 
 @asyncConnect(deps, mapStateToProps, mapDispatchToProps)
 export default class CreatorDashboardView extends Component {
+
+  handleDateChange(opts) {
+    let {profile} = this.props
+    let query = {
+      startDate: opts.start,
+      endDate: opts.end
+    }
+    this.props.loadSummariesByUser({...query, user_id: profile.user_id })
+    this.props.loadTransactionsByUser({...query, user_id: profile.user_id })
+  }
+
   render() {
+    if (!this.props.profile) {
+      return <div/>
+    }
     let name = this.props.creator.user_metadata.name
       ? this.props.creator.user_metadata.name
       : this.props.creator.email
     let title = `Welcome, ${name}!`
     return <div>
-      <PageHeader title={title} />
+      <PageHeader title={title}>
+        <div className="pull-right">
+          <DatePicker onChange={::this.handleDateChange} bsSize="lg" />
+        </div>
+      </PageHeader>
       <Grid>
         <Row>
           <Col xs={12}>

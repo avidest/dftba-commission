@@ -13,7 +13,7 @@ import {
   Button,
   ButtonGroup
 } from 'react-bootstrap'
-import find from 'lodash/find'
+import moment from 'moment'
 
 const formSettings = {
   enableReinitialize: true,
@@ -26,8 +26,12 @@ const formSettings = {
   var map = {
     users: state.users.creators,
     initialValues: {
-      kind: props.type
+      kind: props.type,
+      ...props.params
     }
+  }
+  if (props.params.payout) {
+    map.initialValues.description = `Payout for cycle ending ${moment(props.params.created_at).format(`ll`)}`
   }
   return map
 }, null, null, {withRef: true})
@@ -39,6 +43,8 @@ export default class ProductDetailForm extends Component {
     return <Form onSubmit={handleSubmit}>
 
       <Field component="input" type="hidden" name="kind" />
+      <Field component="input" type="hidden" name="payout" />
+      <Field component="input" type="hidden" name="created_at" />
 
       <Row>
         <Col xs={7}>

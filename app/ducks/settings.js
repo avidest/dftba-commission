@@ -34,7 +34,7 @@ function calcCycleTime(settings) {
 
   cycleTime.seconds(0)
     .milliseconds(0)
-    .utcOffset('-07:00')
+    .utcOffset(settings.offset || '-07:00')
 
   if (settings.day) {
     cycleTime.date(parseInt(settings.day, 10))

@@ -55,6 +55,7 @@ export default class ProductListView extends Component {
   }
 
   handleSetQuery(query) {
+    this.props.grid.setPage(1, GRID_KEY)
     this.props.grid.setQuery(query, GRID_KEY)
     this.loadProducts({ withGrid: true })
   }
@@ -83,7 +84,7 @@ export default class ProductListView extends Component {
                 ['Title', 'title'],
                 ['Vendor', 'vendor'],
                 ['Last Updated', UpdatedAt],
-                ['Actions', Actions]
+                ['Actions', Actions, {className: 'text-right'}]
               ]}
             />
           </Col>
@@ -107,7 +108,7 @@ function UpdatedAt({record, colIndex, rowIndex}) {
 
 function IndexCol({record, colIndex, rowIndex}) {
   let image = record.images.length
-    ? getSize(record.images[0].src, '40x')
-    : 'https://placehold.it/40x40'
-  return <Image circle thumbnail src={image} />
+    ? getSize(record.images[0].src, '30x')
+    : 'https://placehold.it/30x30'
+  return <Image circle src={image} style={{maxWidth: '30px'}} />
 }

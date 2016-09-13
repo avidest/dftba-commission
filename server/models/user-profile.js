@@ -231,6 +231,8 @@ export default class UserProfile extends Model {
       summary.startingBalance = (startingBalance / 100).toFixed(2)
       summary.grossCredits = (credits / 100).toFixed(2)
       summary.grossDebits = (debits / 100).toFixed(2)
+      summary.cycleEnd = opts.endDate
+      summary.cycleStart = opts.startDate
       summary.netBalance = (
         (parseInt(startingBalance, 10)
           + parseInt(debits, 10)

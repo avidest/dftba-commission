@@ -14,7 +14,7 @@ import {
 } from 'react-bootstrap'
 import { getCurrentCycle, getLastNCycles } from '../../lib/cycle'
 
-const DISPLAY_FORMAT = 'M/D/YY HH:mm:ss ZZ'
+const DISPLAY_FORMAT = 'M/D/YY' // 'M/D/YY HH:mm:ss ZZ'
 
 export default class DavePicker extends Component {
 
@@ -76,6 +76,7 @@ export default class DavePicker extends Component {
 
   handleChangeStart(value) {
     let range = this.state.range
+    let val = moment(value).
     range = moment.range(moment(value), range.end)
     this.setState({ range })
   }
@@ -95,9 +96,12 @@ export default class DavePicker extends Component {
   renderCycles() {
     return getLastNCycles(12, this.props).map((cycle, k) => {
       let {start, end} = cycle
-      return <MenuItem key={k} onClick={this.handleApplyPeriod.bind(this, start, end)}>
-        {k === 0 && 'Current Cycle'}
-        {k > 0 && displayDate(start, end)}
+      let display = displayDate(start, end)
+      return <MenuItem key={k} onClick={this.handleApplyPeriod.bind(this, start, end)} className="text-center">
+        {displayDate(start, end)}
+        {k === 0 && <small>
+          <br/>(Current Cycle)
+        </small>}
       </MenuItem>
     })
   }
@@ -106,7 +110,8 @@ export default class DavePicker extends Component {
     let currentCycle = getCurrentCycle(this.props)
     let {start, end} = this.state.range
 
-    return <Dropdown id="dave-picker" 
+    return <Dropdown id="dave-picker"
+              bsSize={this.props.bsSize}
               open={this.state.editing} 
               onOpen={::this.handleOpen} 
               onClose={::this.handleClose} 
@@ -148,5 +153,10 @@ export default class DavePicker extends Component {
 
 
 function displayDate(start, end) {
-  return `${start.format(DISPLAY_FORMAT)}—${end.format(DISPLAY_FORMAT)}`
+  let startFormat = start.format(DISPLAY_FORMAT)
+  let endFormat = end.format(DISPLAY_FORMAT)
+  if (moment().isSameOrBefore(end)) {
+    endFormat = 'Today'
+  }
+  return `${startFormat}—${endFormat}`
 }

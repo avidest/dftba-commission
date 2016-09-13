@@ -8,15 +8,17 @@ import PageHeader           from '../components/page-header'
 @connect(state => ({ token: state.users.token }), { login })
 export default class HomeView extends Component {
 
+  componentDidMount() {
+    this.props.login()
+  }
+
   render() {
     return <div>
       <PageHeader route={this.props.route} />
       <Grid>
         <Row>
           <Col xs={12} sm={4} smPush={4} className="text-center">
-            {!this.props.token && <Button bsSize="lg" bsStyle="primary" onClick={this.props.login}>
-                Login
-            </Button>}
+            <div id="login-container" />
           </Col>
         </Row>
       </Grid>
