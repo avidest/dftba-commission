@@ -88,48 +88,44 @@ export async function sync(force = false) {
       let results = await Order.computeAllTransactions()
       if (results) {
         console.log(results)
-      }
-    }
+        console.log('Making up some fake transactions...')
+        var sample = require('lodash/sample')
+        var moment = require('moment')
+        require('moment-range')
+        let creators = await UserProfile.findAllCreators()
+        let trans = []
+        let range = moment.range('1/5/16', moment())
 
-
-    if (__DEVELOPMENT__) {
-      return;
-      var sample = require('lodash/sample')
-      var moment = require('moment')
-      require('moment-range')
-      let creators = await UserProfile.findAllCreators()
-      let trans = []
-      let range = moment.range('1/5/16', moment())
-
-      range.by('day', moment => {
-        console.log(moment.format('lll'))
-        for (let i = 0; i < 50; i++) {
-          let creator = sample(creators)
-          let neg = Math.random() > 0.7
-          let dollars = getRandomInt(0, 100)
-          let cents = getRandomInt(0, 100)
-          let amount = dollars + (cents / 100)
-          let hour = getRandomInt(0, 24)
-          let minute = getRandomInt(0, 60)
-          let second = getRandomInt(0, 60)
-          if (neg) {
-            amount = amount * -1
+        range.by('day', moment => {
+          for (let i = 0; i < 50; i++) {
+            let creator = sample(creators)
+            let neg = Math.random() > 0.7
+            let dollars = getRandomInt(0, 100)
+            let cents = getRandomInt(0, 100)
+            let amount = dollars + (cents / 100)
+            let hour = getRandomInt(0, 24)
+            let minute = getRandomInt(0, 60)
+            let second = getRandomInt(0, 60)
+            if (neg) {
+              amount = amount * -1
+            }
+            let time = moment.hours(hour).minutes(minute).seconds(second).toJSON()
+            trans.push({
+              amount,
+              kind: neg ? 'debit' : 'credit',
+              user_id: creator.user_id,
+              description: 'TEST DATA PLZ',
+              created_at: time,
+              updated_at: time,
+              effective_at: time
+            })
           }
-          let time = moment.hours(hour).minutes(minute).seconds(second).toJSON()
-          trans.push({
-            amount,
-            kind: neg ? 'debit' : 'credit',
-            user_id: creator.user_id,
-            description: 'Test amount la la la',
-            created_at: time,
-            updated_at: time,
-            effective_at: time
-          })
-        }
-      })
+        })
 
-      Transaction.bulkCreate(trans)
+        await Transaction.bulkCreate(trans)
+        console.log('Done.')
 
+      }
     }
 
   } catch(e) {
