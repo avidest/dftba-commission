@@ -109,7 +109,7 @@ export default class Transaction extends Model {
         line_item_id: line.id,
         order_id: order.id,
         user_id: commish.user_id,
-        description: `Commission earned for order #${order.id}, ${line.quantity}x ${product.title} ${variant.title === 'Default Title' ? '' : ('/ ' + variant.title)}`,
+        description: `${line.quantity}× ${product.title} ${variant.title === 'Default Title' ? '' : ('/ ' + variant.title)}`,
         kind: 'credit',
         amount: this.calcCommissionAmount(order, line, commish)
       })
