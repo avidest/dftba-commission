@@ -1,9 +1,37 @@
 import {createAction, handleActions} from 'protium'
 import {successNotification, errorNotification} from './helpers/notifications'
+import {calcCommission} from '../../lib/transactions'
+import {getCurrentCycle} from '../../lib/cycle'
+import moment from 'moment'
+import find from 'lodash/find'
 
 import * as gridActions from './grid'
 
 export const GRID_KEY = 'products'
+
+export const loadInventorySalesByUser = createAction('dftba/LOAD_SALES_BY_USER', payload => {
+  return ({client, getState, dispatch})=> {
+    let {settings, users} = getState()
+    let currentCycle = getCurrentCycle(settings)
+
+    let {startDate, endDate, user_id} = payload
+
+    if (!startDate) {
+      startDate = currentCycle.start
+    }
+
+    if (!endDate) {
+      endDate = currentCycle.end
+    }
+
+    startDate = startDate.toISOString()
+    endDate = endDate.toISOString()
+
+    return client.get(`users/${user_id}/transactions/sales-summary`, {
+      query: {startDate, endDate}
+    })
+  }
+})
 
 export const addCommission = createAction('dftba/ADD_COMMISSION', payload => {
   return ({client, dispatch})=> {
@@ -123,9 +151,73 @@ export const loadProduct = createAction('dftba/LOAD_PRODUCT', id => {
   }
 })
 
+
+const exportMap = {
+  'title': 'Product Title',
+  'published': 'Published',
+  'price': 'Price',
+  'commission': 'Potential Commission',
+  'inventory': 'Inventory on Hand'
+}
+const exportColOrder = [
+  'title',
+  'published',
+  'price',
+  'commission',
+  'inventory',
+]
+
+export const exportCSV = createAction('dftba/EXPORT_CSV', payload => {
+  return ({getState})=> {
+    let state = getState()
+    let {inventory} = state.products
+    let csvData = []
+    let csvText = 'data:text/csv;charset=utf-8,'
+    if (!inventory.length) {
+      return alert('No inventory to export!')
+    }
+
+    csvData.push([
+      'Title',
+      'Published',
+      'Price',
+      'Potential Commission',
+      'Inventory on Hand'
+    ])
+
+    for (let product of inventory) {
+      for (let variant of product.variants) {
+        variant.commission = product.commissions[0]
+        csvData.push([
+          `${product.title} ${variant.title === 'Default Title' ? '' : ('/ ' + variant.title)}`,
+          product.published_at ? 'TRUE' : 'FALSE',
+          '$' + variant.price,
+          '$' + calcCommission(variant.price, variant.commission),
+          variant.inventory_quantity
+        ])
+      }
+    }
+
+    csvData.forEach((row, index)=> {
+      let data = row.map(c => JSON.stringify(c)).join(',')
+      csvText += index < csvData.length ? `${data}\n` : data
+    })
+
+    let encodedUri = encodeURI(csvText)
+    let link = document.createElement('a')
+    let cycleEnd
+    link.setAttribute('href', encodedUri)
+    link.setAttribute('download', `dftba-inventory-export-${moment().format('lll')}.csv`);
+    document.body.appendChild(link) // Required for FF
+    link.click()
+    link.remove()
+  }
+})
+
 const initialState = {
   list: [],
   inventory: [],
+  sales: {},
   count: null,
   bulkSelections: [],
   bulkSelectAll: false,
@@ -156,5 +248,9 @@ export default handleActions({
       ...state.queryOpts,
       page: payload
     }
+  }),
+  [loadInventorySalesByUser]: (state, {payload})=> ({
+    ...state,
+    sales: payload
   })
 }, initialState)

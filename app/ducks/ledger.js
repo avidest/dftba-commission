@@ -187,7 +187,7 @@ export const loadSummariesByUser = createAction('dftba/ledger/LOAD_TRANSACTIONS_
   return ({client, getState, dispatch})=> {
     let {settings} = getState()
     let currentCycle = getCurrentCycle(settings)
-    
+
     let {startDate, endDate, user_id} = payload
 
     if (!startDate) {
@@ -202,7 +202,7 @@ export const loadSummariesByUser = createAction('dftba/ledger/LOAD_TRANSACTIONS_
     endDate = endDate.toISOString()
 
 
-    return client.get(`users/${user_id}/transactions/summary`, { 
+    return client.get(`users/${user_id}/transactions/summary`, {
       query: {startDate, endDate}
     })
   }

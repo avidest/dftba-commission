@@ -1,14 +1,16 @@
 import React, {Component} from 'react'
 import {asyncConnect} from 'protium'
 import {LinkContainer, push, replace} from 'protium/router'
-import {Grid, Row, Col, ButtonGroup, Button} from 'react-bootstrap'
+import {Grid, Row, Col} from 'react-bootstrap'
 import PageHeader from '../../components/page-header'
 import LedgerDetail from '../../components/ledger-detail'
-import find from 'lodash/find'
 import {
   loadSummariesByUser,
   loadTransactionsByUser
 } from '../../ducks/ledger'
+import {
+  loadInventorySalesByUser
+} from '../../ducks/products'
 import DatePicker from '../../connectors/date-picker'
 
 const deps = [{
@@ -31,24 +33,26 @@ const deps = [{
 
     promises.push(dispatch(loadSummariesByUser(q)))
     promises.push(dispatch(loadTransactionsByUser(q)))
+    promises.push(dispatch(loadInventorySalesByUser(q)))
 
     return Promise.all(promises)
   }
 }]
 
 const mapStateToProps = (state, props) => {
-  let ret = {
+  return {
     transactions: state.ledger.selectedTransactions,
     summary: state.ledger.selectedSummary,
     creator: state.users.profile,
-    profile: state.users.profile
+    profile: state.users.profile,
+    sales: state.products.sales
   }
-  return ret
 }
 
 const mapDispatchToProps = {
   loadSummariesByUser,
   loadTransactionsByUser,
+  loadInventorySalesByUser,
   push,
   replace
 }
@@ -64,6 +68,7 @@ export default class CreatorDashboardView extends Component {
     }
     this.props.loadSummariesByUser({...query, user_id: profile.user_id })
     this.props.loadTransactionsByUser({...query, user_id: profile.user_id })
+    this.props.loadInventorySalesByUser({...query, user_id: profile.user_id })
   }
 
   render() {
@@ -80,10 +85,10 @@ export default class CreatorDashboardView extends Component {
           <DatePicker onChange={::this.handleDateChange} bsSize="lg" />
         </div>
       </PageHeader>
-      <Grid>
+      <Grid fluid>
         <Row>
-          <Col xs={12}>
-            <LedgerDetail {...this.props} />
+          <Col sm={12}>
+            <LedgerDetail {...this.props} includeSales />
           </Col>
         </Row>
       </Grid>

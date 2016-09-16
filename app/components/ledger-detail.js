@@ -1,17 +1,7 @@
 import React, {Component} from 'react'
 import {LinkContainer} from 'protium/router'
-import {
-  Table,
-  Image,
-  Button,
-  Pagination,
-  Row,
-  Col,
-  Well,
-  Label
-} from 'react-bootstrap'
+import {Table, Row, Col, Well, Label} from 'react-bootstrap'
 import classnames from 'classnames'
-import DatePicker from '../connectors/date-picker'
 import moment from 'moment'
 import filter from 'lodash/filter'
 
@@ -19,7 +9,9 @@ export default function LedgerList(props) {
   let {
     transactions,
     summary,
-    kind
+    kind,
+    sales,
+    includeSales
   } = props
 
   if (!transactions) {
@@ -30,27 +22,54 @@ export default function LedgerList(props) {
     transactions = filter(transactions, t => t.kind === kind)
   }
 
-  return <div>
-    {!props.noSummary === true && <div>
+  let styles = includeSales ? {maxHeight: '500px', overflow: 'scroll'} : {}
+
+  return <Row>
+    {!props.noSummary === true && <Col xs={12}>
       <h3>Summary</h3>
       <SummaryViewer summary={summary} />
-      <h3>Transaction Details</h3>
-    </div>}
-    <Table hover responsive>
-      <thead>
-      <SummaryListHeader />
-      </thead>
-      <tbody>
-      {(!transactions || !transactions.length) && <tr className="text-center">
-        <td colSpan="6">No transactions for this cycle.</td>
-      </tr>}
-      {transactions && transactions.map(transaction => {
-        return <TransactionRow key={transaction.id} transaction={transaction} kind={props.kind} />
-      })}
-      {!props.noSummary === true && <SummaryRow {...props} />}
-      </tbody>
-    </Table>
-  </div>
+    </Col>}
+    <Col sm={includeSales ? 6 : 12}>
+      {!props.noSummary === true && <h3>Transaction Details</h3>}
+      <div style={styles}>
+        <Table hover responsive>
+          <thead>
+          <SummaryListHeader />
+          </thead>
+          <tbody>
+          {(!transactions || !transactions.length) && <tr className="text-center">
+            <td colSpan="6">No transactions for this cycle.</td>
+          </tr>}
+          {transactions && transactions.map(transaction => {
+            return <TransactionRow key={transaction.id} transaction={transaction} kind={props.kind} />
+          })}
+          {!props.noSummary === true && <SummaryRow {...props} />}
+          </tbody>
+        </Table>
+      </div>
+    </Col>
+    {includeSales && <Col sm={6}>
+      <h3>Sales</h3>
+      <Table hover responsive>
+        <thead>
+          <tr>
+            <th>Product</th>
+            <th>This Period</th>
+            <th>To Date</th>
+          </tr>
+        </thead>
+        <tbody>
+          {sales.total.map((grp, i) => {
+            return <tr key={grp.variant_id}>
+              <td>{grp.title}</td>
+              <td>{sales.period[i] ? sales.period[i].quantity : 0}</td>
+              <td>{grp.quantity}</td>
+            </tr>
+          })}
+        </tbody>
+      </Table>
+    </Col>}
+  </Row>
 }
 
 function SummaryViewer(props) {

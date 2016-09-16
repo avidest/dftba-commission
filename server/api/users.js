@@ -20,6 +20,11 @@ export default class UserProfileRouter extends CollectionRouter {
     return this.model.findCreatorTransactionSummaries(opts.query, opts.params.user_id)
       .catch(catchError)
   }
+  @route('GET', '/:user_id/transactions/sales-summary')
+  getCreatorsSalesSummaryByUser(opts, http) {
+    return this.model.findCreatorSalesSummaries(opts.query, opts.params.user_id)
+      .catch(catchError)
+  }
 
   @route('GET', '/:user_id/transactions')
   getCreatorsTransactions(opts, http) {

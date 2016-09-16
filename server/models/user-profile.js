@@ -1,5 +1,7 @@
-import find from 'lodash/find'
 import map from 'lodash/map'
+import find from 'lodash/find'
+import {getCurrentCycle} from '../../lib/cycle'
+
 import {
   BOOLEAN,
   INTEGER,
@@ -160,7 +162,6 @@ export default class UserProfile extends Model {
       opts.startDate = (new Date()).toISOString()
     }
 
-
     if (!opts.endDate) {
       opts.endDate = (new Date()).toISOString()
     }
@@ -195,6 +196,89 @@ export default class UserProfile extends Model {
     }
 
     return Transaction.findAll(query)
+  }
+
+  static async findCreatorSalesSummaries(opts, user_id) {
+    let {fn, col, where} = this.sequelize
+    let {Transaction, Product, ProductVariant, OrderLineItem, Commission} = this.sequelize.models
+    let commishs = await Commission.findAll({
+      attributes: [
+        'user_id',
+        'product_id'
+      ],
+      where: {
+        user_id
+      },
+      include: [
+        {
+          attributes: ['id', 'title'],
+          model: Product,
+          as: 'product',
+          include: [
+            { model: ProductVariant, as: 'variants', attributes: [
+                'id',
+                'product_id',
+                'title'
+            ]}
+          ]
+        }
+      ]
+    })
+
+    let variants = commishs.reduce((m, commish)=> {
+      if (commish.product) {
+        if (commish.product.variants.length) {
+          commish.product.variants.forEach(variant => {
+            variant.product = commish.product
+            m.push(variant)
+          })
+        }
+      }
+      return m
+    }, [])
+
+    let variantIds = map(variants, 'id')
+
+    let totalQuery = {
+      raw: true,
+      attributes: [
+        [fn('sum', col('OrderLineItem.quantity')), 'quantity'],
+        [col('OrderLineItem.variant_id'), 'variant_id']
+      ],
+      where: {
+        variant_id: {
+          $in: variantIds
+        }
+      },
+      group: [col('OrderLineItem.variant_id')]
+    }
+
+    let periodQuery = {
+      raw: true,
+      attributes: [
+        [fn('sum', col('OrderLineItem.quantity')), 'quantity'],
+        [col('OrderLineItem.variant_id'), 'variant_id']
+      ],
+      where: {
+        variant_id: {
+          $in: variantIds
+        },
+        created_at: {
+          $between: [opts.startDate, opts.endDate]
+        }
+      },
+      group: [col('OrderLineItem.variant_id')]
+    }
+
+    let [qtyTotals, periodTotals] = await Promise.all([
+      OrderLineItem.findAll(totalQuery),
+      OrderLineItem.findAll(periodQuery)
+    ])
+
+    return {
+      total: qtyTotals.map(extractTitle(variants)),
+      period: periodTotals.map(extractTitle(variants))
+    }
   }
 
   static async findCreatorTransactionSummaries(opts, user_id) {
@@ -328,4 +412,12 @@ export default class UserProfile extends Model {
       .then(deleted => instance)
   }
 
+}
+
+
+
+const extractTitle = variants => grp => {
+  let variant = find(variants, {id: grp.variant_id})
+  grp.title = `${variant.product.title} ${variant.title === 'Default Title' ? '' : `/ ${variant.title}`}`
+  return grp
 }
