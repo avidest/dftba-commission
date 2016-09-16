@@ -27,15 +27,8 @@ const webhookTopics = [
   'orders/create',
   'orders/cancelled', 
   'orders/delete', 
-  'orders/updated',
-  'refunds/create'
+  'orders/updated'
 ]
-
-if (__DEVELOPMENT__) {
-  process.on('beforeExit', ()=> {
-    removeWebhooks()
-  })
-}
 
 export function setup() {
   installWebhooks()

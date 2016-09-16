@@ -97,10 +97,31 @@ export default class Order extends Model {
     let {Transaction} = this.sequelize.models
     await this.reload({ include: [{all: true}] })
     let transactions = []
+
     for (let line of this.line_items) {
       transactions.push(Transaction.createFromOrder(this, line))
     }
+
     return Promise.all(transactions)
+  }
+
+  async updateRefundsFromShopify(sRefunds) {
+    let {Transaction} = this.sequelize.models
+    let currentRefunds = this.get('refunds')
+    let transactions = []
+    let refunds = []
+    for (let refund of sRefunds) {
+      let existing = find(currentRefunds, {id: refund.id})
+      if (!existing || !existing.processed) {
+        transactions.push(Transaction.createRefundFromOrder(this, refund))
+        refund.processed = true;
+      } else {
+        refunds.push(existing)
+      }
+      refunds.push(refund)
+    }
+    await Promise.all(transactions)
+    return refunds
   }
 
   async updateLineItemsFromShopify(sLineItems) {
@@ -138,9 +159,7 @@ export default class Order extends Model {
       include: [{all: true}] 
     }).then(order => {
       return order.processTransactions()
-        .then(transactions => {
-          return order;
-        })
+        .then(transactions => order)
     })
   }
 
@@ -148,6 +167,7 @@ export default class Order extends Model {
     let {
       id,
       line_items,
+      refunds,
       ...update
     } = data
 
@@ -157,6 +177,8 @@ export default class Order extends Model {
 
     if (order) {
       order.set(update)
+      let refundUpdates = await order.updateRefundsFromShopify(refunds)
+      order.set('refunds', refundUpdates)
       let lineItemUpdates = order.updateLineItemsFromShopify(line_items)
       return await Promise.all([
         lineItemUpdates,

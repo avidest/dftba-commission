@@ -65,19 +65,15 @@ export default class Transaction extends Model {
     }
   };
 
-
-  static calcCommissionAmount(order, line, commission) {
+  static calcCommissionAmount(order, line, commission, negative = false) {
     let {percent, flat} = commission
     let totalDiscounts = parseFloat(order.total_discounts)
     let totalLineItemsPrice = parseFloat(order.total_line_items_price)
-
-
 
     // Percentage to multiply all prices by
     let discountRatio = (totalDiscounts > 0) 
       ? 1 - (totalDiscounts / totalLineItemsPrice)
       : 1
-
 
     let percentFlat = (parseFloat(line.price) * discountRatio) * (parseFloat(percent) / 100)
     flat = (parseFloat(flat) * 100) || 0
@@ -85,27 +81,42 @@ export default class Transaction extends Model {
 
     // Amount = (line.price * discountPercent * commissionPercent) + commissionFlat
     let amount = (((flat + percentFlat) * line.quantity) / 100).toFixed(2)
-    
-//     console.log(`Line #${line.id} ——
-//   - User Commission   : ${commission.user_id}
-//   - Price             : ${parseFloat(line.price)}
-//   - Line Total        : ${parseFloat(line.price) * line.quantity}
-//   - Line Discount    %: ${discountRatio}
-//   - Commission       %: ${commission.percent}
-//   - Commission       $: ${commission.flat}
-//   - Total Commission $: ${amount}
-// `)
-    return amount
+
+    return negative ? ('-' + amount) : amount
+  }
+
+  static async createRefundFromOrder(order, refund) {
+    let {OrderLineItem} = this.sequelize.models
+    let transactions = []
+    for (let refundLine of refund.refund_line_items) {
+      let line = await OrderLineItem.findById(refundLine.line_item_id)
+      if (!line) continue;
+      let [product, variant] = await Promise.all([line.getProduct(), line.getVariant()])
+      let commissions = await product.getCommissions({ include: [{all: true} ]})
+
+      for (let commish of commissions) {
+        transactions.push({
+          line_item_id: refundLine.line_item_id,
+          order_id: order.id,
+          user_id: commish.user_id,
+          description: `Chargeback for ${line.quantity}× ${product.title} ${variant.title === 'Default Title' ? '' : ('/ ' + variant.title)}`,
+          kind: 'debit',
+          amount: this.calcCommissionAmount(order, line, commish, true)
+        })
+      }
+    }
+
+    return await this.bulkCreate(transactions)
   }
 
   static async createFromOrder(order, line) {
     let [product, variant] = await Promise.all([line.getProduct(), line.getVariant()])
     let commissions = await product.getCommissions({ include: [{all: true} ]})
 
-    let toCreate = []
+    let transactions = []
 
     for (let commish of commissions) {
-      toCreate.push({
+      transactions.push({
         line_item_id: line.id,
         order_id: order.id,
         user_id: commish.user_id,
@@ -115,11 +126,12 @@ export default class Transaction extends Model {
       })
     }
 
-    return await this.bulkCreate(toCreate)
+    return await this.bulkCreate(transactions)
   }
 
   static async updateFromOrder(order, line) {
-
+    console.log(order.toJSON())
+    console.log(line.toJSON())
   }
 
 }

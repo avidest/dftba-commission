@@ -60,14 +60,6 @@ export default class ShopifyRouter extends Router {
       .catch(webhookError('Order', 'orders/updated'))
     return {success: true}
   }
-
-  @route('POST', '/refunds/create')
-  createRefund(opts, http) {
-    Order.updateFromShopify(opts.body)
-      .then(webhookSuccess('Order', 'refunds/create'))
-      .catch(webhookError('Order', 'refunds/create'))
-    return {success: true}
-  }
 }
 
 function webhookSuccess(modelName, topic) {
