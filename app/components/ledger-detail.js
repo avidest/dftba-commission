@@ -29,7 +29,7 @@ export default function LedgerList(props) {
       <h3>Summary</h3>
       <SummaryViewer summary={summary} />
     </Col>}
-    <Col sm={includeSales ? 6 : 12}>
+    <Col sm={includeSales ? 7 : 12}>
       {!props.noSummary === true && <h3>Transaction Details</h3>}
       <div style={styles}>
         <Table hover responsive>
@@ -48,7 +48,7 @@ export default function LedgerList(props) {
         </Table>
       </div>
     </Col>
-    {includeSales && <Col sm={6}>
+    {includeSales && <Col sm={5}>
       <h3>Sales</h3>
       <Table hover responsive>
         <thead>

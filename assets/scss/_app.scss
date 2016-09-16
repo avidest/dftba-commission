@@ -33,7 +33,7 @@ $logo-desired-width: ceil($logo-desired-height * $logo-aspect-ratio);
     visibility: hidden;
   }
   .a0-panel .a0-top-header {
-    background: #262e2e;
+    background: lighten(#262e2e, 10);
     color: #fff;
   }
 
