@@ -20,7 +20,7 @@ export default function AppHeader(props) {
   </span>) : null;
 
   return <div>
-    <Navbar inverse fixedTop className="dftba">
+    <Navbar fluid inverse fixedTop className="dftba">
       <Navbar.Header>
         <Navbar.Brand className="dftba-brand">
           <Link to={profile && profile.app_metadata.role === 'admin' ? '/admin' : '/creator'} onlyActiveOnIndex>DFTBA</Link>

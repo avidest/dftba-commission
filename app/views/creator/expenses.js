@@ -73,7 +73,7 @@ export default class CreatorIncomeView extends Component {
           <DatePicker onChange={::this.handleDateChange} bsSize="lg" />
         </div>
       </PageHeader>
-      <Grid>
+      <Grid fluid>
         <Row>
           <Col xs={12}>
             <LedgerDetail {...this.props} noSummary kind="debit" />

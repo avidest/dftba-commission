@@ -6,7 +6,7 @@ export default class NotFoundView extends Component {
   render() {
     return <div>
       <PageHeader route={this.props.route} />
-      <Grid>
+      <Grid fluid>
         <Row>
           <Col xs={12} className="text-center">
             <img src="/assets/images/404.gif" />

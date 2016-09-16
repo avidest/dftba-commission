@@ -15,7 +15,7 @@ export default class HomeView extends Component {
   render() {
     return <div>
       <PageHeader route={this.props.route} />
-      <Grid>
+      <Grid fluid>
         <Row>
           <Col xs={12} sm={4} smPush={4} className="text-center">
             <div id="login-container" />

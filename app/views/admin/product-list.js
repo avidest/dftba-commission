@@ -68,7 +68,7 @@ export default class ProductListView extends Component {
   render() {
     return <div>
       <PageHeader route={this.props.route} />
-      <Grid>
+      <Grid fluid>
         <Row>
           <Col xs={12}>
             <DataGrid type={GRID_KEY}

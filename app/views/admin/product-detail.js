@@ -65,7 +65,7 @@ export default class ProductDetailView extends Component {
           </LinkContainer>
         </div>
       </PageHeader>
-      <Grid>
+      <Grid fluid>
         <Row>
           <Col sm={4}>
             <h3>Product Details</h3>

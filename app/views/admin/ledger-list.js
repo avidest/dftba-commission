@@ -118,7 +118,7 @@ export default class LedgerView extends Component {
           </LinkContainer>
         </div>
       </PageHeader>
-      <Grid>
+      <Grid fluid>
         <Row>
           <Col xs={12}>
             <DataGrid type={GRID_KEY}

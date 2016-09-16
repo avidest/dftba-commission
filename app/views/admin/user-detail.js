@@ -61,7 +61,7 @@ export default class UserDetailView extends Component {
           </Button>
         </ButtonGroup>
       </PageHeader>
-      <Grid>
+      <Grid fluid>
         <Row>
           <Col xs={12}>
             <UsersDetailForm ref="usersDetailForm" 

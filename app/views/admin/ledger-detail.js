@@ -75,7 +75,7 @@ export default class OrderDetailView extends Component {
     let title = `Ledger for ${name}`
     return <div>
       <PageHeader title={title} />
-      <Grid>
+      <Grid fluid>
         <Row>
           <Col xs={12}>
             <LedgerDetail {...this.props} />

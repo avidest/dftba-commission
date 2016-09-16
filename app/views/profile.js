@@ -28,7 +28,7 @@ export default class ProfileView extends Component {
   render() {
     return <div>
       <PageHeader title={this.props.routes[this.props.routes.length-1].title} />
-      <Grid>
+      <Grid fluid>
         <Row>
           <Col xs={12}>
             <UsersDetailForm

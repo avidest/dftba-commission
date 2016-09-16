@@ -12,7 +12,7 @@ export default class SettingsView extends Component {
   render() {
     return <div>
       <PageHeader route={this.props.route} />
-      <Grid>
+      <Grid fluid>
         <Row>
           <Col xs={12}>
             <SettingsForm

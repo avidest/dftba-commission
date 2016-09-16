@@ -18,7 +18,7 @@ export default function PageHeader(props) {
   }
 
   return <div className="sub-header">
-    <Grid>
+    <Grid fluid>
       <Row>
         <Col xs={12} sm={7} smPush={5}>
           {props.children}
