@@ -183,6 +183,53 @@ export const loadTransactionsByUser = createAction('dftba/ledger/LOAD_TRANSACTIO
   }
 })
 
+export const exportUserTransactionsCSV = createAction('dftba/ledger/EXPORT_TRANSACTIONS', payload => {
+  return ({getState})=> {
+    let {ledger} = getState()
+    let {selectedSummary, selectedTransactions} = ledger
+    let {cycleStart, cycleEnd} = selectedSummary
+    let periodLabel = `${moment(cycleStart).format('lll')}—${moment(cycleEnd).format('lll')}`
+
+
+    let csvData = []
+    let csvText = 'data:text/csv;charset=utf-8,'
+    if (!selectedTransactions || !selectedTransactions.length) {
+      return alert('No transactions to export!')
+    }
+
+    csvData.push([
+      'ID',
+      'Kind',
+      'Amount',
+      'Description',
+      'Created On'
+    ])
+
+    for (let t of selectedTransactions) {
+      let row = []
+      row.push(t.id)
+      row.push(t.payout ? 'Payout' : ucFirst(t.kind))
+      row.push('$'+t.amount)
+      row.push(t.description)
+      row.push(moment(t.created_at).format('lll'))
+      csvData.push(row)
+    }
+
+    csvData.forEach((row, index)=> {
+      let data = row.map(c => JSON.stringify(c)).join(',')
+      csvText += index < csvData.length ? `${data}\n` : data
+    })
+
+    let encodedUri = encodeURI(csvText)
+    let link = document.createElement('a')
+    link.setAttribute('href', encodedUri)
+    link.setAttribute('download', `dftba-transaction-export-${periodLabel}.csv`);
+    document.body.appendChild(link) // Required for FF
+    link.click()
+    link.remove()
+  }
+})
+
 export const loadSummariesByUser = createAction('dftba/ledger/LOAD_TRANSACTIONS_SUMMARIES_BY_USER', payload => {
   return ({client, getState, dispatch})=> {
     let {settings} = getState()
@@ -220,3 +267,8 @@ export default handleActions({
   [loadSummariesByUser]: (state, {payload})=> ({ ...state, selectedSummary: payload }),
   [loadTransactionsByUser]: (state, {payload})=> ({ ...state, selectedTransactions: payload })
 }, initialState)
+
+
+function ucFirst(str) {
+  return str[0].toUpperCase() + str.slice(1)
+}

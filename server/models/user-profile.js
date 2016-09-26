@@ -1,5 +1,8 @@
 import map from 'lodash/map'
 import find from 'lodash/find'
+import uniq from 'lodash/uniq'
+import sortBy from 'lodash/sortBy'
+
 import {getCurrentCycle} from '../../lib/cycle'
 
 import {
@@ -198,10 +201,9 @@ export default class UserProfile extends Model {
     return Transaction.findAll(query)
   }
 
-  static async findCreatorSalesSummaries(opts, user_id) {
-    let {fn, col, where} = this.sequelize
-    let {Transaction, Product, ProductVariant, OrderLineItem, Commission} = this.sequelize.models
-    let commishs = await Commission.findAll({
+  static getCommissionRatesWithVariantsForUser(user_id) {
+    let {Product, ProductVariant, Commission} = this.sequelize.models
+    return Commission.findAll({
       attributes: [
         'user_id',
         'product_id'
@@ -216,31 +218,27 @@ export default class UserProfile extends Model {
           as: 'product',
           include: [
             { model: ProductVariant, as: 'variants', attributes: [
-                'id',
-                'product_id',
-                'title'
+              'id',
+              'product_id',
+              'title'
             ]}
           ]
         }
       ]
     })
+  }
 
-    let variants = commishs.reduce((m, commish)=> {
-      if (commish.product) {
-        if (commish.product.variants.length) {
-          commish.product.variants.forEach(variant => {
-            variant.product = commish.product
-            m.push(variant)
-          })
-        }
-      }
-      return m
-    }, [])
-
-    let variantIds = map(variants, 'id')
+  static async findCreatorSalesSummaries(opts, user_id) {
+    let {fn, col} = this.sequelize
+    let {OrderLineItem} = this.sequelize.models
+    let commissionRates = await this.getCommissionRatesWithVariantsForUser(user_id)
+    let variants = invertCommissionsIntoVariants(commissionRates)
+    let variantIds = uniq(map(variants, 'id'))
 
     let totalQuery = {
       raw: true,
+      group: [col('OrderLineItem.variant_id')],
+      sort: [col('OrderLineItem.variant_id')],
       attributes: [
         [fn('sum', col('OrderLineItem.quantity')), 'quantity'],
         [col('OrderLineItem.variant_id'), 'variant_id']
@@ -249,25 +247,23 @@ export default class UserProfile extends Model {
         variant_id: {
           $in: variantIds
         }
-      },
-      group: [col('OrderLineItem.variant_id')]
+      }
     }
 
     let periodQuery = {
       raw: true,
-      attributes: [
-        [fn('sum', col('OrderLineItem.quantity')), 'quantity'],
-        [col('OrderLineItem.variant_id'), 'variant_id']
-      ],
+      group: totalQuery.group,
+      attributes: totalQuery.attributes,
+      sort: totalQuery.sort,
       where: {
         variant_id: {
           $in: variantIds
         },
         created_at: {
-          $between: [opts.startDate, opts.endDate]
+          $lte: opts.endDate,
+          $gt: opts.startDate
         }
       },
-      group: [col('OrderLineItem.variant_id')]
     }
 
     let [qtyTotals, periodTotals] = await Promise.all([
@@ -276,8 +272,8 @@ export default class UserProfile extends Model {
     ])
 
     return {
-      total: qtyTotals.map(extractTitle(variants)),
-      period: periodTotals.map(extractTitle(variants))
+      total: sortBy(qtyTotals.map(extractTitle(variants)), 'variant_id'),
+      period: sortBy(periodTotals.map(extractTitle(variants)), 'variant_id')
     }
   }
 
@@ -415,6 +411,17 @@ export default class UserProfile extends Model {
 }
 
 
+const invertCommissionsIntoVariants = rates => rates.reduce((m, commish)=> {
+    if (commish.product) {
+      if (commish.product.variants.length) {
+        commish.product.variants.forEach(variant => {
+          variant.product = commish.product
+          m.push(variant)
+        })
+      }
+    }
+    return m
+  }, [])
 
 const extractTitle = variants => grp => {
   let variant = find(variants, {id: grp.variant_id})

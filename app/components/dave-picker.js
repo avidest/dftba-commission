@@ -76,7 +76,6 @@ export default class DavePicker extends Component {
 
   handleChangeStart(value) {
     let range = this.state.range
-    let val = moment(value).
     range = moment.range(moment(value), range.end)
     this.setState({ range })
   }
@@ -115,7 +114,8 @@ export default class DavePicker extends Component {
               open={this.state.editing} 
               onOpen={::this.handleOpen} 
               onClose={::this.handleClose} 
-              onToggle={::this.handleToggle}>
+              onToggle={::this.handleToggle}
+              pullRight={this.props.pullRight}>
       <Dropdown.Toggle>
         {displayDate(start, end)}
       </Dropdown.Toggle>
@@ -155,7 +155,7 @@ export default class DavePicker extends Component {
 function displayDate(start, end) {
   let startFormat = start.format(DISPLAY_FORMAT)
   let endFormat = end.format(DISPLAY_FORMAT)
-  if (moment().isSameOrBefore(end)) {
+  if (end.isSameOrAfter(moment())) {
     endFormat = 'Today'
   }
   return `${startFormat}—${endFormat}`

@@ -167,6 +167,52 @@ const exportColOrder = [
   'inventory',
 ]
 
+export const exportSalesCSV = createAction('dftba/products/EXPORT_SALES_CSV', payload => {
+  return ({getState})=> {
+    let {products, ledger} = getState()
+    let {cycleStart, cycleEnd} = ledger.selectedSummary
+    let {sales} = products
+    let csvData = []
+    let csvText = 'data:text/csv;charset=utf-8,'
+    if (!sales || !sales.total.length) {
+      return alert('No sales to export!')
+    }
+
+    let periodLabel = `${moment(cycleStart).format('lll')}—${moment(cycleEnd).format('lll')}`
+
+    csvData.push([
+      'Variant ID',
+      'Product Title',
+      `Period ${periodLabel}`,
+      'Total to Date'
+    ])
+
+    for (let i = 0; i < sales.total.length; i++) {
+      let row = []
+      row.push(sales.total[i].variant_id)
+      row.push(sales.total[i].title)
+      let period = find(sales.period, {variant_id: sales.total[i].variant_id})
+      let periodQty = period ? period.quantity : 0
+      row.push(periodQty)
+      row.push(sales.total[i].quantity)
+      csvData.push(row)
+    }
+
+    csvData.forEach((row, index)=> {
+      let data = row.map(c => JSON.stringify(c)).join(',')
+      csvText += index < csvData.length ? `${data}\n` : data
+    })
+
+    let encodedUri = encodeURI(csvText)
+    let link = document.createElement('a')
+    link.setAttribute('href', encodedUri)
+    link.setAttribute('download', `dftba-sales-export-${periodLabel}.csv`);
+    document.body.appendChild(link) // Required for FF
+    link.click()
+    link.remove()
+  }
+})
+
 export const exportCSV = createAction('dftba/EXPORT_CSV', payload => {
   return ({getState})=> {
     let state = getState()

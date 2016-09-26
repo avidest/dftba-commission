@@ -1,15 +1,17 @@
 import React, {Component} from 'react'
 import {asyncConnect} from 'protium'
 import {LinkContainer, push, replace} from 'protium/router'
-import {Grid, Row, Col} from 'react-bootstrap'
+import {Grid, Row, Col, Button} from 'react-bootstrap'
 import PageHeader from '../../components/page-header'
 import LedgerDetail from '../../components/ledger-detail'
 import {
   loadSummariesByUser,
-  loadTransactionsByUser
+  loadTransactionsByUser,
+  exportUserTransactionsCSV,
 } from '../../ducks/ledger'
 import {
-  loadInventorySalesByUser
+  loadInventorySalesByUser,
+  exportSalesCSV
 } from '../../ducks/products'
 import DatePicker from '../../connectors/date-picker'
 
@@ -53,6 +55,8 @@ const mapDispatchToProps = {
   loadSummariesByUser,
   loadTransactionsByUser,
   loadInventorySalesByUser,
+  exportSalesCSV,
+  exportUserTransactionsCSV,
   push,
   replace
 }
@@ -71,6 +75,14 @@ export default class CreatorDashboardView extends Component {
     this.props.loadInventorySalesByUser({...query, user_id: profile.user_id })
   }
 
+  handleExportSales() {
+    this.props.exportSalesCSV()
+  }
+
+  handleExportTransactions() {
+    this.props.exportUserTransactionsCSV()
+  }
+
   render() {
     if (!this.props.profile) {
       return <div/>
@@ -82,7 +94,11 @@ export default class CreatorDashboardView extends Component {
     return <div>
       <PageHeader title={title}>
         <div className="pull-right">
-          <DatePicker onChange={::this.handleDateChange} bsSize="lg" />
+          <Button bsSize="lg" onClick={::this.handleExportTransactions}>Export Transactions</Button>
+          {' '}
+          <Button bsSize="lg" onClick={::this.handleExportSales}>Export Sales</Button>
+          {' '}
+          <DatePicker onChange={::this.handleDateChange} bsSize="lg" pullRight />
         </div>
       </PageHeader>
       <Grid fluid>
