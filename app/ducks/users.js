@@ -35,13 +35,21 @@ export const logout = createAction('dftba/AUTH0_LOGOUT', payload => {
 
 export const loadUsers = createAction('dftba/AUTH0_LOAD_USERS', payload => {
   return ({client})=> {
-    return client.get('/users')
+    return client.get('/users', {
+      query: {
+        limit: 200
+      }
+    })
   }
 })
 
 export const loadCreators = createAction('dftba/AUTH0_LOAD_CREATORS', payload => {
   return ({client})=> {
-    return client.get('/users/creators')
+    return client.get('/users/creators', {
+      query: {
+        limit: 200
+      }
+    })
   }
 })
 
