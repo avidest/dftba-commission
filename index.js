@@ -16,9 +16,11 @@ global.__CLIENT__ = false
 global.__PRODUCTION__ = process.env.NODE_ENV === 'production'
 global.__DEVELOPMENT__ = !global.__PRODUCTION__
 
+var workers = process.env.WEB_CONCURRENCY || 1;
 var throng = require('throng')
 var server = require('./server')
 throng({
+  workers: workers,
   master: function() {
     server.setup()
   },
