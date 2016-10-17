@@ -9,7 +9,7 @@ import Transaction          from '../models/transaction';
 import UserProfile          from '../models/user-profile';
 import Setting              from '../models/setting';
 
-const databaseLogging = process.env.DATABASE_LOGGING || 1
+const databaseLogging = process.env.DATABASE_LOGGING || false
 
 const options = {
   databaseUrl: process.env.DATABASE_URL,
