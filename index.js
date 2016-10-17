@@ -11,6 +11,9 @@ require('babel-register')({
   ]
 })
 
+// Serialize process.env for perf
+process.env = JSON.parse(JSON.stringify(process.env))
+
 global.__SERVER__ = true
 global.__CLIENT__ = false
 global.__PRODUCTION__ = process.env.NODE_ENV === 'production'
@@ -21,6 +24,7 @@ var throng = require('throng')
 var server = require('./server')
 throng({
   workers: workers,
+  lifetime: Infinity,
   master: function() {
     server.setup()
   },

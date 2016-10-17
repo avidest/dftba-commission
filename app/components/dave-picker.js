@@ -98,8 +98,8 @@ export default class DavePicker extends Component {
       let display = displayDate(start, end)
       return <MenuItem key={k} onClick={this.handleApplyPeriod.bind(this, start, end)} className="text-center">
         {displayDate(start, end)}
-        {k === 0 && <small>
-          <br/>(Current Cycle)
+        {k === 0 && <small className="text-muted">
+          <br/>(Current cycle {end.isSameOrAfter(moment()) && `ends ${moment().to(end)}`})
         </small>}
       </MenuItem>
     })
@@ -108,6 +108,7 @@ export default class DavePicker extends Component {
   render() {
     let currentCycle = getCurrentCycle(this.props)
     let {start, end} = this.state.range
+    let miniClose = { padding: '5px 10px', color: 'white', position: 'absolute', top: 0, right: 0, cursor: 'pointer'}
 
     return <Dropdown id="dave-picker"
               bsSize={this.props.bsSize}
@@ -120,7 +121,11 @@ export default class DavePicker extends Component {
         {displayDate(start, end)}
       </Dropdown.Toggle>
       <Dropdown.Menu>
+        <div onClick={::this.handleCancel} className="pull-right" style={miniClose}><Icon type="times" /></div>
         {this.renderCycles()}
+        <MenuItem header style={{textAlign: 'center'}}>
+          Times are displayed in MST
+        </MenuItem>
         <MenuItem divider />
 
         <div className="input-group">

@@ -32,6 +32,7 @@ function reduceSettings(settingRecords) {
 function calcCycleTime(settings) {
   let cycleTime = moment()
 
+  console.log(settings)
   cycleTime.seconds(0)
     .milliseconds(0)
     .utcOffset(settings.offset || '-07:00')
@@ -47,6 +48,13 @@ function calcCycleTime(settings) {
   if (settings.minutes) {
     cycleTime.minutes(parseInt(settings.minutes, 10))
   }
+
+  if (settings.seconds) {
+    cycleTime.seconds(parseInt(settings.seconds, 10))
+  } else {
+    cycleTime.seconds(59)
+  }
+
 
   settings.cycleTime = cycleTime.toString()
 
