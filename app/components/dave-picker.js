@@ -124,7 +124,7 @@ export default class DavePicker extends Component {
         <div onClick={::this.handleCancel} className="pull-right" style={miniClose}><Icon type="times" /></div>
         {this.renderCycles()}
         <MenuItem header style={{textAlign: 'center'}}>
-          Times are displayed in MST
+          Date/Times are displayed in MST
         </MenuItem>
         <MenuItem divider />
 

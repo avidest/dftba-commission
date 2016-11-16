@@ -1,12 +1,28 @@
-import React, {Component}   from 'react'
+import React, {Component}    				from 'react'
 import {Grid, Row, Col, Button}     from 'react-bootstrap'
-import {connect}            from 'protium'
-import {Link, LinkContainer} from 'protium/router'
-import {login}              from '../ducks/users'
-import PageHeader           from '../components/page-header'
+import {connect}             				from 'protium'
+import {Link, LinkContainer, push} 	from 'protium/router'
+import {login}               				from '../ducks/users'
+import PageHeader            				from '../components/page-header'
 
-@connect(state => ({ token: state.users.token }), { login })
+const mapStateToProps = state => ({ 
+	token: state.users.token, 
+	profile: state.users.profile 
+})
+
+@connect(mapStateToProps, { login, push })
 export default class HomeView extends Component {
+
+	componentWillMount() {
+  	if (this.props.profile) {
+  		let profile = this.props.profile
+  		if (profile.app_metadata && profile.app_metadata.role === 'admin') {
+  			this.props.push('/admin')
+  		} else {
+  			this.props.push('/creator')
+  		}
+  	}
+	}
 
   componentDidMount() {
     this.props.login()
