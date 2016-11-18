@@ -128,7 +128,7 @@ export default class Grid extends Component {
             onChange={::this.handleSelectAll}
           />
         </th>}
-        {this.props.columns.map((col, colIndex) => {
+        {(this.props.columns || []).map((col, colIndex) => {
           let label = this.getColumnHeader(colIndex)
           let extra = this.getColumnProps(colIndex)
           return <th
@@ -178,7 +178,7 @@ export default class Grid extends Component {
 
   renderBody(records) {
     return <tbody className="data-grid-body">
-      {records.map((record, rowIndex) => {
+      {(records || []).map((record, rowIndex) => {
         return this.renderRow(record, rowIndex)
       })}
     </tbody>
@@ -278,7 +278,7 @@ function BulkActions(props) {
   }
   return <div style={{display: 'inline-block'}}>
     <DropdownButton title="Bulk Actions" disabled={props.disabled}>
-      {props.bulkActions.map((action, key)=> {
+      {(props.bulkActions || []).map((action, key)=> {
         return <MenuItem eventKey={key} key={key} onClick={e => {
           props.gridInstance.handleBulkAction({ action, data: selectedObjs });
         }}>{action.label}</MenuItem>

@@ -40,7 +40,7 @@ export default function LedgerList(props) {
           {(!transactions || !transactions.length) && <tr className="text-center">
             <td colSpan="6">No transactions for this cycle.</td>
           </tr>}
-          {transactions && transactions.map(transaction => {
+          {(transactions && transactions.length) && transactions.map(transaction => {
             return <TransactionRow key={transaction.id} transaction={transaction} kind={props.kind} />
           })}
           {!props.noSummary === true && <SummaryRow {...props} />}
@@ -62,7 +62,7 @@ export default function LedgerList(props) {
           {(!sales || !sales.total) && <tr>
             <td colSpan="3">No Sales yet!</td>
           </tr>}
-          {sales.total.map((grp, i) => {
+          {(sales && sales.total) && sales.total.map((grp, i) => {
             return <tr key={grp.variant_id}>
               <td>{grp.title}</td>
               <td>{sales.period[i] ? sales.period[i].quantity : 0}</td>
@@ -77,6 +77,9 @@ export default function LedgerList(props) {
 
 function SummaryViewer(props) {
   let {summary} = props
+  if (!summary) {
+    summary = {}
+  }
   return <Row className="ledger-detail-summary">
     <Col sm={3}>
       <Well>
@@ -142,6 +145,9 @@ function TransactionRow(props) {
 
 function SummaryRow(props) {
   let { summary } = props
+  if (!summary) {
+    summary = {}
+  }
   let style = {verticalAlign: 'middle'}
 
   return <tr>
