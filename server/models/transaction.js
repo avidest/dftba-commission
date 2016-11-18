@@ -101,7 +101,8 @@ export default class Transaction extends Model {
           user_id: commish.user_id,
           description: `Chargeback for ${line.quantity}× ${product.title} ${variant.title === 'Default Title' ? '' : ('/ ' + variant.title)}`,
           kind: 'debit',
-          amount: this.calcCommissionAmount(order, line, commish, true)
+          amount: this.calcCommissionAmount(order, line, commish, true),
+          created_at: refund.created_at
         })
       }
     }
@@ -122,7 +123,8 @@ export default class Transaction extends Model {
         user_id: commish.user_id,
         description: `${line.quantity}× ${product.title} ${variant.title === 'Default Title' ? '' : ('/ ' + variant.title)}`,
         kind: 'credit',
-        amount: this.calcCommissionAmount(order, line, commish)
+        amount: this.calcCommissionAmount(order, line, commish),
+        created_at: order.created_at
       })
     }
 
