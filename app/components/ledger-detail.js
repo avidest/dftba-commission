@@ -4,6 +4,7 @@ import {Table, Row, Col, Well, Label} from 'react-bootstrap'
 import classnames from 'classnames'
 import moment from 'moment'
 import filter from 'lodash/filter'
+import find from 'lodash/find'
 
 export default function LedgerList(props) {
   let {
@@ -23,6 +24,7 @@ export default function LedgerList(props) {
   }
 
   let styles = includeSales ? {maxHeight: '500px', overflow: 'scroll'} : {}
+
 
   return <Row>
     {!props.noSummary === true && <Col xs={12}>
@@ -63,9 +65,10 @@ export default function LedgerList(props) {
             <td colSpan="3">No Sales yet!</td>
           </tr>}
           {(sales && sales.total) && sales.total.map((grp, i) => {
+            let periodGrp = find(sales.period, {variant_id: grp.variant_id})
             return <tr key={grp.variant_id}>
               <td>{grp.title}</td>
-              <td>{sales.period[i] ? sales.period[i].quantity : 0}</td>
+              <td>{periodGrp ? periodGrp.quantity : 0}</td>
               <td>{grp.quantity}</td>
             </tr>
           })}
