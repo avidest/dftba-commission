@@ -59,6 +59,9 @@ export default function LedgerList(props) {
           </tr>
         </thead>
         <tbody>
+          {(!sales || !sales.total) && <tr>
+            <td colSpan="3">No Sales yet!</td>
+          </tr>}
           {sales.total.map((grp, i) => {
             return <tr key={grp.variant_id}>
               <td>{grp.title}</td>
