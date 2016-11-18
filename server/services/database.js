@@ -70,6 +70,8 @@ export async function sync(force = false) {
       }
     }
 
+    return
+
     /**
      * Orders
      */

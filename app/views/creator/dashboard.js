@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import {asyncConnect} from 'protium'
+import {connect} from 'protium'
 import {LinkContainer, push, replace} from 'protium/router'
 import {Grid, Row, Col, Button} from 'react-bootstrap'
 import PageHeader from '../../components/page-header'
@@ -15,39 +15,14 @@ import {
 } from '../../ducks/products'
 import DatePicker from '../../connectors/date-picker'
 
-const deps = [{
-  promise({ store: {getState, dispatch}, location: {query}, params }) {
-    let promises = []
-
-    let {
-      ledger: {
-        selectedSummary,
-        selectedTransactions
-      },
-      users: {profile},
-      settings
-    } = getState()
-
-    let q = {
-      ...settings,
-      user_id: profile.user_id
-    }
-
-    promises.push(dispatch(loadSummariesByUser(q)))
-    promises.push(dispatch(loadTransactionsByUser(q)))
-    promises.push(dispatch(loadInventorySalesByUser(q)))
-
-    return Promise.all(promises)
-  }
-}]
-
 const mapStateToProps = (state, props) => {
   return {
     transactions: state.ledger.selectedTransactions,
     summary: state.ledger.selectedSummary,
     creator: state.users.profile,
     profile: state.users.profile,
-    sales: state.products.sales
+    sales: state.products.sales,
+    settings: state.settings
   }
 }
 
@@ -61,8 +36,21 @@ const mapDispatchToProps = {
   replace
 }
 
-@asyncConnect(deps, mapStateToProps, mapDispatchToProps)
+@connect(mapStateToProps, mapDispatchToProps)
 export default class CreatorDashboardView extends Component {
+
+  componentDidMount() {
+    let {profile, settings} = this.props
+
+    let query = {
+      ...settings,
+      user_id: profile.user_id
+    }
+
+    this.props.loadSummariesByUser(query)
+    this.props.loadTransactionsByUser(query)
+    this.props.loadInventorySalesByUser(query)
+  }
 
   handleDateChange(opts) {
     let {profile} = this.props
