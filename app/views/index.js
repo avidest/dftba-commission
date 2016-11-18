@@ -13,19 +13,17 @@ const mapStateToProps = state => ({
 @connect(mapStateToProps, { login, push })
 export default class HomeView extends Component {
 
-	componentWillMount() {
-  	if (this.props.profile) {
-  		let profile = this.props.profile
-  		if (profile.app_metadata && profile.app_metadata.role === 'admin') {
-  			this.props.push('/admin')
-  		} else {
-  			this.props.push('/creator')
-  		}
-  	}
-	}
-
   componentDidMount() {
-    this.props.login()
+		if (this.props.profile) {
+			let profile = this.props.profile
+			if (profile.app_metadata && profile.app_metadata.role === 'admin') {
+				this.props.push('/admin')
+			} else {
+				this.props.push('/creator')
+			}
+		} else {
+    	this.props.login()
+		}
   }
 
   render() {

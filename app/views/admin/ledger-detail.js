@@ -34,13 +34,9 @@ const deps = [{
 
     let payload = {...settings, user_id: params.user_id}
 
-    if (!selectedSummary || (params.user_id !== selectedSummary.user_id)) {
-      promises.push(dispatch(loadSummariesByUser(payload)))
-    }
+    promises.push(dispatch(loadSummariesByUser(payload)))
 
-    if (!selectedTransactions || !selectedTransactions.length || (params.user_id !== selectedSummary.user_id)) {
-      promises.push(dispatch(loadTransactionsByUser(payload)))
-    }
+    promises.push(dispatch(loadTransactionsByUser(payload)))
 
     return Promise.all(promises)
   }
