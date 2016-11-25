@@ -1,6 +1,6 @@
 import React from 'react'
 import {Link, LinkContainer} from 'protium/router'
-import Loader from 'react-loaders'
+import {Loader} from 'react-loaders'
 import {
   Navbar,
   Nav,

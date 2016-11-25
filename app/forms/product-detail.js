@@ -93,7 +93,7 @@ export default class ProductDetailForm extends Component {
   }
 }
 
-function validate(values) {
+function validate(values = {}) {
   const errors = {}
   const required = [
     'user_id',

@@ -27,25 +27,25 @@ export default function LedgerList(props) {
 
 
   return <Row>
-    {!props.noSummary === true && <Col xs={12}>
+    {props.noSummary !== true && <Col xs={12}>
       <h3>Summary</h3>
       <SummaryViewer summary={summary} />
     </Col>}
     <Col sm={includeSales ? 7 : 12}>
-      {!props.noSummary === true && <h3>Transaction Details</h3>}
+      {props.noSummary !== true && <h3>Transaction Details</h3>}
       <div style={styles}>
         <Table hover responsive>
           <thead>
           <SummaryListHeader />
           </thead>
           <tbody>
-          {(!transactions || !transactions.length) && <tr className="text-center">
+          {transactions.length === 0 && <tr className="text-center">
             <td colSpan="6">No transactions for this cycle.</td>
           </tr>}
-          {(transactions && transactions.length) && transactions.map(transaction => {
+          {!!transactions.length && transactions.map(transaction => {
             return <TransactionRow key={transaction.id} transaction={transaction} kind={props.kind} />
           })}
-          {!props.noSummary === true && <SummaryRow {...props} />}
+          {props.noSummary !== true && <SummaryRow {...props} />}
           </tbody>
         </Table>
       </div>
@@ -61,8 +61,8 @@ export default function LedgerList(props) {
           </tr>
         </thead>
         <tbody>
-          {(!sales || !sales.total) && <tr>
-            <td colSpan="3">No Sales yet!</td>
+          {(!sales || !sales.total || !sales.total.length) && <tr>
+            <td colSpan="3" className="text-center">No sales yet.</td>
           </tr>}
           {(sales && sales.total) && sales.total.map((grp, i) => {
             let periodGrp = find(sales.period, {variant_id: grp.variant_id})

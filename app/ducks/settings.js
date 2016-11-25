@@ -32,7 +32,6 @@ function reduceSettings(settingRecords) {
 function calcCycleTime(settings) {
   let cycleTime = moment()
 
-  console.log(settings)
   cycleTime.seconds(0)
     .milliseconds(0)
     .utcOffset(settings.offset || '-07:00')

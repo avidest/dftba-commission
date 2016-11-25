@@ -107,7 +107,7 @@ export default class UsersDetailForm extends Component {
   }
 }
 
-function validate(values) {
+function validate(values = {}) {
   const errors = {}
   if (!values.user_id) {
     if (!values.password) {

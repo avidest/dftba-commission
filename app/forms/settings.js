@@ -114,7 +114,7 @@ function range(x, y) {
   return arr;
 }
 
-function validate(values) {
+function validate(values = {}) {
   const errors = {}
   if (!values.user_id) {
     if (!values.password) {

@@ -14,9 +14,7 @@ import {sync}         from './services/database'
 
 export const server = Express()
 
-server.get('/favicon.ico', (req, res)=> {
-  res.sendStatus(404)
-})
+server.get('/favicon.ico', (req, res)=> { res.sendStatus(404) })
 
 server.use('/api', proxy)
 server.use(compression())
@@ -59,4 +57,6 @@ export function start(port, apiPort) {
       console.log(`\u2699 API listening on port ${apiPort} ...`)
     })
   })
+
+  
 }

@@ -12,4 +12,16 @@ if (module.hot) {
   })
 }
 
+const errorMsg = `
+An error within the app has occurred. We're going to try reloading the page. 
+Please contact your administrator if this message persists.
+If you don't want to reload you can click cancel.
+`
+
+global.onerror = function() {
+	if (confirm(errorMsg)) {
+		location.reload()
+	}
+}
+
 export default app

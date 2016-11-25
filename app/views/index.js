@@ -19,7 +19,7 @@ export default class HomeView extends Component {
 			if (profile.app_metadata && profile.app_metadata.role === 'admin') {
 				this.props.push('/admin')
 			} else {
-				this.props.push('/creator')
+				this.props.push(`/creator?user=${profile.user_id}`)
 			}
 		} else {
     	this.props.login()

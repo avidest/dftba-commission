@@ -34,5 +34,9 @@ throng({
       process.env.PORT || 9001,
       process.env.API_PORT || 9002
     )
+    process.on('SIGTERM', function() {
+      console.log(`Worker ${id} exiting`);
+      process.exit();
+    });
   }
 })

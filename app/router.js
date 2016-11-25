@@ -63,24 +63,28 @@ export default new Router({
 
 function authenticate(store) {
   return (nextProps, replace)=> {
-    let {users: {token, profile}} = store.getState()
-    let url = nextProps.location.pathname
-    let loggedIn = !!(token && profile)
-    let role = profile.app_metadata && profile.app_metadata.role
-    if ((!loggedIn || !role) && url !== '/') {
-      return replace('/')
-    }
+    try {
+      let {users: {token, profile}} = store.getState()
+      let url = nextProps.location.pathname
+      let loggedIn = !!(token && profile)
+      let role = profile.app_metadata && profile.app_metadata.role
+      if ((!loggedIn || !role) && url !== '/') {
+        return replace('/')
+      }
 
-    if (url === '/profile') {
-      return
-    }
+      if (url === '/profile') {
+        return
+      }
 
-    if (role !== 'admin' && url.indexOf('/admin') === 0) {
-      return replace('/')
-    }
+      if (role !== 'admin' && url.indexOf('/admin') === 0) {
+        return replace('/')
+      }
 
-    if (role !== 'creator' && url.indexOf('/creator') === 0) {
-      return replace('/')
+      if (role !== 'creator' && url.indexOf('/creator') === 0) {
+        return replace('/')
+      }
+    } catch(e) {
+      return;
     }
   }
 }

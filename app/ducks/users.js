@@ -10,13 +10,13 @@ export const loadProfile = createAction('dftba/AUTH0_LOAD_PROFILE')
 export const resetUser = createAction('dftba/AUTH0_RESET_USER')
 
 export const login = createAction('dftba/AUTH0_LOGIN', payload => {
-  return ({dispatch})=> {
+  return ({dispatch, getState})=> {
     return performLogin().then(result => {
       let expires = new Date()
       expires.setSeconds(expires.getSeconds() + 36000)
       cookie.save('token', result.token, { path: '/', expires })
       process.nextTick(x => {
-        dispatch(push(result.profile.app_metadata.role === 'admin' ? '/admin' : '/creator'))
+        dispatch(push(result.profile.app_metadata.role === 'admin' ? '/admin' : `/creator?user=${result.profile.user_id}`))
       })
       return result
     })
