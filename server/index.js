@@ -21,6 +21,14 @@ server.use(compression())
 server.use(cookie())
 server.use(json())
 server.use(auth)
+server.use((err, req, res, next)=> {
+  if (err.name === 'UnauthorizedError') {
+    res.clearCookie('token')
+    res.clearCookie('delegate')
+    return res.redirect('/')
+  }
+  next(err)
+})
 
 if (__DEVELOPMENT__) {
   let DevTools = require('protium/devtools').default

@@ -13,7 +13,7 @@ api.use(compression())
 api.use(bodyParser.urlencoded({ extended: true }))
 api.use(bodyParser.json())
 api.use(cookies())
-api.use(auth)
+api.use('/api/v1', auth)
 
 // api.use((req, res, next)=> {
 //   console.log(req.method, req.url, req.body)

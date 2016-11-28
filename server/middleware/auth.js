@@ -7,7 +7,17 @@ const authenticator = JWT({
   secret, 
   audience, 
   getToken,
-  credentialsRequired: false
+  credentialsRequired: true
+}).unless(function(req) {
+  var paths = [
+    '/settings',
+    '/api/v1/settings',
+    '/__webpack_hmr',
+    '/assets'
+  ]
+  return req.url === '/' || paths.some(path => {
+    return req.url.startsWith(path)
+  })
 })
 
 export default function(req, res, next) {
