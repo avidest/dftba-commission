@@ -11,7 +11,9 @@ const authenticator = JWT({
 }).unless(function(req) {
   var paths = [
     '/settings',
+    '/shopify',
     '/api/v1/settings',
+    '/api/v1/shopify',
     '/__webpack_hmr',
     '/assets'
   ]
