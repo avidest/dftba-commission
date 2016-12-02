@@ -1,6 +1,7 @@
 var DevTools = require('protium/devtools').default
 var merge = require('lodash').merge
 var webpack = require('webpack')
+var fs = require('fs')
 
 var devtools = new DevTools(__dirname)
 
@@ -11,7 +12,6 @@ var opts = {
     'AUTH0_CLIENT_ID',
     'AUTH0_DOMAIN',
     'APP_HOST',
-    'SOURCE_VERSION',
     'SHOPIFY_SHOP'
   ],
   vendorLibs: [
@@ -27,7 +27,10 @@ var opts = {
     'redux-form'
   ],
   plugins: [
-    new webpack.IgnorePlugin(/^\.\/locale$/, [/moment$/])
+    new webpack.IgnorePlugin(/^\.\/locale$/, [/moment$/]),
+    new webpack.DefinePlugin({
+      'global.VERSION': JSON.stringify(fs.readFileSync('.source-version'))
+    })
   ]
 }
 

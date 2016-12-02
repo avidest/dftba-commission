@@ -11,6 +11,9 @@ import cors           from 'cors'
 import api            from './api'
 import {setup as shopifySetup} from './services/shopify'
 import {sync}         from './services/database'
+import fs             from 'fs'
+
+const VERSION = fs.readFileSync('.source-version')
 
 export const server = Express()
 
@@ -46,8 +49,8 @@ server.get('/*', renderer(serverEntry, {
   page: {
     main: [
       'https://cdn.auth0.com/js/lock-9.1.min.js',
-      assets.javascript.vendor + '?' + process.env.SOURCE_VERSION,
-      assets.javascript.client + '?' + process.env.SOURCE_VERSION
+      assets.javascript.vendor + '?' + VERSION,
+      assets.javascript.client + '?' + VERSION
     ]
   }
 }))
@@ -65,6 +68,4 @@ export function start(port, apiPort) {
       console.log(`\u2699 API listening on port ${apiPort} ...`)
     })
   })
-
-  
 }

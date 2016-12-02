@@ -1,6 +1,7 @@
 require('source-map-support/register')
 require('babel-polyfill')
 require('babel-register')({
+  ignore: /node_modules|public\/server/,
   presets: [
     ['es2015', {modules: 'commonjs'}],
     'stage-0',

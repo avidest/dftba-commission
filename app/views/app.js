@@ -5,11 +5,12 @@ import {logout, login}          from '../ducks/users'
 import {loadSettings}           from '../ducks/settings'
 import TransitionGroup          from 'react-addons-css-transition-group'
 import {NotificationContainer}  from 'react-notifications';
-    
+
+
 const links = [
   { rel: 'stylesheet', href: 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.1/css/font-awesome.min.css' },
   { rel: 'stylesheet', href: 'https://fonts.googleapis.com/css?family=Satisfy|Titillium+Web:400,400i,600,600i,700,700i|Yanone+Kaffeesatz:700' },
-  { rel: 'stylesheet', href: `/assets/css/index.css?${process.env.SOURCE_VERSION}` },
+  { rel: 'stylesheet', href: `/assets/css/index.css` },
 ]
 
 const meta = [
