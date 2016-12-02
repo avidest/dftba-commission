@@ -18,7 +18,7 @@ export function performLogin() {
       }
     }, (err, profile, token)=> {
       if (err) {
-        throw err
+        return
       }
       resolve({ profile, token })
     })

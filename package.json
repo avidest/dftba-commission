@@ -71,7 +71,7 @@
     "react-redux": "^4.4.6",
     "react-timeago": "^3.1.2",
     "redux": "^3.5.2",
-    "redux-form": "^6.2.0",
+    "redux-form": "^6.0.5",
     "reselect": "^2.5.3",
     "sass-loader": "^4.0.0",
     "sequelize": "^3.27.0",
