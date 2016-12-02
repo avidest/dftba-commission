@@ -6,3 +6,5 @@ public
 dist
 webpack-assets.json
 !public/images
+*.log*
+.source-version
