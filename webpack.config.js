@@ -11,6 +11,7 @@ var opts = {
     'AUTH0_CLIENT_ID',
     'AUTH0_DOMAIN',
     'APP_HOST',
+    'SOURCE_VERSION',
     'SHOPIFY_SHOP'
   ],
   vendorLibs: [

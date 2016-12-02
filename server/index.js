@@ -46,8 +46,8 @@ server.get('/*', renderer(serverEntry, {
   page: {
     main: [
       'https://cdn.auth0.com/js/lock-9.1.min.js',
-      assets.javascript.vendor,
-      assets.javascript.client
+      assets.javascript.vendor + '?' + process.env.SOURCE_VERSION,
+      assets.javascript.client + '?' + process.env.SOURCE_VERSION
     ]
   }
 }))
