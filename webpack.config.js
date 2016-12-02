@@ -3,6 +3,10 @@ var merge = require('lodash').merge
 var webpack = require('webpack')
 var fs = require('fs')
 
+if (process.env.SOURCE_VERSION) {
+  fs.writeFileSync('.source-version', process.env.SOURCE_VERSION)
+}
+
 var devtools = new DevTools(__dirname)
 
 var opts = {
@@ -27,10 +31,7 @@ var opts = {
     'redux-form'
   ],
   plugins: [
-    new webpack.IgnorePlugin(/^\.\/locale$/, [/moment$/]),
-    new webpack.DefinePlugin({
-      'global.VERSION': JSON.stringify(fs.readFileSync('.source-version'))
-    })
+    new webpack.IgnorePlugin(/^\.\/locale$/, [/moment$/])
   ]
 }
 
