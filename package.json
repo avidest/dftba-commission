@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "start": "node index",
-    "dev": "concurrently \"nf start\" \"gulp dev\" \"npm run proxy\"",
+    "start:dev": "nodemon -w server index",
+    "dev": "concurrently \"nf run npm run start:dev\" \"gulp dev\" \"npm run proxy\"",
     "debug": "env $(cat .env | xargs) node --inspect index",
     "build": "webpack -p && gulp static",
     "postinstall": "npm run build",

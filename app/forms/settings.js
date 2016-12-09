@@ -31,6 +31,7 @@ export default class SettingsForm extends Component {
 
       <FormGroup>
         <Col smOffset={2} sm={8}>
+          <h2>Sales Period Settings</h2>
           <Row>
             <Col xs={4}>
               <FormGroup id="settings-time-date">

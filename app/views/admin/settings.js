@@ -3,10 +3,12 @@ import {connect} from 'protium'
 import {Grid, Row, Col} from 'react-bootstrap'
 import PageHeader from '../../components/page-header'
 import SettingsForm from '../../forms/settings'
-import {saveSettings} from '../../ducks/settings'
+import HistoricalDataForm from '../../forms/historical-data'
+import {saveSettings, fetchHistoricalData} from '../../ducks/settings'
 
 @connect(state => state, {
-  saveSettings
+  saveSettings,
+  fetchHistoricalData
 })
 export default class SettingsView extends Component {
   render() {
@@ -18,6 +20,15 @@ export default class SettingsView extends Component {
             <SettingsForm
               onSubmit={values => {
                 return this.props.saveSettings(values)
+              }}
+            />
+          </Col>
+        </Row>
+        <Row style={{marginTop: '2em'}}>
+          <Col xs={12}>
+            <HistoricalDataForm
+              onSubmit={values => {
+                return this.props.fetchHistoricalData(values)
               }}
             />
           </Col>

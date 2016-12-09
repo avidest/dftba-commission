@@ -214,6 +214,40 @@ export default class Order extends Model {
     }
   }
 
+  static async processOrdersInRange(opts) {
+    let sOrders = (await Shopify.Orders.findAll({
+      created_at_min: opts.from,
+      created_at_max: opts.to,
+      complete: true
+    })).map(o => o.toObject())
+
+    let messages = []
+
+    let msg1 = `Processing historical ${sOrders.length} orders...`
+    // messages.push(msg1)
+    console.log(msg1)
+
+    let created = 0
+    let updated = 0
+
+    for (let sOrder of sOrders) {
+      let order = await this.findById(sOrder.id)
+      if (!order) {
+        this.createFromShopify(sOrder).catch(err => console.log(err))
+        created++
+      } else {
+        this.updateFromShopify(sOrder).catch(err => console.log(err))
+        updated++
+      }
+    }
+
+    let msg2 = `Done. Created: ${created}, Updated: ${updated}`
+    messages.push(msg2)
+    console.log(msg2)
+
+    return {created, updated, message: messages.join('\n')}
+  }
+
   static async computeAllTransactions() {
     let orders = await this.findAll()
     let processed = await Promise.all(orders.map(o => o.processTransactions()))

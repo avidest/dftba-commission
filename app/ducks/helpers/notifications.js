@@ -9,6 +9,15 @@ export function successNotification(subject, verb, color = 'success') {
   }
 }
 
+export function genericNotification(msg, color = 'success') { 
+  return x => {
+    if (__CLIENT__) {
+      NotificationManager[color](msg)
+    }
+    return x
+  }
+}
+
 export function errorNotification(subject, verb, color = 'error') {
   return x => {
     if (__CLIENT__) {

@@ -1,6 +1,17 @@
 import {createAction, handleActions} from 'protium'
-import {successNotification, errorNotification} from './helpers/notifications'
+import {successNotification, errorNotification, genericNotification} from './helpers/notifications'
 import moment from 'moment'
+
+export const fetchHistoricalData = createAction('dftba/ledger/FETCH_HISTORICAL_DATA', payload => {
+  return ({client, dispatch})=> {
+    return client.post('settings/fetch-historical-data', {
+      body: payload
+    }).then(results => {
+      return genericNotification(results.message)()
+    })
+    .catch(errorNotification('Data', 'fetch'))
+  }
+})
 
 export const loadSettings = createAction('dftba/ledger/LOAD_SETTINGS', payload => {
   return ({client, dispatch})=> {

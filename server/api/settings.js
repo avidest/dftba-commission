@@ -26,4 +26,15 @@ export default class SettingRouter extends CollectionRouter {
     })
   }
 
+  @route('POST', '/fetch-historical-data')
+  async fetchHistoricalData(opts, http) {
+    let Orders = this.getModel('Order')
+    return Orders.processOrdersInRange(opts.data)
+      .catch(err => {
+        console.log(err)
+        http.res.status(500)
+        return {error: true}
+      })
+  }
+
 }
