@@ -86,42 +86,48 @@ const exportColOrder = [
 ]
 
 export const bulkExport = createAction('dftba/ledger/BULK_EXPORT', payload => {
-  let csvData = []
-  let csvText = 'data:text/csv;charset=utf-8,'
-  let data = Array.isArray(payload) ? payload : []
-  if (data.length) {
-    var headerRow = exportColOrder.map(key => exportMap[key])
+  return ({client, getState})=> {
+    let {settings} = getState()
+    let csvData = []
+    let csvText = 'data:text/csv;charset=utf-8,'
+    let data = Array.isArray(payload) ? payload : []
+    if (data.length) {
+      var headerRow = exportColOrder.map(key => exportMap[key])
 
-    csvData.push(headerRow)
+      csvData.push(headerRow)
 
-    var dataRows = data.map(datum => {
-      return exportColOrder.map(key => {
-        let val = get(datum, key)
-        if (key === 'cycleStart' || key === 'cycleEnd') {
-          val = moment(val).format('lll Z')
-        }
-        return val
+      var dataRows = data.map(datum => {
+        return exportColOrder.map(key => {
+          let val = get(datum, key)
+          if (key === 'cycleStart' || key === 'cycleEnd') {
+            val = moment(val)
+              .utcOffset(settings.offset || '-07:00')
+              .format('lll Z')
+          }
+          return val
+        })
       })
-    })
-    if (!dataRows.length) {
-      return;
+      if (!dataRows.length) {
+        return;
+      }
+
+      csvData = csvData.concat(dataRows)
+
+      csvData.forEach((row, index)=> {
+        let data = row.map(c => JSON.stringify(c)).join(',')
+        csvText += index < csvData.length ? `${data}\n` : data
+      })
+
+      let encodedUri = encodeURI(csvText)
+      let link = document.createElement('a')
+      let cycleEnd
+      link.setAttribute('href', encodedUri)
+      let zDate = moment().utcOffset(settings.offset || '-07:00').format('lll')
+      link.setAttribute('download', `dftba-commission-export-${zDate}.csv`);
+      document.body.appendChild(link) // Required for FF
+      link.click()
+      link.remove()
     }
-
-    csvData = csvData.concat(dataRows)
-
-    csvData.forEach((row, index)=> {
-      let data = row.map(c => JSON.stringify(c)).join(',')
-      csvText += index < csvData.length ? `${data}\n` : data
-    })
-
-    let encodedUri = encodeURI(csvText)
-    let link = document.createElement('a')
-    let cycleEnd
-    link.setAttribute('href', encodedUri)
-    link.setAttribute('download', `dftba-commission-export-${moment().format('lll')}.csv`);
-    document.body.appendChild(link) // Required for FF
-    link.click()
-    link.remove()
   }
 })
 
@@ -185,10 +191,10 @@ export const loadTransactionsByUser = createAction('dftba/ledger/LOAD_TRANSACTIO
 
 export const exportUserTransactionsCSV = createAction('dftba/ledger/EXPORT_TRANSACTIONS', payload => {
   return ({getState})=> {
-    let {ledger} = getState()
+    let {ledger, settings} = getState()
     let {selectedSummary, selectedTransactions} = ledger
     let {cycleStart, cycleEnd} = selectedSummary
-    let periodLabel = `${moment(cycleStart).format('lll')}—${moment(cycleEnd).format('lll')}`
+    let periodLabel = `${moment(cycleStart).utcOffset(settings.offset || '-07:00').format('lll')}—${moment(cycleEnd).utcOffset(settings.offset || '-07:00').format('lll')}`
 
 
     let csvData = []
@@ -211,7 +217,7 @@ export const exportUserTransactionsCSV = createAction('dftba/ledger/EXPORT_TRANS
       row.push(t.payout ? 'Payout' : ucFirst(t.kind))
       row.push('$'+t.amount)
       row.push(t.description)
-      row.push(moment(t.created_at).format('lll'))
+      row.push(moment(t.created_at).utcOffset(settings.offset || '-07:00').format('lll'))
       csvData.push(row)
     }
 
