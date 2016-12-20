@@ -3,6 +3,7 @@ import {asyncConnect} from 'protium'
 import {LinkContainer, push, replace} from 'protium/router'
 import {Grid, Row, Col, ButtonGroup, Button} from 'react-bootstrap'
 import PageHeader from '../../components/page-header'
+import DatePicker from '../../connectors/date-picker'
 import LedgerDetail from '../../components/ledger-detail'
 import find from 'lodash/find'
 import {
@@ -63,6 +64,20 @@ const mapDispatchToProps = {
 
 @asyncConnect(deps, mapStateToProps, mapDispatchToProps)
 export default class OrderDetailView extends Component {
+
+  handleDateChange(values) {
+    this.props.loadSummariesByUser({
+      startDate: values.start, 
+      endDate: values.end,
+      user_id: this.props.creator.user_id
+    })
+    this.props.loadTransactionsByUser({
+      startDate: values.start, 
+      endDate: values.end,
+      user_id: this.props.creator.user_id
+    })
+  }
+
   render() {
     let creator = this.props.creator
     let name = creator.user_metadata && creator.user_metadata.name
@@ -70,7 +85,11 @@ export default class OrderDetailView extends Component {
       : creator.email
     let title = `Ledger for ${name}`
     return <div>
-      <PageHeader title={title} />
+      <PageHeader title={title}>
+        <div className="pull-right">
+          <DatePicker onChange={::this.handleDateChange} bsSize="lg" pullRight />
+        </div>
+      </PageHeader>
       <Grid fluid>
         <Row>
           <Col xs={12}>
