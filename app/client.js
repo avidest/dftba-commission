@@ -1,5 +1,8 @@
 import 'babel-polyfill'
 import app from './index'
+import url from 'url'
+
+global.__ACCESS_DATA__ = url.parse(window.location.href)
 
 global.__STATE__.routing = {}
 
