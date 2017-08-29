@@ -48,7 +48,7 @@ const serverEntry = Path.resolve('public/server.js')
 server.get('/*', renderer(serverEntry, {
   page: {
     main: [
-      'http://cdn.auth0.com/js/lock/10.20.0/lock.min.js',
+      'https://cdn.auth0.com/js/lock/10.20.0/lock.min.js',
       assets.javascript.vendor + '?' + VERSION,
       assets.javascript.client + '?' + VERSION
     ]
