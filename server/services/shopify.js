@@ -59,7 +59,7 @@ export function installWebhooks() {
     } else {
       console.error('Webhooks failed to install...')
     }
-  })
+  }).catch(err => console.log(err))
 }
 
 export function removeWebhooks() {
