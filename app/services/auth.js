@@ -12,7 +12,7 @@ if (__CLIENT__) {
     },
     auth: {
       sso: false,
-      redirectUrl: `http://${process.env.APP_HOST}/`,
+      redirectUrl: `https://${process.env.APP_HOST}/`,
       responseType: 'token',
       params: {
         scope: 'user_id openid email picture user_metadata app_metadata'
