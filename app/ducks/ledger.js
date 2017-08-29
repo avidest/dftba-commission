@@ -153,6 +153,7 @@ export const loadSummaries = createAction('dftba/ledger/LOAD_SUMMARIES', (payloa
       query: {startDate, endDate}
     }).then(summaries => {
       if (!summaries) { summaries = [] }
+      summaries = Array.isArray(summaries) ? summaries : [summaries]
       let grid = getState().grid[GRID_KEY]
       if (!grid.query || !grid.query.length || grid.query === query.query) {
         dispatch(gridActions.loadAll({
