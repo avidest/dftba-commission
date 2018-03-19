@@ -37,20 +37,36 @@ export function getAllUsers() {
       return m
     }, users)
   })
+  .catch(err => {
+    console.log(err)
+    throw err
+  })
 }
 
 export function getUsers(opts = {}) {
   return client.users.getAll(opts)
+  .catch(err => {
+    console.log(err)
+    throw err
+  })
 }
 
 export function getUser(id) {
   return client.users.get({ id })
+  .catch(err => {
+    console.log(err)
+    throw err
+  })
 }
 
 export function createUser(data) {
   return client.users.create({
     ...data,
     connection: 'Username-Password-Authentication'
+  })
+  .catch(err => {
+    console.log(err)
+    throw err
   })
 }
 
@@ -68,8 +84,16 @@ export function updateUser(id, data) {
     : { password }
 
   return client.users.update({ id }, payload)
+    .catch(err => {
+      console.log(err)
+      throw err
+    })
 }
 
 export function deleteUser(id) {
   return client.users.delete({ id })
+  .catch(err => {
+    console.log(err)
+    throw err
+  })
 }
