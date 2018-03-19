@@ -179,11 +179,8 @@ export default class Order extends Model {
       order.set(update)
       let refundUpdates = await order.updateRefundsFromShopify(refunds)
       order.set('refunds', refundUpdates)
-      let lineItemUpdates = order.updateLineItemsFromShopify(line_items)
-      return await Promise.all([
-        lineItemUpdates,
-        order.save()
-      ])
+      let lineItemUpdates = await order.updateLineItemsFromShopify(line_items)
+      return await order.save()
     }
     return order
   }

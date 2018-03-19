@@ -40,19 +40,7 @@ export function installWebhooks() {
     if (installed) {
       return true
     }
-    let calls = [];
-    if (!installed) {
-      calls = map(webhookTopics, (topic)=> {
-        let address = `https://${process.env.APP_HOST}/api/v1/shopify/${topic}`;
-        console.log(address)
-        return Webhooks.create({
-          address: address,
-          topic: topic,
-          format: 'json'
-        })
-      })
-    }
-    return batchCallIsSuccessful(calls)
+    return batchCallIsSuccessful(buildWebhooks().map(x => Webhooks.create(x)))
   }).then(success => {
     if (success) {
       console.log('Webhooks installed...')
@@ -77,12 +65,7 @@ export function removeWebhooks() {
 
 export function webhooksInstalled() {
   return Webhooks.findAll({ complete: true }).then((webhooks)=> {
-    if (!webhooks.length) return false;
-    if (webhookTopics.length !== webhooks.length) {
-      console.log('Removing webhooks... ')
-      return removeWebhooks()
-    }
-
+    if (webhookTopics.length !== webhooks.length) return false;
     let installedHooks = map(webhooks, w => w.get('topic'))
     return every(webhookTopics, (topic)=> {
       return includes(installedHooks, topic);
@@ -99,4 +82,16 @@ export function batchCallIsSuccessful(promises) {
       console.log(err.stack || err)
       return false;
     })
+}
+
+
+function buildWebhooks() {
+  return map(webhookTopics, (topic)=> {
+    let address = `https://${process.env.APP_HOST}/api/v1/shopify/${topic}`;
+    return {
+      address: address,
+      topic: topic,
+      format: 'json'
+    }
+  })
 }
