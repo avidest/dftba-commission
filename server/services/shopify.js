@@ -31,9 +31,7 @@ const webhookTopics = [
 ]
 
 export function setup() {
-  removeWebhooks().then(x => {
-  installWebhooks()
-  })
+  return installWebhooks()
 }
 
 export function installWebhooks() {
