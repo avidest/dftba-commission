@@ -31,7 +31,7 @@ const webhookTopics = [
 ]
 
 export function setup() {
-  return installWebhooks()
+  installWebhooks()
 }
 
 export function installWebhooks() {
@@ -77,7 +77,6 @@ export function removeWebhooks() {
 
 export function webhooksInstalled() {
   return Webhooks.findAll({ complete: true }).then((webhooks)=> {
-    console.log(webhooks)
     if (!webhooks.length) return false;
     if (webhookTopics.length !== webhooks.length) {
       console.log('Removing webhooks... ')
