@@ -1,6 +1,6 @@
 import JWT from 'express-jwt'
 
-const secret = Buffer.from(process.env.AUTH0_CLIENT_SECRET, 'base64')
+const secret = process.env.AUTH0_CLIENT_SECRET
 const audience = process.env.AUTH0_CLIENT_ID
 
 const authenticator = JWT({ 
