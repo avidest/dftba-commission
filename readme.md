@@ -33,6 +33,6 @@ The app has only been tested for production in a Heroku environment and requires
 - Papertrail (optional, for tracking logs)
 
 To push to the existing deployment running at https://dftba-commission.herokuapp.com, simply commit your changes
-and `git push heroku master`, assuming you have `heroku` configured as a remote. To do this run `heroku git:remote -a swatchify`.
+and `git push heroku master`, assuming you have `heroku` configured as a remote. To do this run `heroku git:remote -a dftba-commission`.
 
 If you are configuring a new deployment, simply run `heroku create` and configure the addons mentioned above.
