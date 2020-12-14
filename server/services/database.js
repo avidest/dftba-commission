@@ -1,13 +1,13 @@
-import { Builder } from 'sequelize-classes';
-import Commission from '../models/commission';
-import Order from '../models/order';
-import OrderLineItem from '../models/order-line-item';
-import Product from '../models/product';
-import ProductImage from '../models/product-image';
-import ProductVariant from '../models/product-variant';
-import Setting from '../models/setting';
-import Transaction from '../models/transaction';
-import UserProfile from '../models/user-profile';
+import {Builder}            from 'sequelize-classes';
+import Commission           from '../models/commission';
+import Order                from '../models/order';
+import OrderLineItem        from '../models/order-line-item';
+import Product              from '../models/product';
+import ProductImage         from '../models/product-image';
+import ProductVariant       from '../models/product-variant';
+import Transaction          from '../models/transaction';
+import UserProfile          from '../models/user-profile';
+import Setting              from '../models/setting';
 
 const databaseLogging = process.env.DATABASE_LOGGING || false
 
@@ -21,8 +21,7 @@ const options = {
     },
     dialectOptions: {
       supportBigNumbers: true,
-      bigNumberStrings: true,
-      ssl: true
+      bigNumberStrings: true
     }
   }
 }
